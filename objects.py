@@ -7,7 +7,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import copy
-import ema.matvecs as mv
 from ema.elements import *
 import sympy as sp
 import openseespy as ops

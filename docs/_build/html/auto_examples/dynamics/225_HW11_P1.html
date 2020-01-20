@@ -191,14 +191,15 @@
 <span class="n">M</span>
 </pre></div>
 </div>
-<div class="highlight-pytb notranslate"><div class="highlight"><pre><span></span><span class="gt">Traceback (most recent call last):</span>
-  File <span class="nb">&quot;C:\Users\claud\Anaconda3\lib\site-packages\sphinx_gallery\gen_rst.py&quot;</span>, line <span class="m">440</span>, in <span class="n">_memory_usage</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="n">func</span><span class="p">()</span>
-  File <span class="nb">&quot;C:\Users\claud\Anaconda3\lib\site-packages\sphinx_gallery\gen_rst.py&quot;</span>, line <span class="m">425</span>, in <span class="n">__call__</span>
-    <span class="n">exec</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">code</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">globals</span><span class="p">)</span>
-  File <span class="nb">&quot;C:\Users\claud\OneDrive\400_box\Python\myPackages\ema\ema\examples\dynamics\225_HW11_P1.py&quot;</span>, line <span class="m">12</span>, in <span class="n">&lt;module&gt;</span>
-    <span class="c1"># %config InlineBackend.figure_format = &#39;svg&#39; # used to make plots look nicer</span>
-<span class="gr">ModuleNotFoundError</span>: <span class="n">No module named &#39;ema.utilities&#39;</span>
+<img alt="../../_images/sphx_glr_225_HW11_P1_001.png" class="sphx-glr-single-img" src="../../_images/sphx_glr_225_HW11_P1_001.png" />
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>{&#39;text/html&#39;: &#39;&lt;table style = &quot;display:inline&quot; border=&quot;1&quot; class=&quot;dataframe&quot;&gt;\n  &lt;thead&gt;\n    &lt;tr style=&quot;text-align: right;&quot;&gt;\n      &lt;th&gt;&lt;/th&gt;\n      &lt;th&gt;$u_{{1}}$&lt;/th&gt;\n      &lt;th&gt;$u_{{2}}$&lt;/th&gt;\n      &lt;th&gt;$u_{{3}}$&lt;/th&gt;\n    &lt;/tr&gt;\n  &lt;/thead&gt;\n  &lt;tbody&gt;\n    &lt;tr&gt;\n      &lt;th&gt;$u_{{1}}$&lt;/th&gt;\n      &lt;td&gt;1.0&lt;/td&gt;\n      &lt;td&gt;0.0&lt;/td&gt;\n      &lt;td&gt;0.0&lt;/td&gt;\n    &lt;/tr&gt;\n    &lt;tr&gt;\n      &lt;th&gt;$u_{{2}}$&lt;/th&gt;\n      &lt;td&gt;0.0&lt;/td&gt;\n      &lt;td&gt;1.0&lt;/td&gt;\n      &lt;td&gt;0.0&lt;/td&gt;\n    &lt;/tr&gt;\n    &lt;tr&gt;\n      &lt;th&gt;$u_{{3}}$&lt;/th&gt;\n      &lt;td&gt;0.0&lt;/td&gt;\n      &lt;td&gt;0.0&lt;/td&gt;\n      &lt;td&gt;0.5&lt;/td&gt;\n    &lt;/tr&gt;\n  &lt;/tbody&gt;\n&lt;/table style = &quot;display:inline&quot;&gt;&lt;table style = &quot;display:inline&quot; border=&quot;1&quot; class=&quot;dataframe&quot;&gt;\n  &lt;thead&gt;\n    &lt;tr style=&quot;text-align: right;&quot;&gt;\n      &lt;th&gt;&lt;/th&gt;\n      &lt;th&gt;$1$&lt;/th&gt;\n      &lt;th&gt;$2$&lt;/th&gt;\n      &lt;th&gt;$3$&lt;/th&gt;\n    &lt;/tr&gt;\n  &lt;/thead&gt;\n  &lt;tbody&gt;\n    &lt;tr&gt;\n      &lt;th&gt;$P_{1}$&lt;/th&gt;\n      &lt;td&gt;2.0&lt;/td&gt;\n      &lt;td&gt;-1.0&lt;/td&gt;\n      &lt;td&gt;0.0&lt;/td&gt;\n    &lt;/tr&gt;\n    &lt;tr&gt;\n      &lt;th&gt;$P_{2}$&lt;/th&gt;\n      &lt;td&gt;-1.0&lt;/td&gt;\n      &lt;td&gt;2.0&lt;/td&gt;\n      &lt;td&gt;-1.0&lt;/td&gt;\n    &lt;/tr&gt;\n    &lt;tr&gt;\n      &lt;th&gt;$P_{3}$&lt;/th&gt;\n      &lt;td&gt;0.0&lt;/td&gt;\n      &lt;td&gt;-1.0&lt;/td&gt;\n      &lt;td&gt;1.0&lt;/td&gt;\n    &lt;/tr&gt;\n  &lt;/tbody&gt;\n&lt;/table style = &quot;display:inline&quot;&gt;&#39;}
+C:\Users\claud\Anaconda3\lib\site-packages\sphinx_gallery\gen_rst.py:548: FutureWarning: elementwise comparison failed; returning scalar instead, but in the future will perform elementwise comparison
+  if last_repr == &#39;None&#39;:
+
+Structural_Vector([[1.50000000e+00, 5.55111512e-17, 2.77555756e-16],
+                   [5.55111512e-17, 1.50000000e+00, 2.22044605e-16],
+                   [2.77555756e-16, 2.22044605e-16, 1.50000000e+00]])
 </pre></div>
 </div>
 <div class="section" id="a-modal-expansion-of-earthquake-forces">
@@ -230,6 +231,10 @@
 <h2>Floor displacement response in terms of <span class="math notranslate nohighlight">\(D_n(t)\)</span><a class="headerlink" href="#floor-displacement-response-in-terms-of-d-n-t" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Un</span> <span class="o">=</span> <span class="p">[[</span><span class="n">gamma</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="o">*</span><span class="n">Phi</span><span class="p">[</span><span class="n">i</span><span class="p">,</span><span class="n">n</span><span class="p">]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="p">)]</span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">I</span><span class="p">)]</span>
 <span class="n">Un</span>
+</pre></div>
+</div>
+<p class="sphx-glr-script-out">Out:</p>
+<div class="sphx-glr-script-out highlight-none notranslate"><div class="highlight"><pre><span></span>[[0.6220084679281462, 0.3333333333333332, 0.044658198738520595], [1.077350269189626, -2.533725810203381e-17, -0.077350269189626], [1.2440169358562922, -0.33333333333333326, 0.08931639747704123]]
 </pre></div>
 </div>
 </div>
@@ -274,7 +279,7 @@
 <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">h_eff</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span>  <span class="mf">2.</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-7</span>
 </pre></div>
 </div>
-<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.013 seconds)</p>
+<p class="sphx-glr-timing"><strong>Total running time of the script:</strong> ( 0 minutes  0.158 seconds)</p>
 <div class="sphx-glr-footer class sphx-glr-footer-example docutils container" id="sphx-glr-download-auto-examples-dynamics-225-hw11-p1-py">
 <div class="sphx-glr-download docutils container">
 <p><a class="reference download internal" download="" href="../../_downloads/2fdbe189074082f3e80b38dc3fb7f06d/225_HW11_P1.py"><code class="xref download docutils literal notranslate"><span class="pre">Download</span> <span class="pre">Python</span> <span class="pre">source</span> <span class="pre">code:</span> <span class="pre">225_HW11_P1.py</span></code></a></p>

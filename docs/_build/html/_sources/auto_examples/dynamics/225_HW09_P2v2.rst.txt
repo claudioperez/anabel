@@ -45,16 +45,6 @@ Modal analysis - 1r
 
 
 
-.. code-block:: pytb
-
-    Traceback (most recent call last):
-      File "C:\Users\claud\Anaconda3\lib\site-packages\sphinx_gallery\gen_rst.py", line 440, in _memory_usage
-        out = func()
-      File "C:\Users\claud\Anaconda3\lib\site-packages\sphinx_gallery\gen_rst.py", line 425, in __call__
-        exec(self.code, self.globals)
-      File "C:\Users\claud\OneDrive\400_box\Python\myPackages\ema\ema\examples\dynamics\225_HW09_P2v2.py", line 12, in <module>
-        # %config InlineBackend.figure_format = 'svg'
-    AttributeError: module 'ema' has no attribute 'rModel'
 
 
 
@@ -74,6 +64,47 @@ Part a)
     M.f
 
 
+
+
+
+
+
+.. only:: builder_html
+
+    .. raw:: html
+
+        <table border="1" class="dataframe">
+          <thead>
+            <tr style="text-align: right;">
+              <th></th>
+              <th>$u_{{1}}$</th>
+              <th>$u_{{2}}$</th>
+              <th>$u_{{3}}$</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>$u_{{1}}$</th>
+              <td>1.0</td>
+              <td>0.0</td>
+              <td>0.0</td>
+            </tr>
+            <tr>
+              <th>$u_{{2}}$</th>
+              <td>0.0</td>
+              <td>1.0</td>
+              <td>0.0</td>
+            </tr>
+            <tr>
+              <th>$u_{{3}}$</th>
+              <td>0.0</td>
+              <td>0.0</td>
+              <td>0.5</td>
+            </tr>
+          </tbody>
+        </table>
+        <br />
+        <br />
 
 Part b)
 -------
@@ -95,6 +126,24 @@ Part b)
         U[0:3] = shape
         em.plot_modes(mdl, U, ax[i], color=colors[i], label=str(i+1))
     plt.legend();
+
+
+
+
+
+.. code-block:: pytb
+
+    Traceback (most recent call last):
+      File "C:\Users\claud\Anaconda3\lib\site-packages\sphinx_gallery\gen_rst.py", line 440, in _memory_usage
+        out = func()
+      File "C:\Users\claud\Anaconda3\lib\site-packages\sphinx_gallery\gen_rst.py", line 425, in __call__
+        exec(self.code, self.globals)
+      File "C:\Users\claud\OneDrive\400_box\Python\myPackages\ema\examples\dynamics\225_HW09_P2v2.py", line 56, in <module>
+        #
+      File "C:\Users\claud\OneDrive\400_box\Python\myPackages\ema\matrices.py", line 1598, in U_vector
+        U = np.zeros(model.nt)
+    AttributeError: 'Kinematic_matrix' object has no attribute 'nt'
+
 
 
 
@@ -148,7 +197,7 @@ matrix, :math:`M_n`, equal to the identity matrix.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.013 seconds)
+   **Total running time of the script:** ( 0 minutes  0.017 seconds)
 
 
 .. _sphx_glr_download_auto_examples_dynamics_225_HW09_P2v2.py:

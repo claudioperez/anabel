@@ -47,17 +47,23 @@ Problem 1
 
 
 
-.. code-block:: pytb
+.. image:: /auto_examples/dynamics/images/sphx_glr_225_HW11_P1_001.png
+    :class: sphx-glr-single-img
 
-    Traceback (most recent call last):
-      File "C:\Users\claud\Anaconda3\lib\site-packages\sphinx_gallery\gen_rst.py", line 440, in _memory_usage
-        out = func()
-      File "C:\Users\claud\Anaconda3\lib\site-packages\sphinx_gallery\gen_rst.py", line 425, in __call__
-        exec(self.code, self.globals)
-      File "C:\Users\claud\OneDrive\400_box\Python\myPackages\ema\ema\examples\dynamics\225_HW11_P1.py", line 12, in <module>
-        # %config InlineBackend.figure_format = 'svg' # used to make plots look nicer
-    ModuleNotFoundError: No module named 'ema.utilities'
 
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    {'text/html': '<table style = "display:inline" border="1" class="dataframe">\n  <thead>\n    <tr style="text-align: right;">\n      <th></th>\n      <th>$u_{{1}}$</th>\n      <th>$u_{{2}}$</th>\n      <th>$u_{{3}}$</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>$u_{{1}}$</th>\n      <td>1.0</td>\n      <td>0.0</td>\n      <td>0.0</td>\n    </tr>\n    <tr>\n      <th>$u_{{2}}$</th>\n      <td>0.0</td>\n      <td>1.0</td>\n      <td>0.0</td>\n    </tr>\n    <tr>\n      <th>$u_{{3}}$</th>\n      <td>0.0</td>\n      <td>0.0</td>\n      <td>0.5</td>\n    </tr>\n  </tbody>\n</table style = "display:inline"><table style = "display:inline" border="1" class="dataframe">\n  <thead>\n    <tr style="text-align: right;">\n      <th></th>\n      <th>$1$</th>\n      <th>$2$</th>\n      <th>$3$</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>$P_{1}$</th>\n      <td>2.0</td>\n      <td>-1.0</td>\n      <td>0.0</td>\n    </tr>\n    <tr>\n      <th>$P_{2}$</th>\n      <td>-1.0</td>\n      <td>2.0</td>\n      <td>-1.0</td>\n    </tr>\n    <tr>\n      <th>$P_{3}$</th>\n      <td>0.0</td>\n      <td>-1.0</td>\n      <td>1.0</td>\n    </tr>\n  </tbody>\n</table style = "display:inline">'}
+    C:\Users\claud\Anaconda3\lib\site-packages\sphinx_gallery\gen_rst.py:548: FutureWarning: elementwise comparison failed; returning scalar instead, but in the future will perform elementwise comparison
+      if last_repr == 'None':
+
+    Structural_Vector([[1.50000000e+00, 5.55111512e-17, 2.77555756e-16],
+                       [5.55111512e-17, 1.50000000e+00, 2.22044605e-16],
+                       [2.77555756e-16, 2.22044605e-16, 1.50000000e+00]])
 
 
 
@@ -92,6 +98,12 @@ a) Modal expansion of earthquake forces
 
 
 
+
+
+
+
+
+
 Floor displacement response in terms of :math:`D_n(t)`
 ------------------------------------------------------
 
@@ -102,6 +114,20 @@ Floor displacement response in terms of :math:`D_n(t)`
 
     Un = [[gamma[n]*Phi[i,n] for n in range(N)]for i in range(I)]
     Un
+
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    [[0.6220084679281462, 0.3333333333333332, 0.044658198738520595], [1.077350269189626, -2.533725810203381e-17, -0.077350269189626], [1.2440169358562922, -0.33333333333333326, 0.08931639747704123]]
 
 
 
@@ -122,6 +148,12 @@ Story shear response in terms of :math:`A_n(t)`
 
 
 
+
+
+
+
+
+
 d) Base overturning moment in terms of :math:`A_n(t)`
 -----------------------------------------------------
 
@@ -136,6 +168,12 @@ d) Base overturning moment in terms of :math:`A_n(t)`
     assert abs(Mbn[0] -  4.64273441) <1e-7
     assert abs(Mbn[1] - -0.16666666) <1e-7
     assert abs(Mbn[2] -  0.02393225) <1e-7
+
+
+
+
+
+
 
 
 
@@ -163,9 +201,15 @@ e) Effective modal mass and heights.
     assert abs(h_eff[1] - -1.) < 1e-7
     assert abs(h_eff[2] -  2.) < 1e-7
 
+
+
+
+
+
+
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.013 seconds)
+   **Total running time of the script:** ( 0 minutes  0.158 seconds)
 
 
 .. _sphx_glr_download_auto_examples_dynamics_225_HW11_P1.py:

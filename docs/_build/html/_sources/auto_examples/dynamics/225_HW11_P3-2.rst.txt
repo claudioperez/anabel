@@ -59,16 +59,14 @@ mollit anim id est laborum.
 
 
 
-.. code-block:: pytb
 
-    Traceback (most recent call last):
-      File "C:\Users\claud\Anaconda3\lib\site-packages\sphinx_gallery\gen_rst.py", line 440, in _memory_usage
-        out = func()
-      File "C:\Users\claud\Anaconda3\lib\site-packages\sphinx_gallery\gen_rst.py", line 425, in __call__
-        exec(self.code, self.globals)
-      File "C:\Users\claud\OneDrive\400_box\Python\myPackages\ema\ema\examples\dynamics\225_HW11_P3-2.py", line 20, in <module>
-        mollit anim id est laborum.
-    ModuleNotFoundError: No module named 'ema.utilities'
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    {'text/html': '<table style = "display:inline" border="1" class="dataframe">\n  <thead>\n    <tr style="text-align: right;">\n      <th></th>\n      <th>$u_{{1}}$</th>\n      <th>$u_{{2}}$</th>\n      <th>$u_{{3}}$</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>$u_{{1}}$</th>\n      <td>0.20704</td>\n      <td>0.00000</td>\n      <td>0.00000</td>\n    </tr>\n    <tr>\n      <th>$u_{{2}}$</th>\n      <td>0.00000</td>\n      <td>0.20704</td>\n      <td>0.00000</td>\n    </tr>\n    <tr>\n      <th>$u_{{3}}$</th>\n      <td>0.00000</td>\n      <td>0.00000</td>\n      <td>0.10352</td>\n    </tr>\n  </tbody>\n</table style = "display:inline"><table style = "display:inline" border="1" class="dataframe">\n  <thead>\n    <tr style="text-align: right;">\n      <th></th>\n      <th>$1$</th>\n      <th>$2$</th>\n      <th>$3$</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>$P_{1}$</th>\n      <td>466.17798</td>\n      <td>-233.08899</td>\n      <td>0.00000</td>\n    </tr>\n    <tr>\n      <th>$P_{2}$</th>\n      <td>-233.08899</td>\n      <td>466.17798</td>\n      <td>-233.08899</td>\n    </tr>\n    <tr>\n      <th>$P_{3}$</th>\n      <td>0.00000</td>\n      <td>-233.08899</td>\n      <td>233.08899</td>\n    </tr>\n  </tbody>\n</table style = "display:inline">'}
 
 
 
@@ -107,6 +105,22 @@ officia deserunt mollit anim id est laborum.
 
 
 
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    array([[ 1.28780221e-01,  6.90131125e-02,  9.24600388e-03],
+           [ 2.23053886e-01, -1.57374274e-17, -1.60145485e-02],
+           [ 1.28780221e-01, -3.45065562e-02,  9.24600388e-03]])
+
+
+
 a) Determine :math:`A_n` and :math:`D_n`
 ----------------------------------------
 
@@ -131,6 +145,20 @@ a) Determine :math:`A_n` and :math:`D_n`
 
 
 
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    [0.923352660303864, 0.09304519274915218, 0.03763691127115581]
+
+
+
+
 Plot modes:
 
 
@@ -146,6 +174,25 @@ Plot modes:
 
     A = np.array([D[n]*omega[n]**2 for n in range(N)])
     A
+
+
+
+
+
+.. image:: /auto_examples/dynamics/images/sphx_glr_225_HW11_P3-2_001.png
+    :class: sphx-glr-single-img
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    C:\Users\claud\OneDrive\400_box\Python\myPackages\ema\examples\dynamics\225_HW11_P3-2.py:107: UserWarning: Matplotlib is currently using agg, which is a non-GUI backend, so cannot show the figure.
+  
+
+    array([278.54088513, 209.50424621, 158.13587895])
 
 
 
@@ -166,6 +213,22 @@ Floor displacements
 
 
 
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    array([[ 5.74333174e-01,  3.10150642e-02,  1.68079666e-03],
+           [ 9.94774237e-01, -7.07253019e-18, -2.91122522e-03],
+           [ 1.14866635e+00, -3.10150642e-02,  3.36159333e-03]])
+
+
+
 Story shears
 ~~~~~~~~~~~~
 
@@ -176,6 +239,22 @@ Story shears
 
     Vin = np.array([[sum(s[j,n]*A[n] for j in range(i, I)) for n in range(N)] for i in range(I)])
     Vin
+
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    array([[133.87074037,   7.22927006,   0.3917752 ],
+           [ 98.0001836 ,  -7.22927006,  -1.07034975],
+           [ 35.87055677,  -7.22927006,   1.46212495]])
 
 
 
@@ -198,6 +277,22 @@ Floor and base moments
 
 
 
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    array([[19277.38661365, -2082.02977602,    56.41562875],
+           [ 5165.36017531, -1041.01488801,   210.54599284],
+           [    0.        ,     0.        ,     0.        ]])
+
+
+
 c) Peak modal response combination
 ----------------------------------
 
@@ -213,6 +308,12 @@ For well-seperated modal frequencies, the SRSS method is employed.
 
 
 
+
+
+
+
+
+
 Floor displacements
 ~~~~~~~~~~~~~~~~~~~
 
@@ -222,6 +323,20 @@ Floor displacements
 
 
     ro(Un.T)
+
+
+
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    array([0.57517246, 0.9947785 , 1.14908991])
 
 
 
@@ -237,6 +352,20 @@ Story shears
 
 
 
+
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    array([134.06636775,  98.27229508,  36.62099122])
+
+
+
 Floor and base overturning moments
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -249,9 +378,23 @@ Floor and base overturning moments
 
     ro(M_floor)
 
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    array([19957.41918167,  2327.78005518,   217.97325126])
+
+
+
+
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.007 seconds)
+   **Total running time of the script:** ( 0 minutes  49.774 seconds)
 
 
 .. _sphx_glr_download_auto_examples_dynamics_225_HW11_P3-2.py:

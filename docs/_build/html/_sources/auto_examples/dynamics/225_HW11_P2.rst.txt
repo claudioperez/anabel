@@ -57,17 +57,22 @@ Problem 2
 
 
 
-.. code-block:: pytb
+.. image:: /auto_examples/dynamics/images/sphx_glr_225_HW11_P2_001.png
+    :class: sphx-glr-single-img
 
-    Traceback (most recent call last):
-      File "C:\Users\claud\Anaconda3\lib\site-packages\sphinx_gallery\gen_rst.py", line 440, in _memory_usage
-        out = func()
-      File "C:\Users\claud\Anaconda3\lib\site-packages\sphinx_gallery\gen_rst.py", line 425, in __call__
-        exec(self.code, self.globals)
-      File "C:\Users\claud\OneDrive\400_box\Python\myPackages\ema\ema\examples\dynamics\225_HW11_P2.py", line 15, in <module>
-        import matplotlib.pyplot as plt
-    ModuleNotFoundError: No module named 'ema.utilities'
 
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+    {'text/html': '<table style = "display:inline" border="1" class="dataframe">\n  <thead>\n    <tr style="text-align: right;">\n      <th></th>\n      <th>$u_{{1}}$</th>\n      <th>$u_{{2}}$</th>\n      <th>$u_{{3}}$</th>\n      <th>$u_{{4}}$</th>\n      <th>$u_{{5}}$</th>\n      <th>$u_{{6}}$</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>$u_{{1}}$</th>\n      <td>3.0</td>\n      <td>0.0</td>\n      <td>0.0</td>\n      <td>0.0</td>\n      <td>0.0</td>\n      <td>0.0</td>\n    </tr>\n    <tr>\n      <th>$u_{{2}}$</th>\n      <td>0.0</td>\n      <td>1.0</td>\n      <td>0.0</td>\n      <td>0.0</td>\n      <td>0.0</td>\n      <td>0.0</td>\n    </tr>\n    <tr>\n      <th>$u_{{3}}$</th>\n      <td>0.0</td>\n      <td>0.0</td>\n      <td>0.0</td>\n      <td>0.0</td>\n      <td>0.0</td>\n      <td>0.0</td>\n    </tr>\n    <tr>\n      <th>$u_{{4}}$</th>\n      <td>0.0</td>\n      <td>0.0</td>\n      <td>0.0</td>\n      <td>0.0</td>\n      <td>0.0</td>\n      <td>0.0</td>\n    </tr>\n    <tr>\n      <th>$u_{{5}}$</th>\n      <td>0.0</td>\n      <td>0.0</td>\n      <td>0.0</td>\n      <td>0.0</td>\n      <td>0.0</td>\n      <td>0.0</td>\n    </tr>\n    <tr>\n      <th>$u_{{6}}$</th>\n      <td>0.0</td>\n      <td>0.0</td>\n      <td>0.0</td>\n      <td>0.0</td>\n      <td>0.0</td>\n      <td>0.0</td>\n    </tr>\n  </tbody>\n</table style = "display:inline"><table style = "display:inline" border="1" class="dataframe">\n  <thead>\n    <tr style="text-align: right;">\n      <th></th>\n      <th>$1$</th>\n      <th>$2$</th>\n      <th>$3$</th>\n      <th>$4$</th>\n      <th>$5$</th>\n      <th>$6$</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>$P_{1}$</th>\n      <td>8334.33333</td>\n      <td>0.00000</td>\n      <td>0.50000</td>\n      <td>-8333.33333</td>\n      <td>0.0</td>\n      <td>0.00000</td>\n    </tr>\n    <tr>\n      <th>$P_{2}$</th>\n      <td>0.00000</td>\n      <td>8334.33333</td>\n      <td>0.50000</td>\n      <td>0.00000</td>\n      <td>-1.0</td>\n      <td>0.50000</td>\n    </tr>\n    <tr>\n      <th>$P_{3}$</th>\n      <td>0.50000</td>\n      <td>0.50000</td>\n      <td>0.66667</td>\n      <td>0.00000</td>\n      <td>-0.5</td>\n      <td>0.16667</td>\n    </tr>\n    <tr>\n      <th>$P_{4}$</th>\n      <td>-8333.33333</td>\n      <td>0.00000</td>\n      <td>0.00000</td>\n      <td>8333.33333</td>\n      <td>0.0</td>\n      <td>0.00000</td>\n    </tr>\n    <tr>\n      <th>$P_{5}$</th>\n      <td>0.00000</td>\n      <td>-1.00000</td>\n      <td>-0.50000</td>\n      <td>0.00000</td>\n      <td>1.0</td>\n      <td>-0.50000</td>\n    </tr>\n    <tr>\n      <th>$P_{6}$</th>\n      <td>0.00000</td>\n      <td>0.50000</td>\n      <td>0.16667</td>\n      <td>0.00000</td>\n      <td>-0.5</td>\n      <td>0.33333</td>\n    </tr>\n  </tbody>\n</table style = "display:inline">'}
+    C:\Users\claud\Anaconda3\lib\site-packages\sphinx_gallery\gen_rst.py:548: FutureWarning: elementwise comparison failed; returning scalar instead, but in the future will perform elementwise comparison
+      if last_repr == 'None':
+
+    Structural_Vector([[ 1.65651710e+00, -1.11022302e-16],
+                       [ 0.00000000e+00,  1.37050677e+00]])
 
 
 
@@ -95,9 +100,23 @@ a) Modal expansion of earthquake forces
     sn = [gamma[n]*(m@Phi[:,n]) for n in range(N)]
     sn
 
+
+
+.. rst-class:: sphx-glr-script-out
+
+ Out:
+
+ .. code-block:: none
+
+
+    [Structural_Vector([0.85042189, 0.40551435]), Structural_Vector([-0.85042189,  0.59448565])]
+
+
+
+
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.019 seconds)
+   **Total running time of the script:** ( 0 minutes  2.096 seconds)
 
 
 .. _sphx_glr_download_auto_examples_dynamics_225_HW11_P2.py:

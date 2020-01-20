@@ -59,19 +59,87 @@ Upper Bound Theorem 2
 
 
 
-.. code-block:: pytb
-
-    Traceback (most recent call last):
-      File "C:\Users\claud\Anaconda3\lib\site-packages\sphinx_gallery\gen_rst.py", line 440, in _memory_usage
-        out = func()
-      File "C:\Users\claud\Anaconda3\lib\site-packages\sphinx_gallery\gen_rst.py", line 425, in __call__
-        exec(self.code, self.globals)
-      File "C:\Users\claud\OneDrive\400_box\Python\myPackages\ema\ema\examples\plasticanalysis\220_HW13_P2.py", line 12, in <module>
-        # %config InlineBackend.figure_format = 'svg' # used to make plots look nicerbb
-    AttributeError: module 'ema' has no attribute 'Model'
+.. image:: /auto_examples/plasticanalysis/images/sphx_glr_220_HW13_P2_001.png
+    :class: sphx-glr-single-img
 
 
 
+.. only:: builder_html
+
+    .. raw:: html
+
+        <table border="1" class="dataframe">
+          <thead>
+            <tr style="text-align: right;">
+              <th></th>
+              <th>$1$</th>
+              <th>$2$</th>
+              <th>$3$</th>
+              <th>$4$</th>
+              <th>$5$</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th>$a_1$</th>
+              <td>1.0</td>
+              <td>0.00000</td>
+              <td>0.0</td>
+              <td>0.0</td>
+              <td>0.0</td>
+            </tr>
+            <tr>
+              <th>$a_2$</th>
+              <td>0.0</td>
+              <td>-0.16667</td>
+              <td>0.0</td>
+              <td>0.0</td>
+              <td>0.0</td>
+            </tr>
+            <tr>
+              <th>$a_3$</th>
+              <td>0.0</td>
+              <td>-0.16667</td>
+              <td>1.0</td>
+              <td>0.0</td>
+              <td>0.0</td>
+            </tr>
+            <tr>
+              <th>$b_1$</th>
+              <td>-1.0</td>
+              <td>-0.00000</td>
+              <td>0.0</td>
+              <td>1.0</td>
+              <td>0.0</td>
+            </tr>
+            <tr>
+              <th>$b_2$</th>
+              <td>-0.0</td>
+              <td>0.16667</td>
+              <td>1.0</td>
+              <td>0.0</td>
+              <td>0.0</td>
+            </tr>
+            <tr>
+              <th>$b_3$</th>
+              <td>-0.0</td>
+              <td>0.16667</td>
+              <td>0.0</td>
+              <td>0.0</td>
+              <td>1.0</td>
+            </tr>
+            <tr>
+              <th>$c_1$</th>
+              <td>0.6</td>
+              <td>-0.80000</td>
+              <td>0.0</td>
+              <td>0.0</td>
+              <td>0.0</td>
+            </tr>
+          </tbody>
+        </table>
+        <br />
+        <br />
 
 Vertical mechanism
 ~~~~~~~~~~~~~~~~~~
@@ -103,9 +171,26 @@ Vertical mechanism
 
 
 
+
+.. code-block:: pytb
+
+    Traceback (most recent call last):
+      File "C:\Users\claud\Anaconda3\lib\site-packages\sphinx_gallery\gen_rst.py", line 440, in _memory_usage
+        out = func()
+      File "C:\Users\claud\Anaconda3\lib\site-packages\sphinx_gallery\gen_rst.py", line 425, in __call__
+        exec(self.code, self.globals)
+      File "C:\Users\claud\OneDrive\400_box\Python\myPackages\ema\examples\plasticanalysis\220_HW13_P2.py", line 62, in <module>
+      File "C:\Users\claud\OneDrive\400_box\Python\myPackages\ema\matrices.py", line 1754, in P_vector
+        P = np.zeros(model.nt)
+    AttributeError: 'Static_matrix' object has no attribute 'nt'
+
+
+
+
+
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.008 seconds)
+   **Total running time of the script:** ( 0 minutes  0.198 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plasticanalysis_220_HW13_P2.py:

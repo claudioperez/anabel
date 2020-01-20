@@ -21,9 +21,11 @@ Lower Bound - 2r
         out = func()
       File "C:\Users\claud\Anaconda3\lib\site-packages\sphinx_gallery\gen_rst.py", line 425, in __call__
         exec(self.code, self.globals)
-      File "C:\Users\claud\OneDrive\400_box\Python\myPackages\ema\ema\examples\plasticanalysis\220_HW12_P2r.py", line 16, in <module>
-        import matplotlib.pyplot as plt
-    AttributeError: module 'ema' has no attribute 'rModel'
+      File "C:\Users\claud\OneDrive\400_box\Python\myPackages\ema\examples\plasticanalysis\220_HW12_P2r.py", line 66, in <module>
+        em.plot_structure(mdl, ax)
+      File "C:\Users\claud\OneDrive\400_box\Python\myPackages\ema\matrices.py", line 1754, in P_vector
+        P = np.zeros(model.nt)
+    AttributeError: 'Static_matrix' object has no attribute 'nt'
 
 
 
@@ -112,7 +114,7 @@ Lower Bound - 2r
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.009 seconds)
+   **Total running time of the script:** ( 0 minutes  0.138 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plasticanalysis_220_HW12_P2r.py:

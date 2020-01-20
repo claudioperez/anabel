@@ -14,7 +14,7 @@ __author__ = None
 
 
 import ema.analysis
-import ema.sections
+
 from ema.objects import *
 # from ema.matvecs import *
 from ema.matrices import *
