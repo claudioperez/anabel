@@ -1,0 +1,261 @@
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <link rel="icon" href="/umbrella/static/emtec-3.jpg">
+
+        <title>EMA: A High Performance Analysis Framework</title>
+
+        <!-- Bootstrap core CSS -->
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
+
+         <link rel="stylesheet" href="/umbrella/static/prism-duotone-light.css">
+         <!-- <link rel="stylesheet" href="/umbrella/build\html\_static\bootstrap-3.3.7\css\bootstrap-theme.css"> -->
+
+
+        <!-- Custom styles for this template -->
+        <!-- <link href="/umbrella/static/main-page.css" rel="stylesheet"> -->
+        <link href="\umbrella\umbrella\build\html\_static\bootstrap-3.3.7\css\bootstrap-theme.css" rel="stylesheet">
+
+
+      </head>
+      <body>
+
+        <header>
+
+        <nav class="navbar navbar-expand-lg">
+          <div class="navbar-brand">
+            <img src="/umbrella/static/emtec-2.jpg" style="height: 2rem;" alt="Umbrella logo">
+          </div>
+          <div class="navbar-light bg-light">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+          </div>
+          <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+              <!-- <li class="navbar-item"><a class="nav-link" href="/umbrella/build/user/5minguide.html">Learn Umbrella in 5 minutes</a></li> -->
+
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Documentation
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                  <a class="dropdown-item" href="/umbrella/build/html/index.html">Overview</a>
+                  <a class="dropdown-item" href="/umbrella/build/user/index.html">User Manual</a>
+                  <a class="dropdown-item" href="/umbrella/build/reference/index.html">Reference Manual</a>
+                  <a class="dropdown-item" href="/umbrella/build/cuda/index.html">NVIDIA CUDA GPU Programming</a>
+                  <a class="dropdown-item" href="/umbrella/build/roc/index.html">AMD ROCm GPU Programming</a>
+                  <a class="dropdown-item" href="/umbrella/build/developer/index.html">Developer Manual</a>
+                  <a class="dropdown-item" href="/umbrella/build/release-notes.html">Release Notes</a>
+                </div>
+              </li>
+
+              <li class="navbar-item"><a class="nav-link" href="/umbrella/build/html/index.html">Install</a></li>
+              <li class="navbar-item"><a class="nav-link" href="/umbrella/build/html/auto_examples/index.html">Examples</a></li>
+              <li class="navbar-item"><a class="nav-link" href="/umbrella/build/user/talks.html">Talks/Tutorials</a></li>
+
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Community
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink2">
+                  <a class="dropdown-item" href="https://github.com/claudioperezii/umbrella">Github</a>
+                  <a class="dropdown-item" href="https://pypi.org/project/">PyPI</a>
+                  <!-- <a class="dropdown-item" href="https://gitter.im/Umbrella/Umbrella">Gitter Chat</a> -->
+                  <!-- <a class="dropdown-item" href="https://groups.google.com/a/continuum.io/forum/#!forum/Umbrella-users">Umbrella Mailing List</a> -->
+                </div>
+              </li>
+
+            </ul>
+          </div>
+        </nav>
+
+        <div class="hero position-relative overflow-hidden p-3 text-center text-dark">
+          <div class="col-md-5 p-lg-1 mx-auto my-5">
+            <img src="/umbrella/static/Umbrella-blue-horizontal-rgb.svg" style="max-width: 30rem;" alt="Umbrella logo">
+              <p class="lead font-weight-normal">
+            Umbrella makes Python code fast
+          </p>
+              <p class="lead ">
+            Umbrella is an open source structural analysis framework.
+          </p>
+            <a class="btn outline-Umbrella btn-lg" href="/umbrella/build/user/5minguide.html">Learn More</a>
+            <a class="btn filled-Umbrella btn-lg" href="https://mybinder.org/v2/gh/Umbrella/Umbrella-examples/master?filepath=notebooks" role="button">Try Umbrella »</a>
+          </div>
+          <div class="product-device box-shadow d-none d-md-block"></div>
+          <div class="product-device product-device-2 box-shadow d-none d-md-block"></div>
+        </div>
+
+        </header>
+        <main role="main">
+
+          <!-- Wrap the rest of the page in another container to center all the content. -->
+          <div class="container marketing p-md-5">
+
+            <div class="row featurette">
+              <div class="col-md-7">
+                <h2 class="featurette-heading">Accelerate Python Functions</h2>
+                <p class="lead">Umbrella translates Python functions to optimized machine code at runtime using the
+                  industry-standard <a href="https://llvm.org/">LLVM</a> compiler library. Umbrella-compiled numerical algorithms in Python can approach the speeds of C or FORTRAN.</p>
+                <p class="lead">You don't need to replace the Python interpreter, run a separate compilation step, or even
+                  have a C/C++ compiler installed. Just apply one of the Umbrella decorators to your Python function, and Umbrella does the rest.
+                </p>
+                <a class="btn btn-outline-secondary" href="/umbrella/build/html/theory/index.html" role="button">Learn More »</a>
+                <a class="btn btn-secondary" href="https://mybinder.org/v2/gh/Umbrella/Umbrella-examples/master?filepath=notebooks%2Fbasics.ipynb" role="button">Try Now »</a>
+              </div>
+
+              <div class="col-md-5 code-block">
+                <pre class=" language-python"><code class=" language-python"><span class="token keyword">from</span> Umbrella <span class="token keyword">import</span> jit
+    <span class="token keyword">import</span> random
+
+    @jit<span class="token punctuation">(</span>nopython<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
+    <span class="token keyword">def</span> <span class="token function">monte_carlo_pi</span><span class="token punctuation">(</span>nsamples<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        acc <span class="token operator">=</span> <span class="token number">0</span>
+        <span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span>nsamples<span class="token punctuation">)</span><span class="token punctuation">:</span>
+            x <span class="token operator">=</span> random<span class="token punctuation">.</span>random<span class="token punctuation">(</span><span class="token punctuation">)</span>
+            y <span class="token operator">=</span> random<span class="token punctuation">.</span>random<span class="token punctuation">(</span><span class="token punctuation">)</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>x <span class="token operator">**</span> <span class="token number">2</span> <span class="token operator">+</span> y <span class="token operator">**</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token number">1.0</span><span class="token punctuation">:</span>
+                acc <span class="token operator">+=</span> <span class="token number">1</span>
+        <span class="token keyword">return</span> <span class="token number">4.0</span> <span class="token operator">*</span> acc <span class="token operator">/</span> nsamples</code></pre>
+              </div>
+            </div>
+
+            <hr class="featurette-divider">
+
+            <div class="row featurette">
+              <div class="col-md-7">
+                <h2 class="featurette-heading">Built for Scientific Computing</h2>
+                <p class="lead">Umbrella is designed to be used with NumPy arrays and functions.  Umbrella generates specialized code for
+                  different array data types and layouts to optimize performance.  Special decorators can create <a href="https://docs.scipy.org/doc/numpy/reference/ufuncs.html">universal functions</a> that broadcast over NumPy arrays just like NumPy functions do.</p>
+                <p class="lead">Umbrella also works great with Jupyter notebooks for interactive computing, and with distributed execution frameworks, like Dask and Spark.</p>
+                <a class="btn btn-outline-secondary" href="/umbrella/build/reference/numpysupported.html" role="button">Learn More »</a>
+                <a class="btn btn-secondary" href="https://mybinder.org/v2/gh/Umbrella/Umbrella-examples/master?filepath=notebooks%2Fnumpy.ipynb" role="button">Try Now »</a>
+              </div>
+
+              <div class="col-md-5 code-block">
+                <pre class=" language-python"><code class=" language-python">@Umbrella<span class="token punctuation">.</span>jit<span class="token punctuation">(</span>nopython<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span> parallel<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
+    <span class="token keyword">def</span> <span class="token function">logistic_regression</span><span class="token punctuation">(</span>Y<span class="token punctuation">,</span> X<span class="token punctuation">,</span> w<span class="token punctuation">,</span> iterations<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span>iterations<span class="token punctuation">)</span><span class="token punctuation">:</span>
+            w <span class="token operator">-=</span> np<span class="token punctuation">.</span>dot<span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token number">1.0</span> <span class="token operator">/</span>
+                  <span class="token punctuation">(</span><span class="token number">1.0</span> <span class="token operator">+</span> np<span class="token punctuation">.</span>exp<span class="token punctuation">(</span><span class="token operator">-</span>Y <span class="token operator">*</span> np<span class="token punctuation">.</span>dot<span class="token punctuation">(</span>X<span class="token punctuation">,</span> w<span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+                  <span class="token operator">-</span> <span class="token number">1.0</span><span class="token punctuation">)</span> <span class="token operator">*</span> Y<span class="token punctuation">)</span><span class="token punctuation">,</span> X<span class="token punctuation">)</span>
+        <span class="token keyword">return</span> w</code></pre>
+              </div>
+            </div>
+
+            <hr class="featurette-divider">
+
+            <div class="row featurette">
+            <h2 class="featurette-heading">Parallelize Your Algorithms</h2>
+            <p>Umbrella offers a range of options for parallelizing your code for CPUs and GPUs, often with only minor code changes.</p>
+            <div class="row">
+
+              <div class="col-lg-4">
+                <h2 class="mt-3">Simplified Threading</h2>
+                <pre class=" language-python"><code class=" language-python">@jit<span class="token punctuation">(</span>nopython<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">,</span> parallel<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
+    <span class="token keyword">def</span> <span class="token function">simulator</span><span class="token punctuation">(</span>out<span class="token punctuation">)</span><span class="token punctuation">:</span>
+        <span class="token comment" spellcheck="true"># iterate loop in parallel</span>
+        <span class="token keyword">for</span> i <span class="token keyword">in</span> prange<span class="token punctuation">(</span>out<span class="token punctuation">.</span>shape<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">:</span>
+            out<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">=</span> run_sim<span class="token punctuation">(</span><span class="token punctuation">)</span></code></pre>
+                <p>Umbrella can automatically execute NumPy array expressions on multiple CPU cores and makes it easy to write parallel loops.</p>
+                <p>
+                  <a class="btn btn-outline-secondary" href="https://claudioperezii.github.io/umbrella/" role="button">Learn More »</a>
+                  <a class="btn btn-secondary" href="https://mybinder.org/v2/gh/Umbrella/Umbrella-examples/master?filepath=notebooks%2Fthreads.ipynb" role="button">Try Now »</a>
+                </p>
+              </div><!-- /.col-lg-4 -->
+              <div class="col-lg-4">
+                <h2 class="mt-3">SIMD Vectorization</h2>
+                <pre class=" language-nasm"><code class=" language-nasm">LBB0_8:
+        vmovups	(%rax,%rdx,4), %ymm0
+        vmovups	(%rcx,%rdx,4), %ymm1
+        vsubps	%ymm1, %ymm0, %ymm2
+        vaddps	%ymm2, %ymm2, %ymm2</code></pre>
+                <p>Umbrella can automatically translate some loops into vector instructions for 2-4x speed improvements.  Umbrella adapts to your CPU capabilities, whether your CPU supports SSE, AVX, or AVX-512.</p>
+                <p>
+                  <a class="btn btn-outline-secondary" href="/umbrella/build/user/performance-tips.html" role="button">Learn More »</a>
+                  <a class="btn btn-secondary" href="https://mybinder.org/v2/gh/Umbrella/Umbrella-examples/master?filepath=notebooks%2Fsimd.ipynb" role="button">Try Now »</a>
+                </p>
+              </div><!-- /.col-lg-4 -->
+              <div class="col-lg-4">
+                <h2 class="mt-3">GPU Acceleration</h2>
+                <img src="/umbrella/static/emtec-3.jpg" class="top-image" alt="NVIDIA CUDA logo">
+                <img src="/umbrella/static/emtec-3.jpg" class="top-image" alt="AMD ROCm logo">
+                <p>With support for both NVIDIA's CUDA and AMD's ROCm drivers, Umbrella lets you write parallel GPU algorithms entirely from Python.</p>
+                <p>
+                  <a class="btn btn-outline-secondary" href="https://claudioperezii.github.io/umbrella/" role="button">Umbrella CUDA »</a>
+                  <a class="btn btn-outline-secondary" href="https://claudioperezii.github.io/umbrella/" role="button">Umbrella ROCm »</a>
+                </p>
+              </div><!-- /.col-lg-4 -->
+            </div><!-- /.row -->
+            </div>
+
+            <hr class="featurette-divider">
+
+            <div class="row featurette">
+              <div class="col-md-12">
+                <h2 class="featurette-heading">Portable Compilation</h2>
+                <p class="lead">Ship high performance Python applications without the headache of binary compilation and packaging.  Your source code remains pure Python while Umbrella handles the compilation at runtime.  We test Umbrella continuously in more than 200 different platform configurations.</p>
+                <p class="lead">Umbrella supports Intel and AMD x86, POWER8/9, and ARM CPUs, NVIDIA and  AMD GPUs, Python 2.7 and 3.4-3.7, as well as Windows/macOS/Linux.  Precompiled Umbrella binaries for most systems are available as conda packages and pip-installable wheels.</p>
+                <a class="btn btn-outline-secondary" href="/umbrella/build/user/installing.html" role="button">Learn More »</a>
+              </div>
+            </div>
+          </div>
+
+          <hr class="featurette-divider">
+
+          <section id="supporters">
+
+            <div class="container supporters">
+              <h2>Acknowledgements</h2>
+              <p>Umbrella development is made possible through the current and/or past support of a number of organizations:</p><p>
+              </p><div class="row">
+                <div class="col supporter">
+                  <a href="https://anaconda.com"><img src="/umbrella/static/emtec-3.jpg" alt="Anaconda logo"></a>
+                </div>
+                <div class="col supporter">
+                  <a href="https://www.darpa.mil"><img src="/umbrella/static/emtec-3.jpg" alt="DARPA logo"></a>
+                </div>
+                <div class="col supporter">
+                  <a href="https://www.moore.org/grant-detail?grantId=GBMF5423"><img src="/umbrella/static/emtec-3.jpg" alt="Moore foundation logo"></a>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col supporter">
+                  <a href="https://www.intel.com"><img src="/umbrella/static/emtec-3.jpg" alt="Intel logo"></a>
+                </div>
+                <div class="col supporter">
+                  <a href="https://www.nvidia.com/"><img src="/umbrella/static/emtec-3.jpg" alt="NVIDIA logo"></a>
+                </div>
+                <div class="col supporter">
+                  <a href="https://www.amd.com"><img src="/umbrella/static/emtec-3.jpg" alt="AMD logo"></a>
+                </div>
+              </div>
+            </div>
+          </section>
+
+            <!-- /END THE FEATURETTES -->
+
+          <!-- FOOTER -->
+          <footer class="container">
+            <p>© 2019 Claudio Perez</p>
+            <p><i>HTML layout adapted from the <a href="http://dask.pydata.org/">Dask</a> homepage.</i></p>
+          </footer>
+        </main>
+
+        <!-- Bootstrap core JavaScript
+          ================================================== -->
+          <!-- Placed at the end of the document so the pages load faster -->
+          <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+          <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+          <!-- Code highlighting -->
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.6.0/prism.min.js"></script>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.6.0/components/prism-python.min.js"></script>
+
+
+
+    <iframe id="zotero-progress-window-frame" src="moz-extension://529dde57-7230-4f1e-8531-d67247645be8/progressWindow/progressWindow.html" style="position: fixed; top: 15px; left: unset; right: 8px; width: 351px; max-width: 95%; height: 99px; border: medium none; z-index: 2147483647; display: none;"></iframe></body>
+</html>
