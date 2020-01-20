@@ -5,16 +5,16 @@
 
 Computation times
 =================
-**00:01.110** total execution time for **auto_examples_plasticanalysis** files:
+**00:01.275** total execution time for **auto_examples_plasticanalysis** files:
 
 +-------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plasticanalysis_121_Exam_P23.py` (``121_Exam_P23.py``) | 00:01.043 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plasticanalysis_121_Exam_P23.py` (``121_Exam_P23.py``) | 00:01.233 | 0.0 MB |
 +-------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plasticanalysis_220_HW12_P2r.py` (``220_HW12_P2r.py``) | 00:00.039 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plasticanalysis_220_HW12_P2.py` (``220_HW12_P2.py``)   | 00:00.013 | 0.0 MB |
 +-------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plasticanalysis_220_HW12_P2.py` (``220_HW12_P2.py``)   | 00:00.012 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plasticanalysis_220_HW13_P1.py` (``220_HW13_P1.py``)   | 00:00.011 | 0.0 MB |
 +-------------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_plasticanalysis_220_HW13_P1.py` (``220_HW13_P1.py``)   | 00:00.009 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_plasticanalysis_220_HW12_P2r.py` (``220_HW12_P2r.py``) | 00:00.009 | 0.0 MB |
 +-------------------------------------------------------------------------------------+-----------+--------+
 | :ref:`sphx_glr_auto_examples_plasticanalysis_220_HW13_P2.py` (``220_HW13_P2.py``)   | 00:00.008 | 0.0 MB |
 +-------------------------------------------------------------------------------------+-----------+--------+
