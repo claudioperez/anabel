@@ -1,0 +1,282 @@
+.. note::
+    :class: sphx-glr-download-link-note
+
+    Click :ref:`here <sphx_glr_download_auto_examples_dynamics_225_HW11_P3-2.py>` to download the full example code
+.. rst-class:: sphx-glr-example-title
+
+.. _sphx_glr_auto_examples_dynamics_225_HW11_P3-2.py:
+
+
+MDF Earthquake Response - 3
+===========================
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
+veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
+velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+occaecat cupidatat non proident, sunt in culpa qui officia deserunt
+mollit anim id est laborum.
+
+
+.. code-block:: default
+
+
+    import ema as em
+    import matplotlib.pyplot as plt
+    import numpy as np
+    # %config InlineBackend.figure_format = 'svg' # used to make plots look nicer
+    from ema_examples.dynamics import P09_07
+    from ema.utilities.ipyutils import disp_sbs 
+
+    ft = 12
+    h = 12*ft
+    m = 80/386.4
+    E = 29000
+    I = 1000
+    EI = E*I
+    RHA = False
+
+    N = I = 3
+    mdl = P09_07(h = h, m = m, EI = EI)
+    # fig, ax = plt.subplots()
+    # em.plot_structure(mdl, ax)
+
+    m, k = em.Mass_matrix(mdl), em.K_matrix(mdl)
+    k, m = em.analysis.StaticCondensation(k, m)
+    disp_sbs(m.df, k.df)
+
+    freq2, Phi = em.analysis.ModalAnalysis(mdl, norm='last')
+    Phi
+
+    omega = np.array([np.sqrt(np.real(freq)) for freq in freq2])
+    omega
+
+    M = Phi.T@m@Phi
+    K = Phi.T@k@Phi
+
+
+
+
+
+.. code-block:: pytb
+
+    Traceback (most recent call last):
+      File "C:\Users\claud\Anaconda3\lib\site-packages\sphinx_gallery\gen_rst.py", line 440, in _memory_usage
+        out = func()
+      File "C:\Users\claud\Anaconda3\lib\site-packages\sphinx_gallery\gen_rst.py", line 425, in __call__
+        exec(self.code, self.globals)
+      File "C:\Users\claud\OneDrive\400_box\Python\myPackages\ema\ema\examples\dynamics\225_HW11_P3-2.py", line 20, in <module>
+        mollit anim id est laborum.
+    ModuleNotFoundError: No module named 'ema.utilities'
+
+
+
+
+Modal expansion of earthquake forces
+------------------------------------
+
+Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
+ut aliquip ex ea commodo consequat. Duis aute irure dolor in
+reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+pariatur.
+
+.. math:: \mathrm{p}_{\mathrm{eff}}(t)=-\mathrm{m} \iota \ddot{u}_{g}(t)
+
+.. math:: \mathbf{m} \iota=\sum_{n=1}^{N} \mathbf{s}_{n}=\sum_{n=1}^{N} \Gamma_{n} \mathbf{m} \phi_{n}
+
+Excepteur sint occaecat cupidatat non proident, sunt in culpa qui
+officia deserunt mollit anim id est laborum.
+
+
+
+.. code-block:: default
+
+
+    I = N = 3
+    iota = np.ones(I)
+    L = np.array([sum(Phi.T[n,i]*sum(m[i,j]*iota[j] for j in range(I)) for i in range(I)) for n in range(N)])
+    L = Phi.T@m@iota
+    L
+
+    gamma = np.array([L[n]/M[n,n]  for n in range(N)])
+    gamma
+
+    s = np.array([gamma[n]*(m@Phi.T[n]) for n in range(N)]).T
+    s
+
+
+
+a) Determine :math:`A_n` and :math:`D_n`
+----------------------------------------
+
+
+
+.. code-block:: default
+
+
+    # Values read from response spectrum:
+    D = np.array([0.877, 0.10, 0.04]) # inches
+    D
+
+    # if RHA:
+    D = []
+    u = []
+    for i, w in enumerate(omega):
+        zeta = 0.05
+        t, d = em.analysis.ElcentroRHA(zeta, w)
+        D.append(max(d))
+        u.append([t,d])
+    print(D)
+
+
+
+Plot modes:
+
+
+
+.. code-block:: default
+
+
+    fig2, ax2 = plt.subplots()
+    em.plot_structure(mdl, ax2)
+    for i in range(3):
+        plt.plot(10*u[i][0],200+300*u[i][1], linewidth=0.5)
+    plt.show()
+
+    A = np.array([D[n]*omega[n]**2 for n in range(N)])
+    A
+
+
+
+b) Modal response quantities
+----------------------------
+
+
+Floor displacements
+~~~~~~~~~~~~~~~~~~~
+
+
+
+.. code-block:: default
+
+
+    Un = np.array([[gamma[n]*Phi[i,n]*D[n] for n in range(N)]for i in range(I)])
+    Un
+
+
+
+Story shears
+~~~~~~~~~~~~
+
+
+
+.. code-block:: default
+
+
+    Vin = np.array([[sum(s[j,n]*A[n] for j in range(i, I)) for n in range(N)] for i in range(I)])
+    Vin
+
+
+
+Floor and base moments
+~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+.. code-block:: default
+
+
+    M_base = np.array([sum(s[i,n]*h*(i+1)*A[n]  for i in range(I)) for n in range(N)])
+    M_base # kip-inch
+
+    H = [h*(i+1) for i in range(I)]
+    H
+
+    M_floor = np.array([[sum((H[j]-h*(i+1))*s[j,n]*A[n] for j in range(i,N)) for n in range(N)] for i in range(I)])
+    M_floor # kip-inch
+
+
+
+c) Peak modal response combination
+----------------------------------
+
+For well-seperated modal frequencies, the SRSS method is employed.
+
+
+
+.. code-block:: default
+
+
+    def ro(rno):
+        return np.sqrt(sum(rn**2 for rn in rno))
+
+
+
+Floor displacements
+~~~~~~~~~~~~~~~~~~~
+
+
+
+.. code-block:: default
+
+
+    ro(Un.T)
+
+
+
+Story shears
+~~~~~~~~~~~~
+
+
+
+.. code-block:: default
+
+
+    ro(Vin.T)
+
+
+
+Floor and base overturning moments
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+.. code-block:: default
+
+
+    ro(M_base)
+
+    ro(M_floor)
+
+.. rst-class:: sphx-glr-timing
+
+   **Total running time of the script:** ( 0 minutes  0.072 seconds)
+
+
+.. _sphx_glr_download_auto_examples_dynamics_225_HW11_P3-2.py:
+
+
+.. only :: html
+
+ .. container:: sphx-glr-footer
+    :class: sphx-glr-footer-example
+
+
+
+  .. container:: sphx-glr-download
+
+     :download:`Download Python source code: 225_HW11_P3-2.py <225_HW11_P3-2.py>`
+
+
+
+  .. container:: sphx-glr-download
+
+     :download:`Download Jupyter notebook: 225_HW11_P3-2.ipynb <225_HW11_P3-2.ipynb>`
+
+
+.. only:: html
+
+ .. rst-class:: sphx-glr-signature
+
+    `Gallery generated by Sphinx-Gallery <https://sphinx-gallery.github.io>`_
