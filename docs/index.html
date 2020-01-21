@@ -147,13 +147,11 @@
 
               <div class="col-lg-4">
                 <h2 class="mt-3">Basic Principles</h2>
-                <pre class=" language-python"><code class=" language-python">
-Kf = ema.K_matrix(Model).f 
+                <pre class=" language-python"><code class=" language-python">Kf = ema.K_matrix(Model).f 
 Pf = ema.P0_vector(Model).f
 
 Uf = Kf.inv @ Pf
-ema.plot_U(Model, Uf)
-                </code></pre>
+ema.plot_U(Model, Uf)</code></pre>
                 <p>ema can automatically execute NumPy array expressions on multiple CPU cores and makes it easy to write parallel loops.</p>
                 <p>
                   <a class="btn btn-outline-secondary" href="https://claudioperezii.github.io/ema/" role="button">Learn More »</a>
