@@ -90,6 +90,51 @@
         </header>
         <main role="main">
 
+
+          <div class="row featurette">
+          <h2 class="featurette-heading">Parallelize Your Algorithms</h2>
+          <p>ema offers a range of options for parallelizing your code for CPUs and GPUs, often with only minor code changes.</p>
+          <div class="row">
+
+            <div class="col-lg-4">
+              <h2 class="mt-3">Basic Principles</h2>
+              <pre class=" language-python"><code class=" language-python">Kf = ema.K_matrix(Model).f 
+Pf = ema.P0_vector(Model).f
+
+Uf = Kf.inv @ Pf
+ema.plot_U(Model, Uf)</code></pre>
+              <p>ema can automatically execute NumPy array expressions on multiple CPU cores and makes it easy to write parallel loops.</p>
+              <p>
+                <a class="btn btn-outline-secondary" href="https://claudioperezii.github.io/ema/" role="button">Learn More »</a>
+                <a class="btn btn-secondary" href="https://mybinder.org/v2/gh/ema/ema-examples/master?filepath=notebooks%2Fthreads.ipynb" role="button">Try Now »</a>
+              </p>
+            </div><!-- /.col-lg-4 -->
+            <div class="col-lg-4">
+              <h2 class="mt-3">Dynamic Analysis</h2>
+              <pre class=" language-nasm"><code class=" language-nasm">LBB0_8:
+      vmovups	(%rax,%rdx,4), %ymm0
+      vmovups	(%rcx,%rdx,4), %ymm1
+      vsubps	%ymm1, %ymm0, %ymm2
+      vaddps	%ymm2, %ymm2, %ymm2</code></pre>
+              <p>ema can automatically translate some loops into vector instructions for 2-4x speed improvements.  ema adapts to your CPU capabilities, whether your CPU supports SSE, AVX, or AVX-512.</p>
+              <p>
+                <a class="btn btn-outline-secondary" href="/ema/_build/user/performance-tips.html" role="button">Learn More »</a>
+                <a class="btn btn-secondary" href="https://mybinder.org/v2/gh/ema/ema-examples/master?filepath=notebooks%2Fsimd.ipynb" role="button">Try Now »</a>
+              </p>
+            </div><!-- /.col-lg-4 -->
+            <div class="col-lg-4">
+              <h2 class="mt-3">Event-to-Event</h2>
+              <img src="/ema/_static/emtec.jpg" class="top-image" alt="x logo">
+              <img src="/ema/_static/emtec.jpg" class="top-image" alt="x logo">
+              <p>With support for both NVIDIA's CUDA and AMD's ROCm drivers, ema lets you write parallel GPU algorithms entirely from Python.</p>
+              <p>
+                <a class="btn btn-outline-secondary" href="https://claudioperezii.github.io/ema/" role="button">ema CUDA »</a>
+                <a class="btn btn-outline-secondary" href="https://claudioperezii.github.io/ema/" role="button">ema ROCm »</a>
+              </p>
+            </div><!-- /.col-lg-4 -->
+          </div><!-- /.row -->
+          </div>
+
           <!-- Wrap the rest of the page in another container to center all the content. -->
           <div class="container marketing p-md-5">
 
@@ -112,7 +157,7 @@ model = em.Model
               </div>
             </div>
 
-            <hr class="featurette-divider">
+            <!-- <hr class="featurette-divider">
 
             <div class="row featurette">
               <div class="col-md-7">
@@ -133,7 +178,7 @@ model = em.Model
                   <span class="token operator">-</span> <span class="token number">1.0</span><span class="token punctuation">)</span> <span class="token operator">*</span> Y<span class="token punctuation">)</span><span class="token punctuation">,</span> X<span class="token punctuation">)</span>
         <span class="token keyword">return</span> w</code></pre>
               </div>
-            </div>
+            </div> -->
 
             <hr class="featurette-divider">
 
@@ -156,7 +201,7 @@ ema.plot_U(Model, Uf)</code></pre>
                 </p>
               </div><!-- /.col-lg-4 -->
               <div class="col-lg-4">
-                <h2 class="mt-3">Modal Analysis</h2>
+                <h2 class="mt-3">Dynamic Analysis</h2>
                 <pre class=" language-nasm"><code class=" language-nasm">LBB0_8:
         vmovups	(%rax,%rdx,4), %ymm0
         vmovups	(%rcx,%rdx,4), %ymm1
@@ -169,7 +214,7 @@ ema.plot_U(Model, Uf)</code></pre>
                 </p>
               </div><!-- /.col-lg-4 -->
               <div class="col-lg-4">
-                <h2 class="mt-3">Event-to-Event Procedures</h2>
+                <h2 class="mt-3">Event-to-Event</h2>
                 <img src="/ema/_static/emtec.jpg" class="top-image" alt="x logo">
                 <img src="/ema/_static/emtec.jpg" class="top-image" alt="x logo">
                 <p>With support for both NVIDIA's CUDA and AMD's ROCm drivers, ema lets you write parallel GPU algorithms entirely from Python.</p>
