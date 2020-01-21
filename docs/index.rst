@@ -7,7 +7,7 @@ Welcome to EMA's documentation.
 ===============================
 
 
-.. attention::
+.. warning::
    THIS SOFTWARE IS IN A VERY EARLY STAGE OF DEVELOPMENT.
 
    THIS SOFTWARE IS PROVIDED ''AS IS'' AND ANY
