@@ -22,9 +22,10 @@ Welcome to EMA's documentation.
    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Contents:
    
+   submodules
    auto_examples/index.rst
    theory/index.rst
    Basics.rst
