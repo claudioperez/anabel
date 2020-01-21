@@ -107,18 +107,11 @@
               </div>
 
               <div class="col-md-5 code-block">
-                <pre class=" language-python"><code class=" language-python"><span class="token keyword">from</span> ema <span class="token keyword">import</span> jit
-    <span class="token keyword">import</span> random
-
-    @jit<span class="token punctuation">(</span>nopython<span class="token operator">=</span><span class="token boolean">True</span><span class="token punctuation">)</span>
-    <span class="token keyword">def</span> <span class="token function">monte_carlo_pi</span><span class="token punctuation">(</span>nsamples<span class="token punctuation">)</span><span class="token punctuation">:</span>
-        acc <span class="token operator">=</span> <span class="token number">0</span>
-        <span class="token keyword">for</span> i <span class="token keyword">in</span> range<span class="token punctuation">(</span>nsamples<span class="token punctuation">)</span><span class="token punctuation">:</span>
-            x <span class="token operator">=</span> random<span class="token punctuation">.</span>random<span class="token punctuation">(</span><span class="token punctuation">)</span>
-            y <span class="token operator">=</span> random<span class="token punctuation">.</span>random<span class="token punctuation">(</span><span class="token punctuation">)</span>
-            <span class="token keyword">if</span> <span class="token punctuation">(</span>x <span class="token operator">**</span> <span class="token number">2</span> <span class="token operator">+</span> y <span class="token operator">**</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token operator">&lt;</span> <span class="token number">1.0</span><span class="token punctuation">:</span>
-                acc <span class="token operator">+=</span> <span class="token number">1</span>
-        <span class="token keyword">return</span> <span class="token number">4.0</span> <span class="token operator">*</span> acc <span class="token operator">/</span> nsamples</code></pre>
+                <pre class=" language-python"><code class=" language-python">
+                  import ema as em
+                  
+                  model = em.Model
+                </code></pre>
               </div>
             </div>
 
