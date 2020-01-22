@@ -1986,35 +1986,6 @@ def PlasticAnalysis_wLBT(model, verbose=False):
 
     return lambdac, Q
 
-def GenSolve(mdl):
-    K = K_matrix(mdl)
-    B = B_matrix(mdl)
-    P = P_vector(B)
-    Q = Q_vector(B)*np.nan
-    A = A_matrix(mdl)
-    V = V_vector(A)*np.nan
-
-    # U = U0_vector(mdl)
-    Uf = np.ones(mdl.nf) * np.nan
-    U = np.zeros(mdl.nt)
-    U[0:mdl.nf] = Uf
-
-    Uc = P[np.where(~np.isnan(P) &  np.isnan(U))]
-    Vc = Q[np.where(~np.isnan(Q) &  np.isnan(V))]
-    Pc = U[np.where(~np.isnan(U) &  np.isnan(P))]
-    Qc = V[np.where(~np.isnan(V) &  np.isnan(Q))]
-
-
-    Ux = P[np.where( np.isnan(P) & ~np.isnan(U))]
-    Vx = Q[np.where( np.isnan(Q) & ~np.isnan(V))]
-    Px = U[np.where( np.isnan(U) & ~np.isnan(P))]
-    Qx = V[np.where( np.isnan(V) & ~np.isnan(Q))]
-
-    x = np.concatenate((Ux,Vx,Px,Qx))
-    c = np.concatenate((Uc,Vc,Pc,Qc))
-    return x, c
- 
-
     
 
 
