@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>IV Linear Elasticity &#8212; EMA  documentation</title>
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="V Variational Formulation" href="05_VariationalFormulation.html" />
+    <link rel="prev" title="III Balance Laws" href="03_BalanceLaws.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html"><span><img src="../../_static/emtec-1.jpg"></span>
+          EMA</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html#dynamics">Dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html#plastic-analysis">Plastic analysis</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Theory reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">ema</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">IV Linear Elasticity</a><ul>
+<li><a class="reference internal" href="#compatibility">Compatibility:</a></li>
+<li><a class="reference internal" href="#linear-constitutive-equations">7 Linear Constitutive Equations</a><ul>
+<li><a class="reference internal" href="#free-energy-elasticity">7.1 Free Energy: Elasticity</a></li>
+<li><a class="reference internal" href="#isotropic-relations">7.5 Isotropic Relations</a></li>
+<li><a class="reference internal" href="#id1">7.5.4</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#elastostatics">8 Elastostatics</a><ul>
+<li><a class="reference internal" href="#displacement-formulation-navier">Displacement Formulation (Navier)</a><ul>
+<li><a class="reference internal" href="#isotropic">Isotropic</a><ul>
+<li><a class="reference internal" href="#boundary">Boundary:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#stress-formulation-beltrami-mitchell">Stress Formulation (Beltrami-Mitchell)</a><ul>
+<li><a class="reference internal" href="#id2">Compatibility:</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#plane-strain">8.9.1 Plane Strain</a></li>
+<li><a class="reference internal" href="#plane-stress">Plane Stress</a></li>
+<li><a class="reference internal" href="#plane-stress-strain">Plane Stress/Strain</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#airy-stress-function">Airy Stress Function</a></li>
+<li><a class="reference internal" href="#torsion">Torsion</a><ul>
+<li><a class="reference internal" href="#displacement-formulations">Displacement Formulations</a><ul>
+<li><a class="reference internal" href="#equilibrium">Equilibrium:</a></li>
+<li><a class="reference internal" href="#id3">Boundary:</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#stress-formulation">Stress Formulation</a><ul>
+<li><a class="reference internal" href="#id4">Compatibility:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#solutions">9 Solutions</a><ul>
+<li><a class="reference internal" href="#crack-tip">Crack Tip</a><ul>
+<li><a class="reference internal" href="#mode-iii-anti-plane-tearing">Mode III: Anti-plane tearing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="03_BalanceLaws.html" title="Previous Chapter: III Balance Laws"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; III Balance Laws</span>
+    </a>
+  </li>
+  <li>
+    <a href="05_VariationalFormulation.html" title="Next Chapter: V Variational Formulation"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">V Variational... &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">IV Linear Elasticity</a><ul>
+<li><a class="reference internal" href="#compatibility">Compatibility:</a></li>
+<li><a class="reference internal" href="#linear-constitutive-equations">7 Linear Constitutive Equations</a><ul>
+<li><a class="reference internal" href="#free-energy-elasticity">7.1 Free Energy: Elasticity</a></li>
+<li><a class="reference internal" href="#isotropic-relations">7.5 Isotropic Relations</a></li>
+<li><a class="reference internal" href="#id1">7.5.4</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#elastostatics">8 Elastostatics</a><ul>
+<li><a class="reference internal" href="#displacement-formulation-navier">Displacement Formulation (Navier)</a><ul>
+<li><a class="reference internal" href="#isotropic">Isotropic</a><ul>
+<li><a class="reference internal" href="#boundary">Boundary:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#stress-formulation-beltrami-mitchell">Stress Formulation (Beltrami-Mitchell)</a><ul>
+<li><a class="reference internal" href="#id2">Compatibility:</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#plane-strain">8.9.1 Plane Strain</a></li>
+<li><a class="reference internal" href="#plane-stress">Plane Stress</a></li>
+<li><a class="reference internal" href="#plane-stress-strain">Plane Stress/Strain</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#airy-stress-function">Airy Stress Function</a></li>
+<li><a class="reference internal" href="#torsion">Torsion</a><ul>
+<li><a class="reference internal" href="#displacement-formulations">Displacement Formulations</a><ul>
+<li><a class="reference internal" href="#equilibrium">Equilibrium:</a></li>
+<li><a class="reference internal" href="#id3">Boundary:</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#stress-formulation">Stress Formulation</a><ul>
+<li><a class="reference internal" href="#id4">Compatibility:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#solutions">9 Solutions</a><ul>
+<li><a class="reference internal" href="#crack-tip">Crack Tip</a><ul>
+<li><a class="reference internal" href="#mode-iii-anti-plane-tearing">Mode III: Anti-plane tearing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <li>
+    <a href="03_BalanceLaws.html" title="Previous Chapter: III Balance Laws"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; III Balance Laws</span>
+    </a>
+  </li>
+  <li>
+    <a href="05_VariationalFormulation.html" title="Next Chapter: V Variational Formulation"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">V Variational... &raquo;</span>
+    </a>
+  </li>
+<div id="sourcelink">
+  <a href="../../_sources/theory/Mechanics/04-LinearElasticity.md.txt"
+     rel="nofollow">Source</a>
+</div>
+<form action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        </div>
+      </div>
+    <div class="col-md-9 content">
+      
+  <div class="section" id="iv-linear-elasticity">
+<h1>IV Linear Elasticity<a class="headerlink" href="#iv-linear-elasticity" title="Permalink to this headline">¶</a></h1>
+<p>$I=\int_{A} y^{2} d A$</p>
+<div class="section" id="compatibility">
+<h2>Compatibility:<a class="headerlink" href="#compatibility" title="Permalink to this headline">¶</a></h2>
+<p>$\operatorname{curl}(\operatorname{curl} \epsilon)=0, \quad e_{i p q} e_{j r s} \epsilon_{q s, r p}=0$</p>
+</div>
+<div class="section" id="linear-constitutive-equations">
+<h2>7 Linear Constitutive Equations<a class="headerlink" href="#linear-constitutive-equations" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="free-energy-elasticity">
+<h3>7.1 Free Energy: Elasticity<a class="headerlink" href="#free-energy-elasticity" title="Permalink to this headline">¶</a></h3>
+<p>$$\sigma=\mathbb{C} \epsilon, \quad \sigma_{i j}=C_{i j k l} \epsilon_{k l}$$
+Voight Notation:</p>
+<p>$$\left(\begin{array}{l}{\sigma_{11}} \ {\sigma_{22}} \ {\sigma_{33}} \ {\sigma_{23}} \ {\sigma_{13}} \ {\sigma_{12}}\end{array}\right)=\left(\begin{array}{cccccc}{C_{1111}} &amp; {C_{1122}} &amp; {C_{1133}} &amp; {C_{1123}} &amp; {C_{1113}} &amp; {C_{112}} \ {C_{211}} &amp; {C_{222}} &amp; {C_{233}} &amp; {C_{223}} &amp; {C_{2213}} &amp; {C_{2212}} \ {C_{331}} &amp; {C_{332}} &amp; {C_{333}} &amp; {C_{333}} &amp; {C_{313}} &amp; {C_{2312}} \ {C_{1311}} &amp; {C_{1322}} &amp; {C_{1333}} &amp; {C_{1323}} &amp; {C_{1313}} &amp; {C_{1312}} \ {C_{1211}} &amp; {C_{1222}} &amp; {C_{1233}} &amp; {C_{1223}} &amp; {C_{1213}} &amp; {C_{1212}}\end{array}\right)\left(\begin{array}{c}{\epsilon_{11}} \ {\epsilon_{22}} \ {\epsilon_{33}} \ {2 \epsilon_{23}} \ {2 \epsilon_{13}} \ {2 \epsilon_{12}}\end{array}\right)$$</p>
+<p><strong>Triclinic, 21</strong></p>
+<p><strong>Monoclinic 13:</strong>
+$\left{\mathcal{C}<em>{11}, \mathcal{C}</em>{22}, \mathcal{C}<em>{33}, \mathcal{C}</em>{44}, \mathcal{C}<em>{55}, \mathcal{C}</em>{66}, \mathcal{C}<em>{12}, \mathcal{C}</em>{13}, \mathcal{C}<em>{16}, \mathcal{C}</em>{23}, \mathcal{C}<em>{26}, \mathcal{C}</em>{36}, \mathcal{C}_{45}\right}$</p>
+<p><strong>Orthotropic,  9:</strong>
+$\left{\mathcal{C}<em>{11}, \mathcal{C}</em>{22}, \mathcal{C}<em>{33}, \mathcal{C}</em>{44}, \mathcal{C}<em>{55}, \mathcal{C}</em>{66}, \mathcal{C}<em>{12}, \mathcal{C}</em>{13}, \mathcal{C}_{23}\right}$</p>
+<p><strong>Tetragonal, 6:</strong>
+$\left{\mathcal{C}<em>{11}, \mathcal{C}</em>{33}, \mathcal{C}<em>{44}, \mathcal{C}</em>{66}, \mathcal{C}<em>{12}, \mathcal{C}</em>{13}\right}$</p>
+<p><strong>Transversely isotropic, 5:</strong>
+$\left{\mathcal{C}<em>{11}, \mathcal{C}</em>{33}, \mathcal{C}<em>{44}, \mathcal{C}</em>{12}, \mathcal{C}_{13}\right}$</p>
+<p><strong>Cubic, 3:</strong>
+$\left{\mathcal{C}<em>{11}, \mathcal{C}</em>{12}, \mathcal{C}_{44}\right}$</p>
+</div>
+<div class="section" id="isotropic-relations">
+<h3>7.5 Isotropic Relations<a class="headerlink" href="#isotropic-relations" title="Permalink to this headline">¶</a></h3>
+<p>$\boldsymbol{\sigma}=\mathbb{C} \boldsymbol{\epsilon}=2 \mu \boldsymbol{\epsilon}+\lambda(\operatorname{tr} \boldsymbol{\epsilon}) \mathbf{1}$</p>
+<p>$\boldsymbol{\sigma}=2 \mu \boldsymbol{\epsilon}^{\prime}+\kappa(\operatorname{tr} \boldsymbol{\epsilon}) \mathbf{1},
+\quad \sigma_{i j}=2 \mu \epsilon_{i j}^{\prime}+\kappa\left(\epsilon_{k k}\right) \delta_{i j}$</p>
+<p>$\mathbb{C}=2 \mu^{\mathrm{sym}}+\lambda \mathbf{1} \otimes \mathbf{1}, \quad C_{i j k l}=\mu\left(\delta_{i k} \delta_{j l}+\delta_{i l} \delta_{j k}\right)+\lambda \delta_{i j} \delta_{k l}$</p>
+<p>$\epsilon=\frac{1}{2 \mu} \sigma^{\prime}+\frac{1}{9 \kappa}(\operatorname{tr} \sigma) 1,
+\quad \epsilon_{i j}=\frac{1}{2 \mu} \sigma_{i j}^{\prime}+\frac{1}{9 \kappa}\left(\sigma_{k k}\right) \delta_{i j}$</p>
+<p>$E \equiv \frac{9 \kappa \mu}{3 \kappa+\mu}, \quad \nu \equiv \frac{1}{2}\left[\frac{3 \kappa-2 \mu}{3 \kappa+\mu}\right]$</p>
+<p>$-1&lt;\nu&lt;\frac{1}{2}$</p>
+<p>$\kappa=\lambda+\frac{2}{3} \mu$</p>
+</div>
+<div class="section" id="id1">
+<h3>7.5.4<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>$$
+\sigma=\frac{E}{(1+\nu)}\left[\epsilon+\frac{\nu}{(1-2 \nu)}(\operatorname{tr} \epsilon) 1\right], \quad \sigma_{i j}=\frac{E}{(1+\nu)}\left[\epsilon_{i j}+\frac{\nu}{(1-2 \nu)}\left(\epsilon_{k k}\right) \delta_{i j}\right]
+$$</p>
+<p>$$
+\epsilon=\frac{1}{E}[(1+\nu) \sigma-\nu(\operatorname{tr} \sigma) 1] . \quad \epsilon_{i j}=\frac{1}{E}\left[(1+\nu) \sigma_{i j}-\nu\left(\sigma_{k k}\right) \delta_{i j}\right]
+$$</p>
+</div>
+</div>
+<div class="section" id="elastostatics">
+<h2>8 Elastostatics<a class="headerlink" href="#elastostatics" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="displacement-formulation-navier">
+<h3>Displacement Formulation (Navier)<a class="headerlink" href="#displacement-formulation-navier" title="Permalink to this headline">¶</a></h3>
+<p>$C_{i j k l} u_{k, l j}+b_{i}=0$</p>
+<div class="section" id="isotropic">
+<h4>Isotropic<a class="headerlink" href="#isotropic" title="Permalink to this headline">¶</a></h4>
+<p>$\mu \triangle \mathbf{u}+(\lambda+\mu) \nabla \operatorname{div} \mathbf{u}+\mathbf{b}=0\$  $
+\mu u_{i, j j}+(\lambda+\mu) u_{j, j i}+b_{i}=0\$</p>
+<p>$(\lambda+2 \mu) \nabla \operatorname{div} \mathbf{u}-\mu \text { curl curl } \mathbf{u}+\mathbf{b}=\mathbf{0}\$
+$(\lambda+2 \mu) u_{j, j i}-\mu e_{i j k} e_{k l m} u_{m, l j}+b_{i}=0$</p>
+<div class="section" id="boundary">
+<h5>Boundary:<a class="headerlink" href="#boundary" title="Permalink to this headline">¶</a></h5>
+<p>$$\left.\begin{array}{r}{\mathbf{u}=\hat{\mathbf{u}} \text { on } \mathcal{S}<em>{1},} \ {\left(\mu\left(\nabla \mathbf{u}+(\nabla \mathbf{u})^{\top}\right)+\lambda(\operatorname{div} \mathbf{u}) \mathbf{1}\right) \mathbf{n}=\hat{\mathbf{t}} \quad \text { on } \mathcal{S}</em>{2}}\end{array}\right}$$</p>
+</div>
+</div>
+</div>
+<div class="section" id="stress-formulation-beltrami-mitchell">
+<h3>Stress Formulation (Beltrami-Mitchell)<a class="headerlink" href="#stress-formulation-beltrami-mitchell" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id2">
+<h4>Compatibility:<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h4>
+<p>$\sigma_{i j, k k}+\frac{1}{1+\nu} \sigma_{k k, i j}=-\frac{\nu}{1-\nu} b_{k, k} \delta_{i j}-b_{i, j}-b_{j, i}\$
+$\Delta \sigma_{k k}=-\frac{1+\nu}{1-\nu} b_{k, k}\$</p>
+</div>
+</div>
+<div class="section" id="plane-strain">
+<h3>8.9.1 Plane Strain<a class="headerlink" href="#plane-strain" title="Permalink to this headline">¶</a></h3>
+<p>$u_{\alpha}=u_{\alpha}\left(x_{1}, x_{2}\right), \quad u_{3}=0$</p>
+<p>$\epsilon_{\alpha \beta}=\frac{1}{2}\left(u_{\alpha, \beta}+u_{\beta, \alpha}\right)$</p>
+<p>$\epsilon_{13}=\epsilon_{23}=\epsilon_{33}=0$</p>
+<p>$\sigma_{\alpha \beta}=\frac{E}{(1+\nu)}\left(\epsilon_{\alpha \beta}+\frac{\nu}{(1-2 \nu)}\left(\epsilon_{\gamma \gamma}\right) \delta_{\alpha \beta}\right)$</p>
+<p>$\sigma_{33}=\nu \sigma_{\alpha \alpha}$</p>
+<p>$\epsilon_{\alpha \beta}=\frac{1+\nu}{E}\left(\sigma_{\alpha \beta}-\nu\left(\sigma_{\gamma \gamma}\right) \delta_{\alpha \beta}\right)$</p>
+<p>$\sigma_{\alpha \beta, \beta}+b_{\alpha}=0$</p>
+</div>
+<div class="section" id="plane-stress">
+<h3>Plane Stress<a class="headerlink" href="#plane-stress" title="Permalink to this headline">¶</a></h3>
+<p>$\sigma_{\alpha \beta}=\sigma_{\alpha \beta}\left(x_{1}, x_{2}\right), \quad \sigma_{33}=\sigma_{13}=\sigma_{23}=0$</p>
+</div>
+<div class="section" id="plane-stress-strain">
+<h3>Plane Stress/Strain<a class="headerlink" href="#plane-stress-strain" title="Permalink to this headline">¶</a></h3>
+<p>$\epsilon_{13}=\epsilon_{23}= \sigma_{13}=\sigma_{23}=0$</p>
+<p>|                 |                                    Plane Stress                                   |                              Plane Strain                             |   |   |
+|:—————:|:———————————————————————————:|:———————————————————————:|:-:|:-:|
+|                 | $\sigma <em>{\alpha  \beta }=\sigma <em>{\alpha  \beta}\left(x</em>{1}, x</em>{2}\right)$ | $u_{\alpha  }=u_{\alpha }\left(x_{1}, x_{2}\right)\$ $u_{3}=0$ |   |   |
+|        s        |                                $\frac {1}{1+\nu }$                                |                                $1-\nu$                                |   |   |
+|  $\sigma_{33}$  |                                        $0$                                        |                    $\nu  \sigma <em>{\alpha  \alpha }$                   |   |   |
+| $\epsilon</em>{33}$ |                $-\frac {\nu }{1-\nu } \epsilon _{\alpha  \alpha }$                |                                  $0$                                  |   |   |
+|                 |                                                                                   |                                                                       |   |   |</p>
+<p>$$
+\text{Navier}:\left{\begin{array}{cl}{\left(\frac{E}{2(1+\nu)}\right) u_{\alpha, \beta \beta}+\left(\frac{E}{2(1+\nu)(1-2 \nu)}\right) u_{\beta, \beta \alpha}+b_{\alpha}=0} &amp; {\text { for plane strain }} \ {\left(\frac{E}{2(1+\nu)}\right) u_{\alpha, \beta \beta}+\frac{E}{2(1-\nu)} u_{\beta, \beta \alpha}+b_{\alpha}=0} &amp; {\text { for plane stress }}\end{array}\right.
+$$</p>
+<!-- 
+$$
+\sigma_{33}=\left\{\begin{array}{ll}{\nu \sigma_{\alpha \alpha}} & {\text { for plane strain }} \\ {0} & {\text { for plane stress. }}\end{array}\right.
+$$
+$$
+s \stackrel{\text { def }}{=}\left\{\begin{array}{ll}{1-\nu} & {\text { for plane strain }} \\ {\frac{1}{1+\nu}} & {\text { for plane stress }}\end{array}\right.
+$$ --><p><strong>Constitutive Relation</strong>
+$$
+\sigma_{\alpha \beta}=\frac{E}{(1+\nu)}\left(\epsilon_{\alpha \beta}+\left(\frac{1-s}{2 s-1}\right)\left(\epsilon_{\gamma \gamma}\right) \delta_{\alpha \beta}\right)
+$$
+$$
+\epsilon_{\alpha \beta}=\frac{(1+\nu)}{E}\left(\sigma_{\alpha \beta}-(1-s)\left(\sigma_{\gamma \gamma}\right) \delta_{\alpha \beta}\right)
+$$
+<strong>Equilibrium</strong>
+$$
+\sigma_{\alpha \beta, \beta}+b_{\alpha}=0
+$$</p>
+<p><strong>Compatibility</strong>
+$$
+\Delta\left(\sigma_{\alpha \alpha}\right)=\left(\sigma_{11}+\sigma_{22}\right),<em>{11}+\left(\sigma</em>{11}+\sigma_{22}\right),<em>{22}=-\frac{1}{s} b</em>{\alpha, \alpha}
+$$</p>
+</div>
+</div>
+<div class="section" id="airy-stress-function">
+<h2>Airy Stress Function<a class="headerlink" href="#airy-stress-function" title="Permalink to this headline">¶</a></h2>
+<p>$\sigma_{11}=\varphi,<em>{22}, \quad \sigma</em>{22}=\varphi_{, 11}, \quad \sigma_{12}=-\varphi_{, 12}$</p>
+<p><strong>Compatibility</strong></p>
+<p>$\Delta \Delta \varphi=\varphi, 1111+2 \varphi, 1122+\varphi, 2222=0$</p>
+<p><strong>Displacements</strong></p>
+<p>$u_{1}=\frac{(1+\nu)}{E}(-\varphi, 1+s \psi, 2)+w_{1}\$
+$u_{2}=\frac{(1+\nu)}{E}\left(-\varphi, 2+s \psi,<em>{1}\right)+w</em>{2}\$
+where:
+$\Delta \psi =0$ and $\psi_{, 12} =\Delta \varphi$</p>
+<p>and w is a plane rigid displacement:<br />$w_{1,1}=0, \quad w_{2,2}=0, \quad w_{1,2}+w_{2,1}=0$</p>
+<p><strong>Polar form</strong> (9.4.16):<br />$\begin{aligned} \sigma_{r r} &amp;=\frac{1}{r} \frac{\partial \varphi}{\partial r}+\frac{1}{r^{2}} \frac{\partial^{2} \varphi}{\partial \theta^{2}} \ \sigma_{\theta \theta} &amp;=\frac{\partial^{2} \varphi}{\partial r^{2}} \ \sigma_{r \theta} &amp;=-\frac{\partial}{\partial r}\left(\frac{1}{r} \frac{\partial \varphi}{\partial \theta}\right) \end{aligned}$</p>
+</div>
+<div class="section" id="torsion">
+<h2>Torsion<a class="headerlink" href="#torsion" title="Permalink to this headline">¶</a></h2>
+<p>$\begin{array}{l}{u_{1}(\mathrm{x})\approx-\alpha x_{2} x_{3}} \ {u_{2}(\mathrm{x})\approx\alpha x_{1} x_{3}} \ u_{3}(\mathbf{x})=\alpha \varphi\left(x_{1}, x_{2}\right)\end{array}$</p>
+<p>$\alpha=\frac{T}{\mu \bar{J}}$</p>
+<p>$T=\int_{\mathcal{S}<em>{L}}\left(x</em>{1} \sigma_{23}-x_{2} \sigma_{13}\right) d a$</p>
+<p>$\bar{J} \stackrel{\text { def }}{=} \int_{\Omega}\left(x_{1}^{2}+x_{2}^{2}+x_{1} \varphi_{, 2}-x_{2} \varphi,_{1}\right) d a$</p>
+<p>For open sections:
+$$
+\mu \bar{J} =\mu\left(b_{1}+b_{2}+b_{3}\right) t^{3} / 3
+$$</p>
+<div class="section" id="displacement-formulations">
+<h3>Displacement Formulations<a class="headerlink" href="#displacement-formulations" title="Permalink to this headline">¶</a></h3>
+<p>${\epsilon_{11}(\mathrm{x})=\epsilon_{22}(\mathrm{x})=\epsilon_{33}(\mathrm{x})=\epsilon_{12}(\mathrm{x})=0}\$
+$\epsilon_{13}(\mathrm{x})=\frac{1}{2}\left(\frac{\partial \varphi}{\partial x_{1}}-x_{2}\right) \alpha\$
+$\epsilon_{23}(\mathrm{x})=\frac{1}{2}\left(\frac{\partial \varphi}{\partial x_{2}}+x_{1}\right) \alpha\$</p>
+<p>$\sigma_{11}(\mathrm{x})=\sigma_{22}(\mathrm{x})=\sigma_{33}(\mathrm{x})=\sigma_{12}(\mathrm{x})=0 \$
+$\sigma_{13}(\mathrm{x})=\mu \alpha\left(\frac{\partial \varphi}{\partial x_{1}}-x_{2}\right)\$
+$\sigma_{23}(\mathrm{x})=\mu \alpha\left(\frac{\partial \varphi}{\partial x_{2}}+x_{1}\right)$</p>
+<div class="section" id="equilibrium">
+<h4>Equilibrium:<a class="headerlink" href="#equilibrium" title="Permalink to this headline">¶</a></h4>
+<p>$\sigma_{13,1}+\sigma_{23,2}=0 \quad \text { in } \Omega$</p>
+</div>
+<div class="section" id="id3">
+<h4>Boundary:<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h4>
+<p>$\Delta \varphi=0 \quad \text { in } \Omega\$
+$\frac{\partial \varphi}{\partial n}=x_{2} n_{1}-x_{1} n_{2} \quad \text { on } \Gamma$</p>
+</div>
+</div>
+<div class="section" id="stress-formulation">
+<h3>Stress Formulation<a class="headerlink" href="#stress-formulation" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id4">
+<h4>Compatibility:<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h4>
+<p>$\epsilon_{13,2}-\epsilon_{23,1}=-\alpha \quad \text { in } \Omega\$
+$\Delta \Psi=\Psi_{, 11}+\Psi_{, 22} = -2 \mu \alpha \quad \text{ in  } \Omega$
+$\text { subject to } \quad \Psi=0 \quad \text { on } \Gamma\$
+for $\sigma_{13}=\frac{\partial \Psi}{\partial x_{2}}, \quad \sigma_{23}=-\frac{\partial \Psi}{\partial x_{1}}$</p>
+<p>$T=2 \int_{\Omega} \Psi d a$</p>
+</div>
+</div>
+</div>
+<div class="section" id="solutions">
+<h2>9 Solutions<a class="headerlink" href="#solutions" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="crack-tip">
+<h3>Crack Tip<a class="headerlink" href="#crack-tip" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="mode-iii-anti-plane-tearing">
+<h4>Mode III: Anti-plane tearing<a class="headerlink" href="#mode-iii-anti-plane-tearing" title="Permalink to this headline">¶</a></h4>
+<p>$\Delta u_{z}=0 = \frac{\partial^{2} u_{z}}{\partial r^{2}}+\frac{1}{r^{2}} \frac{\partial^{2} u_{z}}{\partial \theta^{2}}+\frac{1}{r} \frac{\partial u_{z}}{\partial r}$</p>
+<p>$\delta_{3} \stackrel{\text { def }}{=} u_{3}(r,+\pi)-u_{3}(r,-\pi)=\frac{4}{\mu} K_{\mathrm{III}} \sqrt{\frac{r}{2 \pi}}$</p>
+<p>$\left(\begin{array}{c}{\sigma_{13}} \ {\sigma_{23}}\end{array}\right)=\frac{K_{\mathrm{III}}}{\sqrt{2 \pi r}}\left(\begin{array}{c}{-\sin \left(\frac{\theta}{2}\right)} \ {\cos \left(\frac{\theta}{2}\right)}\end{array}\right)+\text{ bounded terms}$</p>
+<p>$\sigma_{11}=\sigma_{22}=\sigma_{33}=\sigma_{12}=0$</p>
+<p>$\left(u_{3}\right)=\frac{K_{\mathrm{M}}}{2 \mu} \sqrt{\frac{r}{2 \pi}}\left(4 \sin \left(\frac{\theta}{2}\right)\right)+$ rigid displacenent.</p>
+</div>
+</div>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+<div id="sourcelink">
+  <a href="../../_sources/theory/Mechanics/04-LinearElasticity.md.txt"
+     rel="nofollow">Source</a>
+</div>
+      
+    </p>
+    <p>
+        &copy; Copyright 2020, Claudio Perez.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

@@ -219,6 +219,26 @@ Plastic analysis
 
 .. raw:: html
 
+    <div class="sphx-glr-thumbcontainer" tooltip="(220_HW12_P2r)">
+
+.. only:: html
+
+ .. figure:: /auto_examples/plasticanalysis/images/thumb/sphx_glr_220_HW12_P2r_E2E_thumb.png
+
+     :ref:`sphx_glr_auto_examples_plasticanalysis_220_HW12_P2r_E2E.py`
+
+.. raw:: html
+
+    </div>
+
+
+.. toctree::
+   :hidden:
+
+   /auto_examples/plasticanalysis/220_HW12_P2r_E2E
+
+.. raw:: html
+
     <div class="sphx-glr-thumbcontainer" tooltip="33. Plastic Analysis">
 
 .. only:: html

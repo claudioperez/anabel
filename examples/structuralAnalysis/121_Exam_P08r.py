@@ -33,15 +33,13 @@ mdl.hinge(e['c'], n['2'])
 mdl.pin(n['1'])
 mdl.roller(n['3'])
 
-mdl.numDOF()
+mdl.DOF = mdl.numdofs()
 
 n['4'].p['x'] = 10
 e['b'].w['y'] = -5
 
 Uf = em.analysis.SolveDispl(mdl)
+Uf
 
 fig, ax = plt.subplots(1,1)
 em.plot_U(mdl, Uf, ax)
-
-Uf
-

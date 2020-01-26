@@ -140,7 +140,7 @@ Part b)
         exec(self.code, self.globals)
       File "C:\Users\claud\OneDrive\400_box\Python\myPackages\ema\examples\dynamics\Untitled.py", line 56, in <module>
         #
-      File "C:\Users\claud\OneDrive\400_box\Python\myPackages\ema\matrices.py", line 1598, in U_vector
+      File "C:\Users\claud\OneDrive\400_box\Python\myPackages\ema\matrices.py", line 1600, in U_vector
         U = np.zeros(model.nt)
     AttributeError: 'Kinematic_matrix' object has no attribute 'nt'
 
@@ -197,7 +197,7 @@ matrix, :math:`M_n`, equal to the identity matrix.
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  2.111 seconds)
+   **Total running time of the script:** ( 0 minutes  2.826 seconds)
 
 
 .. _sphx_glr_download_auto_examples_dynamics_Untitled.py:

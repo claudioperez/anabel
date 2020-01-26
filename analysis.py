@@ -1873,8 +1873,8 @@ def SolveDispl(Model):
     # Find global free displacements
     Uf = K.f.inv@ (P.f - (Pw.f + P0f))
     Uf.model = Model
-    # U = U_vector(A, Uf)
-    return (Uf, P)
+    # U = U_vector(Model, Uf)
+    return Uf
 
 def MemberDeformations(Model, U_vector):
     A = A_matrix(Model)

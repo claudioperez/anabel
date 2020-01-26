@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Linear Response &#8212; EMA  documentation</title>
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Earthquake Response" href="13-EarthquakeResponse.html" />
+    <link rel="prev" title="Damping in Structures" href="11-Damping.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html"><span><img src="../../_static/emtec-1.jpg"></span>
+          EMA</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html#dynamics">Dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html#plastic-analysis">Plastic analysis</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Theory reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">ema</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Linear Response</a><ul>
+<li><a class="reference internal" href="#part-b-modal-analysis">Part B: Modal Analysis</a><ul>
+<li><a class="reference internal" href="#summary">12.7 - Summary</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="11-Damping.html" title="Previous Chapter: Damping in Structures"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Damping in Structures</span>
+    </a>
+  </li>
+  <li>
+    <a href="13-EarthquakeResponse.html" title="Next Chapter: Earthquake Response"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Earthquake Response &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">Linear Response</a><ul>
+<li><a class="reference internal" href="#part-b-modal-analysis">Part B: Modal Analysis</a><ul>
+<li><a class="reference internal" href="#summary">12.7 - Summary</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <li>
+    <a href="11-Damping.html" title="Previous Chapter: Damping in Structures"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Damping in Structures</span>
+    </a>
+  </li>
+  <li>
+    <a href="13-EarthquakeResponse.html" title="Next Chapter: Earthquake Response"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">Earthquake Response &raquo;</span>
+    </a>
+  </li>
+<div id="sourcelink">
+  <a href="../../_sources/theory/Dynamics/12-LinearResponse.md.txt"
+     rel="nofollow">Source</a>
+</div>
+<form action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        </div>
+      </div>
+    <div class="col-md-9 content">
+      
+  <div class="section" id="linear-response">
+<h1>Linear Response<a class="headerlink" href="#linear-response" title="Permalink to this headline">¶</a></h1>
+<p>Linear response of multiple degree-of-freedom systems to dynamic excitation</p>
+<div class="section" id="part-b-modal-analysis">
+<h2>Part B: Modal Analysis<a class="headerlink" href="#part-b-modal-analysis" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="summary">
+<h3>12.7 - Summary<a class="headerlink" href="#summary" title="Permalink to this headline">¶</a></h3>
+<p>let $n$ denote mode numbers, and $i, j, k…$ denote dofs.</p>
+<p>The dynamic response of an MDF system to external force vector $\mathbf{p}(t)$ can be computed by modal analysis, summarized next as a sequence of steps:</p>
+<ol>
+<li><p>Define the structural properties.</p>
+<p>a. Determine the mass matrix $\mathbf{m}$ and stiffness matrix $\mathbf{k}$ (Chapter 9).</p>
+<p>b. Estimate the modal damping ratios $\zeta_n$ (Chapter 11).</p>
+</li>
+<li><p>Determine the natural frequencies $\omega_n$ and modes $\phi_n$ (Chapter 10).</p></li>
+<li><p>Compute the response in each mode by the following steps:</p>
+<p>a. Set up Eq. (12.4.5) or (12.4.6) and solve for $q_n(t)$.
+$$M_{n} \ddot{q}<em>{n}+C</em>{n} \dot{q}<em>{n}+K</em>{n} q_{n}=P_{n}(t)\quad (12.4.5)$$
+$$\ddot{q}<em>{n}+2 \zeta</em>{n} \omega_{n} \dot{q}<em>{n}+\omega</em>{n}^{2} q_{n}=\frac{P_{n}(t)}{M_{n}}\quad (12.4.6)$$
+where $M_{n} = \phi_n^T\mathbf{m} \phi_n$, $K_{n} = \phi_n^T\mathbf{k} \phi_n$, and $P_{n} = \phi_n^T\mathbf{p}(t)$</p>
+<p>b. Compute the nodal displacements $\mathbf{u}_{n}(t)$ from Eq. (12.5.1).</p>
+<p>$$\mathbf{u}<em>{n}(t)=\phi</em>{n} q_{n}(t) \quad(12.5.1)$$
+c. Compute the element forces associated with the nodal displacements $\mathbf{u}_n(t)$ by implementing one of the two methods described in Section 12.6 for the desired values of $t$ and the element forces of interest.</p>
+</li>
+<li><p>Combine the contributions of all the modes to determine the total response. In particular, the nodal displacements $\mathbf{u}(t)$ are given by Eq. (12.5.2) and element forces by Eq. (12.6.1).</p>
+<p>a.
+$$\mathbf{u}(t)=\sum_{n=1}^{N} \mathbf{u}<em>{n}(t)=\sum</em>{n=1}^{N} \phi_{n} q_{n}(t)\quad (12.5.2)$$</p>
+<p>b. Element forces.</p>
+<ol class="simple">
+<li><p>Modal summation
+$$
+r(t)=\sum_{n=1}^{N} r_{n}(t)
+$$</p></li>
+<li><p>Equivalent static forces.
+$$\mathbf{f}<em>{n}(t)=\omega</em>{n}^{2} \mathbf{m} \phi_{n} q_{n}(t)$$</p></li>
+</ol>
+</li>
+</ol>
+</div>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+<div id="sourcelink">
+  <a href="../../_sources/theory/Dynamics/12-LinearResponse.md.txt"
+     rel="nofollow">Source</a>
+</div>
+      
+    </p>
+    <p>
+        &copy; Copyright 2020, Claudio Perez.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

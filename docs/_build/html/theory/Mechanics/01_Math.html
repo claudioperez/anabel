@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>I Math &#8212; EMA  documentation</title>
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="II Kinematics" href="02_Kinematics.html" />
+    <link rel="prev" title="Mechanics" href="index.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html"><span><img src="../../_static/emtec-1.jpg"></span>
+          EMA</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html#dynamics">Dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html#plastic-analysis">Plastic analysis</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Theory reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">ema</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">I Math</a><ul>
+<li><a class="reference internal" href="#calculus">Calculus</a></li>
+<li><a class="reference internal" href="#calculus-of-variations">Calculus of Variations</a></li>
+<li><a class="reference internal" href="#tensors">Tensors</a><ul>
+<li><a class="reference internal" href="#algebra">1 Algebra</a><ul>
+<li><a class="reference internal" href="#id1">1.2 Tensors</a><ul>
+<li><a class="reference internal" href="#products">Products</a><ul>
+<li><a class="reference internal" href="#outer-product">1.2.3 Outer Product</a></li>
+<li><a class="reference internal" href="#id2">1.2.8</a></li>
+<li><a class="reference internal" href="#inner-dot-products">1.2.11 Inner / Dot Products</a></li>
+<li><a class="reference internal" href="#cross-product">1.2.1 Cross Product</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#symmetric-skew-components">6 Symmetric - Skew components</a></li>
+<li><a class="reference internal" href="#inner-product-norm">11 - Inner Product &amp; Norm</a></li>
+<li><a class="reference internal" href="#orthogonal-tensors">16 - Orthogonal tensors</a></li>
+<li><a class="reference internal" href="#transformations">17 - Transformations</a></li>
+<li><a class="reference internal" href="#eigenvalues">18 - Eigenvalues</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#analysis">2 Analysis</a><ul>
+<li><a class="reference internal" href="#derivatives">Derivatives</a><ul>
+<li><a class="reference internal" href="#gradient">Gradient</a></li>
+<li><a class="reference internal" href="#directional-derivative">Directional Derivative</a></li>
+<li><a class="reference internal" href="#divergence-curl-laplacian">Divergence - Curl- Laplacian</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#integration">Integration</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#step-functions">Step functions</a><ul>
+<li><a class="reference internal" href="#heaviside-step-function-h-t">Heaviside Step Function, $h(t)$</a></li>
+<li><a class="reference internal" href="#dirac-delta-delta">Dirac Delta, $\delta$</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#convolution">Convolution</a></li>
+<li><a class="reference internal" href="#laplace-transformations">Laplace Transformations</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="index.html" title="Previous Chapter: Mechanics"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Mechanics</span>
+    </a>
+  </li>
+  <li>
+    <a href="02_Kinematics.html" title="Next Chapter: II Kinematics"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">II Kinematics &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">I Math</a><ul>
+<li><a class="reference internal" href="#calculus">Calculus</a></li>
+<li><a class="reference internal" href="#calculus-of-variations">Calculus of Variations</a></li>
+<li><a class="reference internal" href="#tensors">Tensors</a><ul>
+<li><a class="reference internal" href="#algebra">1 Algebra</a><ul>
+<li><a class="reference internal" href="#id1">1.2 Tensors</a><ul>
+<li><a class="reference internal" href="#products">Products</a><ul>
+<li><a class="reference internal" href="#outer-product">1.2.3 Outer Product</a></li>
+<li><a class="reference internal" href="#id2">1.2.8</a></li>
+<li><a class="reference internal" href="#inner-dot-products">1.2.11 Inner / Dot Products</a></li>
+<li><a class="reference internal" href="#cross-product">1.2.1 Cross Product</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#symmetric-skew-components">6 Symmetric - Skew components</a></li>
+<li><a class="reference internal" href="#inner-product-norm">11 - Inner Product &amp; Norm</a></li>
+<li><a class="reference internal" href="#orthogonal-tensors">16 - Orthogonal tensors</a></li>
+<li><a class="reference internal" href="#transformations">17 - Transformations</a></li>
+<li><a class="reference internal" href="#eigenvalues">18 - Eigenvalues</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#analysis">2 Analysis</a><ul>
+<li><a class="reference internal" href="#derivatives">Derivatives</a><ul>
+<li><a class="reference internal" href="#gradient">Gradient</a></li>
+<li><a class="reference internal" href="#directional-derivative">Directional Derivative</a></li>
+<li><a class="reference internal" href="#divergence-curl-laplacian">Divergence - Curl- Laplacian</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#integration">Integration</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#step-functions">Step functions</a><ul>
+<li><a class="reference internal" href="#heaviside-step-function-h-t">Heaviside Step Function, $h(t)$</a></li>
+<li><a class="reference internal" href="#dirac-delta-delta">Dirac Delta, $\delta$</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#convolution">Convolution</a></li>
+<li><a class="reference internal" href="#laplace-transformations">Laplace Transformations</a></li>
+</ul>
+</li>
+</ul>
+
+  <li>
+    <a href="index.html" title="Previous Chapter: Mechanics"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; Mechanics</span>
+    </a>
+  </li>
+  <li>
+    <a href="02_Kinematics.html" title="Next Chapter: II Kinematics"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">II Kinematics &raquo;</span>
+    </a>
+  </li>
+<div id="sourcelink">
+  <a href="../../_sources/theory/Mechanics/01_Math.md.txt"
+     rel="nofollow">Source</a>
+</div>
+<form action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        </div>
+      </div>
+    <div class="col-md-9 content">
+      
+  <div class="section" id="i-math">
+<h1>I Math<a class="headerlink" href="#i-math" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="calculus">
+<h2>Calculus<a class="headerlink" href="#calculus" title="Permalink to this headline">¶</a></h2>
+<p>$\frac{d}{d x} \int_{a}^{x} f(t) d t=f(x)$</p>
+</div>
+<div class="section" id="calculus-of-variations">
+<h2>Calculus of Variations<a class="headerlink" href="#calculus-of-variations" title="Permalink to this headline">¶</a></h2>
+<p><em>First variation</em> of a functional, $I$:
+$\left.\delta I{u ; w} \stackrel{\text { def }}{=} \frac{d}{d \zeta} I{u(x)+\zeta w(x)}\right|_{\zeta=0}$</p>
+<p>The condition:
+$\delta I{u ; w}=0$
+for all admissible $w$ is a necessary condition for $u(x)$ to be a minimizer of $I$.</p>
+<p><strong>Euler-Lagrance Equation</strong>
+$$\frac{\partial F}{\partial u}-\frac{d}{d x}\left(\frac{\partial F}{\partial u^{\prime}}\right)=0 \quad \forall x \in\left(x_{0}, x_{1}\right)$$</p>
+<p><strong>Taking variations</strong></p>
+<p>$\delta I=\left.\frac{d}{d \zeta} I(\Psi+\zeta \delta \Psi)\right|_{\zeta=0}$</p>
+<p>$\delta F=\left(\frac{\partial F}{\partial u}\right) \delta u+\left(\frac{\partial F}{\partial u^{\prime}}\right) \delta u^{\prime}$</p>
+<p>$\begin{aligned} \delta I &amp; \equiv \int_{x_{0}}^{x_{1}} \delta F\left(x, u, u^{\prime}\right) d x \ &amp;=\int_{x_{0}}^{x_{1}}\left(\frac{\partial F}{\partial u} \delta u+\frac{\partial F}{\partial u^{\prime}} \delta u^{\prime}\right) d x \ &amp;=\left.\frac{\partial F}{\partial u^{\prime}} \delta u\right|<em>{x</em>{0}} ^{x_{1}}+\int_{x_{0}}^{x_{1}}\left[\frac{\partial F}{\partial u}-\frac{d}{d x}\left(\frac{\partial F}{\partial u^{\prime}}\right)\right] \delta u d x \end{aligned}$</p>
+<p>$\left.\delta H \equiv \delta\left(u^{\prime}\right) \stackrel{\text { def }}{=} \frac{d}{d \zeta} H{u+\zeta \delta u}\right|<em>{\zeta=0}=\left.\frac{d}{d \zeta}\left(u^{\prime}+\zeta(\delta u)^{\prime}\right)\right|</em>{\zeta=0}=(\delta u)^{\prime}$</p>
+</div>
+<div class="section" id="tensors">
+<h2>Tensors<a class="headerlink" href="#tensors" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="algebra">
+<h3>1 Algebra<a class="headerlink" href="#algebra" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="id1">
+<h4>1.2 Tensors<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h4>
+<p>$S_{i j} \stackrel{\text { def }}{=} \mathbf{e}<em>{i} \cdot \mathbf{S} \mathbf{e}</em>{j}$</p>
+<p>$C_{i j k l} \stackrel{\text { def }}{=}\left(\mathbf{e}<em>{i} \otimes \mathbf{e}</em>{j}\right): \mathbb{C}\left(\mathbf{e}<em>{k} \otimes \mathbf{e}</em>{l}\right)\$</p>
+<p>$\mathbf{S}=S_{i j} \mathbf{e}<em>{i} \otimes \mathbf{e}</em>{j}$</p>
+<p>$v_i =S_{i j} u_{j}$</p>
+<p>$\mathbb{I}^{\mathrm{sym}} \rightarrow \frac{1}{2}\left(\delta_{i k} \delta_{j l}+\delta_{i l} \delta_{j k}\right)$</p>
+<div class="section" id="products">
+<h5>Products<a class="headerlink" href="#products" title="Permalink to this headline">¶</a></h5>
+<div class="section" id="outer-product">
+<h6>1.2.3 Outer Product<a class="headerlink" href="#outer-product" title="Permalink to this headline">¶</a></h6>
+<p>$$(\mathbf{u} \otimes \mathbf{v}) \mathbf{w}=(\mathbf{v} \cdot \mathbf{w}) \mathbf{u}$$</p>
+</div>
+<div class="section" id="id2">
+<h6>1.2.8<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h6>
+<p>$$(\mathbf{S T})<em>{i j}=S</em>{i k} T_{k j}$$</p>
+</div>
+<div class="section" id="inner-dot-products">
+<h6>1.2.11 Inner / Dot Products<a class="headerlink" href="#inner-dot-products" title="Permalink to this headline">¶</a></h6>
+<p>$$\mathbf{u} \cdot \mathbf{v}=\mathbf{v} \cdot \mathbf{u}=u_{i} v_{j} \delta_{ij} =u_{i} v_{i}\\mathbf{S}: \mathbf{T}=\mathbf{T}: \mathbf{S}=S_{i j} T_{i j}\\mathbf{S}\cdot \mathbf{T}=S_{i j} T_{j l}\mathrm{e}<em>{i}\mathrm{e}</em>{l}\neq \mathbf{T}\cdot \mathbf{S}$$</p>
+</div>
+<div class="section" id="cross-product">
+<h6>1.2.1 Cross Product<a class="headerlink" href="#cross-product" title="Permalink to this headline">¶</a></h6>
+<p>$$(\mathbf{u} \times \mathbf{v})<em>{i}=e</em>{i j k} u_{j} v_{k}$$</p>
+</div>
+</div>
+<div class="section" id="symmetric-skew-components">
+<h5>6 Symmetric - Skew components<a class="headerlink" href="#symmetric-skew-components" title="Permalink to this headline">¶</a></h5>
+<p>$$\begin{array}{c}{\mathbf{S}=\mathbf{S}^{\top}, \quad S_{i j}=S_{j i}} \ {\mathbf{\Omega}=-\mathbf{\Omega}^{\top}, \quad \Omega_{i j}=-\Omega_{j i}}\end{array}$$</p>
+<p>$$\begin{array}{l}{(\operatorname{sym} \mathbf{T})<em>{i j}=\frac{1}{2}\left(T</em>{i j}+T_{j i}\right)} \ {(\operatorname{skw} \mathbf{T})<em>{i j}=\frac{1}{2}\left(T</em>{i j}-T_{j i}\right)}\end{array}$$</p>
+</div>
+<div class="section" id="inner-product-norm">
+<h5>11 - Inner Product &amp; Norm<a class="headerlink" href="#inner-product-norm" title="Permalink to this headline">¶</a></h5>
+<p>$$|\mathbf{u}|=\sqrt{\mathbf{u} \cdot \mathbf{u}}=\sqrt{u_{i} u_{i}}\|\mathbf{S}|=\sqrt{\mathbf{S}: \mathbf{S}}=\sqrt{S_{i j} S_{i j}}$$</p>
+</div>
+<div class="section" id="orthogonal-tensors">
+<h5>16 - Orthogonal tensors<a class="headerlink" href="#orthogonal-tensors" title="Permalink to this headline">¶</a></h5>
+<p>$\begin{array}{c}{\mathbf{Q}^{\top} \mathbf{Q}=\mathbf{Q} \mathbf{Q}^{\top}=\mathbf{1}} \ {\operatorname{det} \mathbf{Q}=\pm 1}\end{array}$</p>
+</div>
+<div class="section" id="transformations">
+<h5>17 - Transformations<a class="headerlink" href="#transformations" title="Permalink to this headline">¶</a></h5>
+<p>$$v_{i}^{<em>}=\mathrm{e}_{i}^{</em>} \cdot \mathrm{v} \quad \text { and } \quad S_{i j}^{<em>}=\mathrm{e}_{i}^{</em>} \cdot \mathrm{Se}_{j}^{*}$$</p>
+<p>$$\mathrm{Q} \stackrel{\text { def }}{=}  \mathrm{e}<em>{k} \otimes \mathrm{e}</em>{k}^{*}$$</p>
+<p>$$v_{i}^{<em>}=Q_{i j} v_{j}\S_{i j}^{</em>}=Q_{i k} Q_{j l} S_{k l}
+\C_{i j k l}^{*}=Q_{i p} Q_{j q} Q_{k r} Q_{l s} C_{p q r s}
+$$</p>
+</div>
+<div class="section" id="eigenvalues">
+<h5>18 - Eigenvalues<a class="headerlink" href="#eigenvalues" title="Permalink to this headline">¶</a></h5>
+<p>$$\omega^{3}-I_{1}(\mathbf{S}) \omega^{2}+I_{2}(\mathbf{S}) \omega-I_{3}(\mathbf{S})=0$$
+Principal Invariants:
+$$\begin{array}{l}{I_{1}(\mathbf{S})=\operatorname{tr} \mathbf{S}}  = \omega_1 + \omega_2 + \omega_3 \ {I_{2}(\mathbf{S})=\frac{1}{2}\left[(\operatorname{tr}(\mathbf{S}))^{2}-\operatorname{tr}\left(\mathbf{S}^{2}\right)\right]}  = \omega_1 \omega_2 + \omega_2 \omega_3+ \omega_3 \omega_1 \ {I_{3}(\mathbf{S})=\operatorname{det} \mathbf{S}} = \omega_1 \omega_2 \omega_3 \end{array}$$</p>
+</div>
+</div>
+</div>
+<div class="section" id="analysis">
+<h3>2 Analysis<a class="headerlink" href="#analysis" title="Permalink to this headline">¶</a></h3>
+<div class="section" id="derivatives">
+<h4>Derivatives<a class="headerlink" href="#derivatives" title="Permalink to this headline">¶</a></h4>
+<p>In the case of a vector field, the directional derivative is also a vector each of whose components gives the rate of change of the corresponding component of v in the direction of h. The gradient in this case will be a tensor field (that when applied to h gives the directional derivative of v in the direction of h).</p>
+<div class="section" id="gradient">
+<h5>Gradient<a class="headerlink" href="#gradient" title="Permalink to this headline">¶</a></h5>
+<p>$$ \begin{array}{c}{\mathbf{e}<em>{i} \cdot \operatorname{grad} \varphi(\mathbf{x})=[\operatorname{grad} \varphi(\mathbf{x})]</em>{i}=\frac{\partial \varphi(\mathbf{x})}{\partial x_{i}}}\{\mathbf{e}<em>{i} \cdot \operatorname{grad} \mathbf{v}(\mathbf{x}) \mathbf{e}</em>{j}=[\operatorname{grad} \mathbf{v}(\mathbf{x})]<em>{i j}=\frac{\partial v</em>{i}(\mathbf{x})}{\partial x_{j}}}\end{array}$$</p>
+</div>
+<div class="section" id="directional-derivative">
+<h5>Directional Derivative<a class="headerlink" href="#directional-derivative" title="Permalink to this headline">¶</a></h5>
+<p>$$\operatorname{grad} \varphi(\mathbf{x})[\mathbf{h}]=\left.\frac{d}{d \alpha} \varphi(\mathbf{x}+\alpha \mathbf{h})\right|_{\alpha=0}$$</p>
+</div>
+<div class="section" id="divergence-curl-laplacian">
+<h5>Divergence - Curl- Laplacian<a class="headerlink" href="#divergence-curl-laplacian" title="Permalink to this headline">¶</a></h5>
+<p>$$\begin{aligned} \operatorname{div} \mathbf{v}=\operatorname{tr}[\operatorname{grad} \mathbf{v}] &amp;=\frac{\partial v_{i}}{\partial x_{i}} \(\operatorname{div} \mathbf{T})<em>{i} &amp;=\frac{\partial T</em>{i j}}{\partial x_{j}} \(\operatorname{curl} \mathbf{v})<em>{i} &amp;=e</em>{i j k} \frac{\partial v_{k}}{\partial x_{j}} \(\operatorname{curl} \mathbf{T})<em>{i j} &amp;=e</em>{i p q} \frac{\partial T_{j q}}{\partial x_{p}} \end{aligned}$$</p>
+<p>$$\Delta \mathbf{v}=\operatorname{div} \operatorname{grad} \mathbf{v}, \quad \Delta v_{i}=\frac{\partial^{2} v_{i}}{\partial x_{j} \partial x_{j}}\$$
+$$\Delta T_{i j}=\frac{\partial T_{i j}}{\partial x_{k} \partial x_{k}}$$</p>
+</div>
+</div>
+<div class="section" id="integration">
+<h4>Integration<a class="headerlink" href="#integration" title="Permalink to this headline">¶</a></h4>
+<p>Divergence Theorem</p>
+<p>$\begin{array}{rl}{\int \varphi n_{i} d a} &amp; {=\int_{R} \frac{\partial \varphi}{\partial x_{i}} d v} \ {\int_{\partial R} v_{i} n_{i} d a} &amp; {=\int_{R} \frac{\partial v_{i}}{\partial x_{i}} d v} \ {\int_{\partial R} T_{i j} n_{j} d a} &amp; {=\int_{R} \frac{\partial T_{i j}}{\partial x_{j}} d v} \ {\partial R} &amp; {R}\end{array}$</p>
+</div>
+</div>
+</div>
+<div class="section" id="step-functions">
+<h2>Step functions<a class="headerlink" href="#step-functions" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="heaviside-step-function-h-t">
+<h3>Heaviside Step Function, $h(t)$<a class="headerlink" href="#heaviside-step-function-h-t" title="Permalink to this headline">¶</a></h3>
+<p>$$h(t)=\left{\begin{array}{l}{0 \text { for } t \leq 0} \ {1 \text { for } t&gt;0}\end{array}\right.$$</p>
+</div>
+<div class="section" id="dirac-delta-delta">
+<h3>Dirac Delta, $\delta$<a class="headerlink" href="#dirac-delta-delta" title="Permalink to this headline">¶</a></h3>
+<p>$$\delta(t) \equiv \dot{h}(t)$$</p>
+<p>$$\delta(t)=\left{\begin{array}{ll}{0} &amp; {\text { for } t \neq 0,} \ {\infty} &amp; {\text { for } t=0,}\end{array} \quad \text { where } \quad \int_{-\infty}^{\infty} \delta(t) d t=\int_{0^{-}}^{0^{+}} \delta(t) d t=1\right.$$</p>
+<p>For any function continuous at $t=0$ :</p>
+<p>$$\int_{-\infty}^{\infty} g(t) \delta(t) d t=\int_{0^{-}}^{0^{+}} g(t) \delta(t) d t=g(0)$$</p>
+</div>
+</div>
+<div class="section" id="convolution">
+<h2>Convolution<a class="headerlink" href="#convolution" title="Permalink to this headline">¶</a></h2>
+<p>$$
+\int_{0^{-}}^{t} f(t-\tau) g(\tau) d \tau \equiv(f * g)(t)
+$$</p>
+</div>
+<div class="section" id="laplace-transformations">
+<h2>Laplace Transformations<a class="headerlink" href="#laplace-transformations" title="Permalink to this headline">¶</a></h2>
+<p>$$
+L[f(t)]=\int_{0^{-}}^{\infty} e^{-s t} f(t) d t \equiv \bar{f}(s)
+$$</p>
+<p>The laplace transformation has the following properties:</p>
+<ol class="simple">
+<li><p>$L[(f * g)(t)]=L[f(t)] L[g(t)]=\bar{f}(s) \bar{g}(s)$</p></li>
+<li><p>$L[\dot{f}(t)]=s L[f(t)]-f\left(0^{-}\right)=s \bar{f}(s)-f\left(0^{-}\right)$</p></li>
+</ol>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+<div id="sourcelink">
+  <a href="../../_sources/theory/Mechanics/01_Math.md.txt"
+     rel="nofollow">Source</a>
+</div>
+      
+    </p>
+    <p>
+        &copy; Copyright 2020, Claudio Perez.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

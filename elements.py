@@ -423,7 +423,7 @@ class Beam(Element):
         k = np.array([[E*A/L,    0   ,   0   ],
                       [  0  , 4*EI/L , 2*EI/L],
                       [  0  , 2*EI/L , 4*EI/L]])
-        k = ah.transpose() @ k @ ah
+        k = ah.T @ k @ ah
 
         # Assemble matrix metadata
         k = Structural_Matrix(k)
@@ -433,7 +433,7 @@ class Beam(Element):
         k.c_cidx = k.c_ridx = [int(key)-1 for key in self.rel.keys() if self.rel[key]]
         return k
 
-    def f_matrix(self, Roption=None):
+    def f_matrix(self, Roption=False):
         """Flexibility matrix of an element.
 
         """

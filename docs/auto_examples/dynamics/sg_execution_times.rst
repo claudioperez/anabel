@@ -5,12 +5,12 @@
 
 Computation times
 =================
-**00:02.130** total execution time for **auto_examples_dynamics** files:
+**00:02.859** total execution time for **auto_examples_dynamics** files:
 
 +--------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_dynamics_Untitled.py` (``Untitled.py``)           | 00:02.111 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_dynamics_Untitled.py` (``Untitled.py``)           | 00:02.826 | 0.0 MB |
 +--------------------------------------------------------------------------------+-----------+--------+
-| :ref:`sphx_glr_auto_examples_dynamics_225_HW09_P2v2.py` (``225_HW09_P2v2.py``) | 00:00.019 | 0.0 MB |
+| :ref:`sphx_glr_auto_examples_dynamics_225_HW09_P2v2.py` (``225_HW09_P2v2.py``) | 00:00.033 | 0.0 MB |
 +--------------------------------------------------------------------------------+-----------+--------+
 | :ref:`sphx_glr_auto_examples_dynamics_225_HW09_P3.py` (``225_HW09_P3.py``)     | 00:00.000 | 0.0 MB |
 +--------------------------------------------------------------------------------+-----------+--------+

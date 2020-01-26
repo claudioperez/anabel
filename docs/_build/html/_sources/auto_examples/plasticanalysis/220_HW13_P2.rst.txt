@@ -180,7 +180,7 @@ Vertical mechanism
       File "C:\Users\claud\Anaconda3\lib\site-packages\sphinx_gallery\gen_rst.py", line 425, in __call__
         exec(self.code, self.globals)
       File "C:\Users\claud\OneDrive\400_box\Python\myPackages\ema\examples\plasticanalysis\220_HW13_P2.py", line 62, in <module>
-      File "C:\Users\claud\OneDrive\400_box\Python\myPackages\ema\matrices.py", line 1754, in P_vector
+      File "C:\Users\claud\OneDrive\400_box\Python\myPackages\ema\matrices.py", line 1756, in P_vector
         P = np.zeros(model.nt)
     AttributeError: 'Static_matrix' object has no attribute 'nt'
 
@@ -190,7 +190,7 @@ Vertical mechanism
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.150 seconds)
+   **Total running time of the script:** ( 0 minutes  0.169 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plasticanalysis_220_HW13_P2.py:

@@ -43,4 +43,3 @@ fig, ax = plt.subplots(1,1)
 em.plot_U(mdl, Uf, ax, scale=0.001)
 
 Uf
-

@@ -97,7 +97,7 @@ class Structural_Vector(np.ndarray):
     
     def get(self, key):
         idx = np.array([i for i,j in enumerate(self.row_data) if str(j) == key], dtype=int)
-        row = self.row_data.index(component)
+        # row = self.row_data.index(component)
         return self[idx]
 
     def set_item(self, key, value):
@@ -105,10 +105,11 @@ class Structural_Vector(np.ndarray):
         self[idx] = value
 
     def rows(self, component):
-        rows = [self.row_data.index(item) for item in component]
-        idx = np.array([i for i,j in enumerate(self.row_data) if str(j) == key])
+        # rows = [self.row_data.index(item) for item in component]
+        # idx = np.array([i for i,j in enumerate(self.row_data) if str(j) == key])
+        idx = np.where(np.isin(self.row_data,component))[0]
         newV = self[idx]
-        newV.row_data = list(np.array(self.row_data)[idx])
+        newV.row_data = np.array(self.row_data)[idx]
         newV.model = self.model
         return newV
 
@@ -959,7 +960,8 @@ class Kinematic_matrix (Structural_Matrix):
         n_col = len(Af.T)
         tags = [elem.tag + "_" + rel for elem in self.model.elems for rel in elem.rel if elem.rel[rel]]
         # delcols = [idx for idx, rel in enumerate(self.model.rel) if rel==1]
-        delrows = [Af.row_data.index(tag) for tag in tags]
+        delrows = np.where(np.isin(Af.row_data,tags))
+        # delrows = [Af.row_data.index(tag) for tag in tags]
         newA = Af 
         for rw in delrows:
             newA[rw,:] = [0.]*n_col
@@ -1390,7 +1392,7 @@ class Stiffness_matrix (Structural_Matrix):
         elif type(Vector) is nForce_vector:
             vect = np.matmul(self, Vector).view(Displacement_vector)
             vect.row_data = self.row_data
-            vect.matrix = self
+            vect.model = self.model
         else:
             vect = Structural_Matrix.__matmul__(self, Vector)
         return vect
@@ -1769,7 +1771,7 @@ def P0_vector(model):
 def Pw_vector(model):
     P = np.zeros(model.nt)
     for elem in model.elems:
-        if type(elem) is ema.Beam:
+        if len(elem.dofs)>4:
             dofs = elem.dofs
             P[int(dofs[0])-1] +=  elem.w['y']*elem.L/2*elem.sn
             P[int(dofs[1])-1] += -elem.w['y']*elem.L/2*elem.cs

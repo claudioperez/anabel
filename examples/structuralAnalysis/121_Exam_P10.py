@@ -9,7 +9,7 @@ import sympy as sp
 import numpy as np
 import matplotlib.pyplot as plt
 
-p2 = em.Model(2,3)
+mdl = em.Model(2,3)
 
 n1 = mdl.node('1', 0.0, 0.0)
 n2 = mdl.node('2', 6.0, 0.0)
@@ -30,7 +30,5 @@ mdl.fix(n4, 'y')
 fig, ax= plt.subplots(1,1)
 em.plot_structure(mdl, ax)
 
-p2.numDOF()
-
-# em.utilities.export.FEDEAS(p2)
+mdl.numDOF()
 

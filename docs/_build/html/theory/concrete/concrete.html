@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>11 SMRF &#8212; EMA  documentation</title>
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html"><span><img src="../../_static/emtec-1.jpg"></span>
+          EMA</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html#dynamics">Dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html#plastic-analysis">Plastic analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Theory reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">ema</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">11 SMRF</a><ul>
+<li><a class="reference internal" href="#columns">Columns</a><ul>
+<li><a class="reference internal" href="#see-joint-section">SEE JOINT SECTION</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#beams">Beams</a><ul>
+<li><a class="reference internal" href="#shear">Shear</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#walls">12 Walls</a><ul>
+<li><a class="reference internal" href="#resistance-factors">Resistance Factors</a></li>
+<li><a class="reference internal" href="#behavioral-observations">13.4 Behavioral Observations</a><ul>
+<li><a class="reference internal" href="#slender-vs-squat">Slender vs Squat</a></li>
+<li><a class="reference internal" href="#flexural-response">Flexural Response</a></li>
+<li><a class="reference internal" href="#lateral-stability">Lateral stability</a></li>
+<li><a class="reference internal" href="#dynamic-response">Dynamic response</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#preliminary-proportioning-for-v-b">Preliminary Proportioning for $V_b$</a></li>
+<li><a class="reference internal" href="#detailing">Detailing</a></li>
+<li><a class="reference internal" href="#slender-walls-w-c-section">Slender Walls w/ C. Section</a><ul>
+<li><a class="reference internal" href="#distributed-rebar">Distributed rebar</a></li>
+<li><a class="reference internal" href="#boundary-elements">Boundary Elements</a></li>
+<li><a class="reference internal" href="#id1">Shear</a></li>
+<li><a class="reference internal" href="#sbe">SBE</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#walls-w-o-c-section">13.9 Walls w/o C. Section</a></li>
+<li><a class="reference internal" href="#conventional-squat-walls">13.10.1 Conventional Squat Walls</a></li>
+<li><a class="reference internal" href="#openings">13.16 - Openings</a></li>
+<li><a class="reference internal" href="#coupled-walls">13.12 Coupled Walls</a><ul>
+<li><a class="reference internal" href="#coupling-beams">Coupling beams</a></li>
+<li><a class="reference internal" href="#wall-piers">Wall Piers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#gravity-framing">13 Gravity Framing</a><ul>
+<li><a class="reference internal" href="#id2">Columns</a><ul>
+<li><a class="reference internal" href="#confinement">Confinement</a></li>
+<li><a class="reference internal" href="#id3">Shear</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id4">Beams</a></li>
+<li><a class="reference internal" href="#slabs">Slabs</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#diaphragms">14 Diaphragms</a><ul>
+<li><a class="reference internal" href="#moment">Moment</a></li>
+<li><a class="reference internal" href="#collectors">Collectors</a><ul>
+<li><a class="reference internal" href="#shear-friction">Shear friction</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id5">Openings</a><ul>
+<li><a class="reference internal" href="#comp-zones">Comp. Zones</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">11 SMRF</a><ul>
+<li><a class="reference internal" href="#columns">Columns</a><ul>
+<li><a class="reference internal" href="#see-joint-section">SEE JOINT SECTION</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#beams">Beams</a><ul>
+<li><a class="reference internal" href="#shear">Shear</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#walls">12 Walls</a><ul>
+<li><a class="reference internal" href="#resistance-factors">Resistance Factors</a></li>
+<li><a class="reference internal" href="#behavioral-observations">13.4 Behavioral Observations</a><ul>
+<li><a class="reference internal" href="#slender-vs-squat">Slender vs Squat</a></li>
+<li><a class="reference internal" href="#flexural-response">Flexural Response</a></li>
+<li><a class="reference internal" href="#lateral-stability">Lateral stability</a></li>
+<li><a class="reference internal" href="#dynamic-response">Dynamic response</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#preliminary-proportioning-for-v-b">Preliminary Proportioning for $V_b$</a></li>
+<li><a class="reference internal" href="#detailing">Detailing</a></li>
+<li><a class="reference internal" href="#slender-walls-w-c-section">Slender Walls w/ C. Section</a><ul>
+<li><a class="reference internal" href="#distributed-rebar">Distributed rebar</a></li>
+<li><a class="reference internal" href="#boundary-elements">Boundary Elements</a></li>
+<li><a class="reference internal" href="#id1">Shear</a></li>
+<li><a class="reference internal" href="#sbe">SBE</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#walls-w-o-c-section">13.9 Walls w/o C. Section</a></li>
+<li><a class="reference internal" href="#conventional-squat-walls">13.10.1 Conventional Squat Walls</a></li>
+<li><a class="reference internal" href="#openings">13.16 - Openings</a></li>
+<li><a class="reference internal" href="#coupled-walls">13.12 Coupled Walls</a><ul>
+<li><a class="reference internal" href="#coupling-beams">Coupling beams</a></li>
+<li><a class="reference internal" href="#wall-piers">Wall Piers</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#gravity-framing">13 Gravity Framing</a><ul>
+<li><a class="reference internal" href="#id2">Columns</a><ul>
+<li><a class="reference internal" href="#confinement">Confinement</a></li>
+<li><a class="reference internal" href="#id3">Shear</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id4">Beams</a></li>
+<li><a class="reference internal" href="#slabs">Slabs</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#diaphragms">14 Diaphragms</a><ul>
+<li><a class="reference internal" href="#moment">Moment</a></li>
+<li><a class="reference internal" href="#collectors">Collectors</a><ul>
+<li><a class="reference internal" href="#shear-friction">Shear friction</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#id5">Openings</a><ul>
+<li><a class="reference internal" href="#comp-zones">Comp. Zones</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+<div id="sourcelink">
+  <a href="../../_sources/theory/concrete/concrete.md.txt"
+     rel="nofollow">Source</a>
+</div>
+<form action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        </div>
+      </div>
+    <div class="col-md-9 content">
+      
+  <div class="section" id="smrf">
+<h1>11 SMRF<a class="headerlink" href="#smrf" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><p>Joint Shear</p></li>
+<li><p>Anchorage</p></li>
+<li><p>Column Shear</p></li>
+<li><p>$\sum M_{nc} \ge \frac{6}{5}\sum M_{nb}$ (Check one floor below roof)</p></li>
+</ul>
+<div class="section" id="columns">
+<h2>Columns<a class="headerlink" href="#columns" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="see-joint-section">
+<h3>SEE JOINT SECTION<a class="headerlink" href="#see-joint-section" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+<div class="section" id="beams">
+<h2>Beams<a class="headerlink" href="#beams" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="shear">
+<h3>Shear<a class="headerlink" href="#shear" title="Permalink to this headline">¶</a></h3>
+<p>$V_u = f(M_pr)$</p>
+<p>$V_c = 0$ in plastic hinge regions.</p>
+<div class="page"/></div>
+</div>
+</div>
+<div class="section" id="walls">
+<h1>12 Walls<a class="headerlink" href="#walls" title="Permalink to this headline">¶</a></h1>
+<p>$\delta_c$ Wall displacement capacity at top of wall</p>
+<div class="section" id="resistance-factors">
+<h2>Resistance Factors<a class="headerlink" href="#resistance-factors" title="Permalink to this headline">¶</a></h2>
+<p>Axial/Moment:<br />$\phi = 0.65-0.9$</p>
+<p>Shear:<br />$\phi = 0.75$, For $V_u$ amplified by $\Omega_v$<br />$\phi = 0.60$ if $V_n &lt; V(M_n)$<br />for squat walls, take $\phi=0.6$</p>
+<p>Coupling beam shear:<br />$\phi = 0.85$ diagonally reinforced<br />$\phi = 0.75$ otherwise</p>
+</div>
+<div class="section" id="behavioral-observations">
+<h2>13.4 Behavioral Observations<a class="headerlink" href="#behavioral-observations" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="slender-vs-squat">
+<h3>Slender vs Squat<a class="headerlink" href="#slender-vs-squat" title="Permalink to this headline">¶</a></h3>
+</div>
+<hr class="docutils" />
+<div class="section" id="flexural-response">
+<h3>Flexural Response<a class="headerlink" href="#flexural-response" title="Permalink to this headline">¶</a></h3>
+</div>
+<hr class="docutils" />
+<div class="section" id="lateral-stability">
+<h3>Lateral stability<a class="headerlink" href="#lateral-stability" title="Permalink to this headline">¶</a></h3>
+<hr class="docutils" />
+<p>$\lambda_c = \frac{c}{b}\frac{l_w}{b} &gt; 40$</p>
+<p>$b \geq \sqrt{0.025cl_w}$ <strong>for SBEs</strong>.</p>
+</div>
+<div class="section" id="dynamic-response">
+<h3>Dynamic response<a class="headerlink" href="#dynamic-response" title="Permalink to this headline">¶</a></h3>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="preliminary-proportioning-for-v-b">
+<h2>Preliminary Proportioning for $V_b$<a class="headerlink" href="#preliminary-proportioning-for-v-b" title="Permalink to this headline">¶</a></h2>
+<p>assume $l_{be}=0.2l_w$</p>
+</div>
+<div class="section" id="detailing">
+<h2>Detailing<a class="headerlink" href="#detailing" title="Permalink to this headline">¶</a></h2>
+<p>long. bar fracture:<br />$A_sf_y \ge A_{be}f_r \therefore \rho_l \ge 6\sqrt{f’_c}/f_y$</p>
+<p>Cut-offs:<br />$0.8l_w$ or $l_d$ above next floor</p>
+<p>No-splice zone:<br />min($20’$, $h_{1^{st}floor}$)</p>
+</div>
+<div class="section" id="slender-walls-w-c-section">
+<h2>Slender Walls w/ C. Section<a class="headerlink" href="#slender-walls-w-c-section" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="distributed-rebar">
+<h3>Distributed rebar<a class="headerlink" href="#distributed-rebar" title="Permalink to this headline">¶</a></h3>
+<p>$\rho_l, \quad \rho_t=\frac{2A_{si}}{ts}\ge 0.0025$ if $V_u \ge \lambda A_{cv}\sqrt{f’_c}$ (18.10.2.1)</p>
+</div>
+<div class="section" id="boundary-elements">
+<h3>Boundary Elements<a class="headerlink" href="#boundary-elements" title="Permalink to this headline">¶</a></h3>
+<p>SEE NOTES PAGE 163 B.E. FRACTURE</p>
+</div>
+<div class="section" id="id1">
+<h3>Shear<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>$V_u=\frac{M_n[P_u]}{M_u}\omega_vV_{code}$</p>
+</div>
+<div class="section" id="sbe">
+<h3>SBE<a class="headerlink" href="#sbe" title="Permalink to this headline">¶</a></h3>
+<hr class="docutils" />
+<p>Required if <br />$c \ge\dfrac{l_w}{900(\delta_{u}/h_w)} \quad \text{or} \quad \sigma \ge \dfrac{f’_c}{5}$</p>
+<p>use given graph to determine $c$.</p>
+<p>for min. height of $h_{be} = \text{max}(l_w, \frac{M_{u,cs}}{4V_{u,cs}})$</p>
+<ul class="simple">
+<li><p>$A_{sh} \ge 0.09 s b_c \frac{f’<em>c}{f_y} \ge0.3\left(\frac{A_g}{A</em>{ch}}-1\right)sb_c \frac{f’_c}{f_y}$</p></li>
+<li></li>
+</ul>
+</div>
+</div>
+<div class="section" id="walls-w-o-c-section">
+<h2>13.9 Walls w/o C. Section<a class="headerlink" href="#walls-w-o-c-section" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="conventional-squat-walls">
+<h2>13.10.1 Conventional Squat Walls<a class="headerlink" href="#conventional-squat-walls" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="openings">
+<h2>13.16 - Openings<a class="headerlink" href="#openings" title="Permalink to this headline">¶</a></h2>
+<p>Tie region: $A_s=T_u/\phi f_y$<br />Strut region: $P_u \leq \phi P_o$</p>
+<p>$\phi = 0.65$ in wall piers<br />$\phi = 0.60$ for wall shear<br />$\phi = 0.75$ otherwise</p>
+</div>
+<div class="section" id="coupled-walls">
+<h2>13.12 Coupled Walls<a class="headerlink" href="#coupled-walls" title="Permalink to this headline">¶</a></h2>
+<hr class="docutils" />
+<div class="section" id="coupling-beams">
+<h3>Coupling beams<a class="headerlink" href="#coupling-beams" title="Permalink to this headline">¶</a></h3>
+<p>$$
+V_{n}=2 A_{v d} f_{y} \sin \alpha \leq 10 \sqrt{f_{c}^{\prime}} A_{c w}
+$$</p>
+<ul class="simple">
+<li><p>$\phi$ for $A_{tr}$ is $0.75$</p></li>
+</ul>
+</div>
+<div class="section" id="wall-piers">
+<h3>Wall Piers<a class="headerlink" href="#wall-piers" title="Permalink to this headline">¶</a></h3>
+<p>$P_u=1.2P_D+0.5P_L+n_sP_E$</p>
+</div>
+</div>
+</div>
+<div class="section" id="gravity-framing">
+<h1>13 Gravity Framing<a class="headerlink" href="#gravity-framing" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id2">
+<h2>Columns<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="confinement">
+<h3>Confinement<a class="headerlink" href="#confinement" title="Permalink to this headline">¶</a></h3>
+<p>if $P_u \ge 0.35 A_gf’_c$:</p>
+<ul class="simple">
+<li><p>Support all bars with $135^o$ hook.</p></li>
+<li><p>$\frac{A_{sh}}{sb_c}\ge 0.3…, 0.09…, 0.2…$</p></li>
+</ul>
+</div>
+<div class="section" id="id3">
+<h3>Shear<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
+<p>$V_u = f(M_{pr}(P_u))$, often $\frac{2M_{pr}}{l_w}$</p>
+</div>
+</div>
+<div class="section" id="id4">
+<h2>Beams<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>FIGURE FROM NOTES PAGE 200</p>
+</div>
+<div class="section" id="slabs">
+<h2>Slabs<a class="headerlink" href="#slabs" title="Permalink to this headline">¶</a></h2>
+<p>$V_n = 4\lambda_s\sqrt{f’_c}b_o d$</p>
+<p>DRIFT CAPACITY</p>
+<div class="page"/></div>
+</div>
+<div class="section" id="diaphragms">
+<h1>14 Diaphragms<a class="headerlink" href="#diaphragms" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="moment">
+<h2>Moment<a class="headerlink" href="#moment" title="Permalink to this headline">¶</a></h2>
+<p>$M_u =\dfrac{wl^2}{8}\le \phi M_n = 0.9(A_sf_y0.9d)$</p>
+<p>$T_u=C_u=\frac{M_u}{jd}$</p>
+<p>$T_u \le Tn = 0.9A_sfy$</p>
+<p>$C_u \le \phi \alpha P_{no} = (0.65)(0.8)(A_sf_y+0.85A_cf’_c)$</p>
+</div>
+<div class="section" id="collectors">
+<h2>Collectors<a class="headerlink" href="#collectors" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="shear-friction">
+<h3>Shear friction<a class="headerlink" href="#shear-friction" title="Permalink to this headline">¶</a></h3>
+<p>$\Omega_oV_u\le \underbrace{\phi}<em>{0.75} \underbrace{\mu}</em>{1.4} A_{sf}f_y$</p>
+<ul class="simple">
+<li><p>Give $A_{sf}$ as $in^2/ft$</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="id5">
+<h2>Openings<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="comp-zones">
+<h3>Comp. Zones<a class="headerlink" href="#comp-zones" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><p>Confine if $\frac{C}{A}\ge 0.2f’_c$</p></li>
+</ul>
+</div>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+<div id="sourcelink">
+  <a href="../../_sources/theory/concrete/concrete.md.txt"
+     rel="nofollow">Source</a>
+</div>
+      
+    </p>
+    <p>
+        &copy; Copyright 2020, Claudio Perez.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

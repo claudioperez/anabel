@@ -21,7 +21,7 @@ Lower Bound - 2
         exec(self.code, self.globals)
       File "C:\Users\claud\OneDrive\400_box\Python\myPackages\ema\examples\plasticanalysis\220_HW12_P2.py", line 74, in <module>
         A = em.A_matrix(mdl)
-      File "C:\Users\claud\OneDrive\400_box\Python\myPackages\ema\matrices.py", line 1754, in P_vector
+      File "C:\Users\claud\OneDrive\400_box\Python\myPackages\ema\matrices.py", line 1756, in P_vector
         P = np.zeros(model.nt)
     AttributeError: 'Static_matrix' object has no attribute 'nt'
 
@@ -111,7 +111,7 @@ Lower Bound - 2
 
 .. rst-class:: sphx-glr-timing
 
-   **Total running time of the script:** ( 0 minutes  0.110 seconds)
+   **Total running time of the script:** ( 0 minutes  0.194 seconds)
 
 
 .. _sphx_glr_download_auto_examples_plasticanalysis_220_HW12_P2.py:

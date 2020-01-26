@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>Strain &#8212; EMA  documentation</title>
+    <link rel="stylesheet" href="../../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/gallery.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../../index.html"><span><img src="../../../_static/emtec-1.jpg"></span>
+          EMA</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto_examples/index.html">Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto_examples/index.html#dynamics">Dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../auto_examples/index.html#plastic-analysis">Plastic analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">Theory reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">ema</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">Strain</a><ul>
+<li><a class="reference internal" href="#green-lagrange">Green-Lagrange</a></li>
+<li><a class="reference internal" href="#rotated-engineering">Rotated Engineering</a></li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+              
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">Strain</a><ul>
+<li><a class="reference internal" href="#green-lagrange">Green-Lagrange</a></li>
+<li><a class="reference internal" href="#rotated-engineering">Rotated Engineering</a></li>
+</ul>
+</li>
+</ul>
+
+<div id="sourcelink">
+  <a href="../../../_sources/theory/StructuralAnalysis/Nonlinear/Strain.md.txt"
+     rel="nofollow">Source</a>
+</div>
+<form action="../../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        </div>
+      </div>
+    <div class="col-md-9 content">
+      
+  <div class="section" id="strain">
+<h1>Strain<a class="headerlink" href="#strain" title="Permalink to this headline">¶</a></h1>
+<p>There are many possible representations of deformation. Any reasonable representation however, must be able to represent a rigid rotation of an unstrained body without producing any strain. The engineering strain fails here, thus it cannot be used for general geometrically nonlinear cases <a class="reference external" href="https://www.comsol.com/blogs/why-all-these-stresses-and-strains/">^1</a>.</p>
+<div class="section" id="green-lagrange">
+<h2>Green-Lagrange<a class="headerlink" href="#green-lagrange" title="Permalink to this headline">¶</a></h2>
+<p><em>The classical Lagrangian finite strain measure</em>[^3]</p>
+<ul class="simple">
+<li><p>We should note that in the definition of the Green-Lagrange strain tensor, all derivatives are with respect to the initial coordinates of the material particles. For this reason, we say that the strain tensor is defined with respect to the initial coordinates of the body. Also note that, although only up to quadratic terms of displacement derivatives appear in ( 6.55), this is the complete strain tensor; i.e., we have not neglect~d any higher-order terms [^2].</p></li>
+<li><p>contains derivatives of the displacements with respect to the original configuration <a class="reference external" href="https://www.comsol.com/blogs/why-all-these-stresses-and-strains/">^1</a>.</p></li>
+<li><p>Values represent strains in material directions, similar to the behavior of the Second Piola-Kirchhoff stress. This allows a physical interpretation <a class="reference external" href="https://www.comsol.com/blogs/why-all-these-stresses-and-strains/">^1</a>.</p></li>
+<li><p>Even for a uniaxial case, the Green-Lagrange strain is strongly nonlinear with respect to the displacement. If an object is stretched to twice its original length, the Green-Lagrange strain is 1.5 in the stretching direction. If the object is compressed to half its length, the strain would read -0.375 <a class="reference external" href="https://www.comsol.com/blogs/why-all-these-stresses-and-strains/">^1</a>.</p></li>
+</ul>
+</div>
+<div class="section" id="rotated-engineering">
+<h2>Rotated Engineering<a class="headerlink" href="#rotated-engineering" title="Permalink to this headline">¶</a></h2>
+<p>[^2]: Bathe, 2014 978-0-9790049-5-7
+[^3]: Felippa, Chp 7</p>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+<div id="sourcelink">
+  <a href="../../../_sources/theory/StructuralAnalysis/Nonlinear/Strain.md.txt"
+     rel="nofollow">Source</a>
+</div>
+      
+    </p>
+    <p>
+        &copy; Copyright 2020, Claudio Perez.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>

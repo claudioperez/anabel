@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>III Balance Laws &#8212; EMA  documentation</title>
+    <link rel="stylesheet" href="../../_static/bootstrap-sphinx.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/gallery.css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-1.11.0.min.js"></script>
+    <script type="text/javascript" src="../../_static/js/jquery-fix.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../../_static/bootstrap-sphinx.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="IV Linear Elasticity" href="04-LinearElasticity.html" />
+    <link rel="prev" title="II Kinematics" href="02_Kinematics.html" />
+<meta charset='utf-8'>
+<meta http-equiv='X-UA-Compatible' content='IE=edge,chrome=1'>
+<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1'>
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+  </head><body>
+
+  <div id="navbar" class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <div class="navbar-header">
+        <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".nav-collapse">
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="../../index.html"><span><img src="../../_static/emtec-1.jpg"></span>
+          EMA</a>
+        <span class="navbar-text navbar-version pull-left"><b></b></span>
+      </div>
+
+        <div class="collapse navbar-collapse nav-collapse">
+          <ul class="nav navbar-nav">
+            
+            
+              <li class="dropdown globaltoc-container">
+  <a role="button"
+     id="dLabelGlobalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="../../index.html">Site <b class="caret"></b></a>
+  <ul class="dropdown-menu globaltoc"
+      role="menu"
+      aria-labelledby="dLabelGlobalToc"><p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html">Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html#dynamics">Dynamics</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auto_examples/index.html#plastic-analysis">Plastic analysis</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">Theory reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">ema</a></li>
+</ul>
+</ul>
+</li>
+              
+                <li class="dropdown">
+  <a role="button"
+     id="dLabelLocalToc"
+     data-toggle="dropdown"
+     data-target="#"
+     href="#">Page <b class="caret"></b></a>
+  <ul class="dropdown-menu localtoc"
+      role="menu"
+      aria-labelledby="dLabelLocalToc"><ul>
+<li><a class="reference internal" href="#">III Balance Laws</a><ul>
+<li><a class="reference internal" href="#energy-entropy-balance">5. Energy-Entropy Balance</a><ul>
+<li><a class="reference internal" href="#energy">5.1 Energy</a></li>
+<li><a class="reference internal" href="#entropy">5.2 Entropy</a></li>
+<li><a class="reference internal" href="#free-energy">5.3 Free Energy</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#linear-constitutive-equations">7 Linear Constitutive Equations</a><ul>
+<li><a class="reference internal" href="#free-energy-elasticity">7.1 Free Energy: Elasticity</a></li>
+<li><a class="reference internal" href="#isotropic-relations">7.5 Isotropic Relations</a></li>
+<li><a class="reference internal" href="#id1">7.5.4</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</ul>
+</li>
+              
+            
+            
+              
+                
+  <li>
+    <a href="02_Kinematics.html" title="Previous Chapter: II Kinematics"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; II Kinematics</span>
+    </a>
+  </li>
+  <li>
+    <a href="04-LinearElasticity.html" title="Next Chapter: IV Linear Elasticity"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">IV Linear Elasticity &raquo;</span>
+    </a>
+  </li>
+              
+            
+            
+            
+            
+          </ul>
+
+          
+            
+<form class="navbar-form navbar-right" action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+          
+        </div>
+    </div>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <div class="col-md-3">
+        <div id="sidebar" class="bs-sidenav" role="complementary"><ul>
+<li><a class="reference internal" href="#">III Balance Laws</a><ul>
+<li><a class="reference internal" href="#energy-entropy-balance">5. Energy-Entropy Balance</a><ul>
+<li><a class="reference internal" href="#energy">5.1 Energy</a></li>
+<li><a class="reference internal" href="#entropy">5.2 Entropy</a></li>
+<li><a class="reference internal" href="#free-energy">5.3 Free Energy</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#linear-constitutive-equations">7 Linear Constitutive Equations</a><ul>
+<li><a class="reference internal" href="#free-energy-elasticity">7.1 Free Energy: Elasticity</a></li>
+<li><a class="reference internal" href="#isotropic-relations">7.5 Isotropic Relations</a></li>
+<li><a class="reference internal" href="#id1">7.5.4</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <li>
+    <a href="02_Kinematics.html" title="Previous Chapter: II Kinematics"><span class="glyphicon glyphicon-chevron-left visible-sm"></span><span class="hidden-sm hidden-tablet">&laquo; II Kinematics</span>
+    </a>
+  </li>
+  <li>
+    <a href="04-LinearElasticity.html" title="Next Chapter: IV Linear Elasticity"><span class="glyphicon glyphicon-chevron-right visible-sm"></span><span class="hidden-sm hidden-tablet">IV Linear Elasticity &raquo;</span>
+    </a>
+  </li>
+<div id="sourcelink">
+  <a href="../../_sources/theory/Mechanics/03_BalanceLaws.md.txt"
+     rel="nofollow">Source</a>
+</div>
+<form action="../../search.html" method="get">
+ <div class="form-group">
+  <input type="text" name="q" class="form-control" placeholder="Search" />
+ </div>
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+        </div>
+      </div>
+    <div class="col-md-9 content">
+      
+  <div class="section" id="iii-balance-laws">
+<h1>III Balance Laws<a class="headerlink" href="#iii-balance-laws" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="energy-entropy-balance">
+<h2>5. Energy-Entropy Balance<a class="headerlink" href="#energy-entropy-balance" title="Permalink to this headline">¶</a></h2>
+<p>Infinitesimal specializations boxed.</p>
+<div class="section" id="energy">
+<h3>5.1 Energy<a class="headerlink" href="#energy" title="Permalink to this headline">¶</a></h3>
+<p>$$\rho \dot{\varepsilon}<em>{m}=\sigma: \mathbf{D}-\operatorname{div} \mathbf{q}+r \quad \rho \dot{\varepsilon}</em>{m}=\sigma_{i j} D_{i j}-\frac{\partial q_{i}}{\partial x_{i}}+r$$</p>
+<p>$$\mathbf{D} \stackrel{\text { def }}{=} \operatorname{sym}[\operatorname{grad} \dot{\mathbf{u}}], \quad \quad D_{i j}=\frac{1}{2}\left(\dot{u}<em>{i, j}+\dot{u}</em>{j, i}\right)$$</p>
+<p>$$\boxed{\dot{\varepsilon}=\sigma: \dot{\epsilon}-\operatorname{div} \mathbf{q}+r, \quad \dot{\varepsilon}=\sigma_{i j} \dot{\epsilon}<em>{i j}-\frac{\partial q</em>{i}}{\partial x_{i}}+r
+}$$</p>
+</div>
+<div class="section" id="entropy">
+<h3>5.2 Entropy<a class="headerlink" href="#entropy" title="Permalink to this headline">¶</a></h3>
+<p>$$\rho \dot{\eta}<em>{m} \geq-\operatorname{div}\left(\frac{\mathrm{q}}{\vartheta}\right)+\frac{r}{\vartheta}, \quad \rho \dot{\eta}</em>{m} \geq-\frac{\partial}{\partial x_{i}}\left(\frac{q_{i}}{\vartheta}\right)+\frac{r}{\vartheta}$$
+$$\boxed{\dot{\eta} \geq-\operatorname{div}\left(\frac{\mathrm{q}}{\vartheta}\right)+\frac{r}{\vartheta}, \quad \dot{\eta} \geq-\frac{\partial}{\partial x_{i}}\left(\frac{q_{i}}{\vartheta}\right)+\frac{r}{\vartheta}}$$</p>
+</div>
+<div class="section" id="free-energy">
+<h3>5.3 Free Energy<a class="headerlink" href="#free-energy" title="Permalink to this headline">¶</a></h3>
+<p>Where thermal influences are negligible:
+$$\mathcal{D} \stackrel{\text { def }}{=} \sigma: \mathbf{D}-\rho \dot{\psi}_{m} \geq 0$$
+$$\boxed{\mathcal{D} \stackrel{\text { def }}{=} \sigma: \dot{\epsilon}-\dot{\psi} \geq 0}$$
+$\mathcal{D} &gt;0$ generated by plastic deformations.</p>
+</div>
+</div>
+<div class="section" id="linear-constitutive-equations">
+<h2>7 Linear Constitutive Equations<a class="headerlink" href="#linear-constitutive-equations" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="free-energy-elasticity">
+<h3>7.1 Free Energy: Elasticity<a class="headerlink" href="#free-energy-elasticity" title="Permalink to this headline">¶</a></h3>
+<p>$$\sigma=\mathbb{C} \epsilon, \quad \sigma_{i j}=C_{i j k l} \epsilon_{k l}$$
+Voight Notation:</p>
+<p>$$\left(\begin{array}{l}{\sigma_{11}} \ {\sigma_{22}} \ {\sigma_{33}} \ {\sigma_{23}} \ {\sigma_{13}} \ {\sigma_{12}}\end{array}\right)=\left(\begin{array}{cccccc}{C_{1111}} &amp; {C_{1122}} &amp; {C_{1133}} &amp; {C_{1123}} &amp; {C_{1113}} &amp; {C_{112}} \ {C_{211}} &amp; {C_{222}} &amp; {C_{233}} &amp; {C_{223}} &amp; {C_{2213}} &amp; {C_{2212}} \ {C_{331}} &amp; {C_{332}} &amp; {C_{333}} &amp; {C_{333}} &amp; {C_{313}} &amp; {C_{2312}} \ {C_{1311}} &amp; {C_{1322}} &amp; {C_{1333}} &amp; {C_{1323}} &amp; {C_{1313}} &amp; {C_{1312}} \ {C_{1211}} &amp; {C_{1222}} &amp; {C_{1233}} &amp; {C_{1223}} &amp; {C_{1213}} &amp; {C_{1212}}\end{array}\right)\left(\begin{array}{c}{\epsilon_{11}} \ {\epsilon_{22}} \ {\epsilon_{33}} \ {2 \epsilon_{23}} \ {2 \epsilon_{13}} \ {2 \epsilon_{12}}\end{array}\right)$$</p>
+</div>
+<div class="section" id="isotropic-relations">
+<h3>7.5 Isotropic Relations<a class="headerlink" href="#isotropic-relations" title="Permalink to this headline">¶</a></h3>
+<p>$\boldsymbol{\sigma}=\mathbb{C} \boldsymbol{\epsilon}=2 \mu \boldsymbol{\epsilon}+\lambda(\operatorname{tr} \boldsymbol{\epsilon}) \mathbf{1}$</p>
+<p>$\boldsymbol{\sigma}=2 \mu \boldsymbol{\epsilon}^{\prime}+\kappa(\operatorname{tr} \boldsymbol{\epsilon}) \mathbf{1},
+\quad \sigma_{i j}=2 \mu \epsilon_{i j}^{\prime}+\kappa\left(\epsilon_{k k}\right) \delta_{i j}$</p>
+<p>$\mathbb{C}=2 \mu^{\mathrm{sym}}+\lambda \mathbf{1} \otimes \mathbf{1}, \quad C_{i j k l}=\mu\left(\delta_{i k} \delta_{j l}+\delta_{i l} \delta_{j k}\right)+\lambda \delta_{i j} \delta_{k l}$</p>
+<p>$\epsilon=\frac{1}{2 \mu} \sigma^{\prime}+\frac{1}{9 \kappa}(\operatorname{tr} \sigma) 1,
+\quad \epsilon_{i j}=\frac{1}{2 \mu} \sigma_{i j}^{\prime}+\frac{1}{9 \kappa}\left(\sigma_{k k}\right) \delta_{i j}$</p>
+<p>$E \equiv \frac{9 \kappa \mu}{3 \kappa+\mu}, \quad \nu \equiv \frac{1}{2}\left[\frac{3 \kappa-2 \mu}{3 \kappa+\mu}\right]$</p>
+<p>$\kappa=\lambda+\frac{2}{3} \mu$</p>
+</div>
+<div class="section" id="id1">
+<h3>7.5.4<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>$$
+\sigma=\frac{E}{(1+\nu)}\left[\epsilon+\frac{\nu}{(1-2 \nu)}(\operatorname{tr} \epsilon) 1\right], \quad \sigma_{i j}=\frac{E}{(1+\nu)}\left[\epsilon_{i j}+\frac{\nu}{(1-2 \nu)}\left(\epsilon_{k k}\right) \delta_{i j}\right]
+$$</p>
+<p>$$
+\epsilon=\frac{1}{E}[(1+\nu) \sigma-\nu(\operatorname{tr} \sigma) 1] . \quad \epsilon_{i j}=\frac{1}{E}\left[(1+\nu) \sigma_{i j}-\nu\left(\sigma_{k k}\right) \delta_{i j}\right]
+$$</p>
+</div>
+</div>
+</div>
+
+
+    </div>
+      
+  </div>
+</div>
+<footer class="footer">
+  <div class="container">
+    <p class="pull-right">
+      <a href="#">Back to top</a>
+      
+        <br/>
+        
+<div id="sourcelink">
+  <a href="../../_sources/theory/Mechanics/03_BalanceLaws.md.txt"
+     rel="nofollow">Source</a>
+</div>
+      
+    </p>
+    <p>
+        &copy; Copyright 2020, Claudio Perez.<br/>
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 2.2.2.<br/>
+    </p>
+  </div>
+</footer>
+  </body>
+</html>
