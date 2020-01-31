@@ -1573,6 +1573,33 @@ elcentro = np.array([[0.0,0.0063],
     [31.16,0],
     [31.18,0]])    
 
+
+class EqResponse:
+    def __init__(self,ground_motion):
+        self.ground_motion = ground_motion
+    
+    def RHA(period, damping=1.0, R=1.0):
+        g=386.4
+        ground_motion = elcentro
+        time = ground_motion[:,0]
+        t_span = (time[0], time[-1])
+        u0 = (0.0, 0.0)
+
+        def EOM(t, y):
+            i = np.argmin(np.abs(time - t))
+            D, dDdt = y
+            dydt = [dDdt, -ground_motion[i,1]*g-omega**2*D-2*zeta*omega*dDdt]
+            return dydt
+
+        rtol=atol=1e-8
+        sol = solve_ivp(EOM, y0=u0, t_span=t_span, rtol=rtol, atol=atol)
+        D = sol.y[0,:]
+        t = sol.t
+        return t, D
+
+
+
+
 def ElcentroRHA(zeta, omega):
     g=386.4
     ground_motion = elcentro
