@@ -28,7 +28,7 @@ EMA Documentation.
    submodules
    auto_examples/index.rst
    theory/index.rst
-   Basics.rst
+   basics.rst
    modules
 
 .. .. toctree::
