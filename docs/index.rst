@@ -22,7 +22,7 @@ EMA Documentation.
    SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 .. toctree::
-   :maxdepth: 1
+   :maxdepth:
    :caption: Contents:
    
    submodules
