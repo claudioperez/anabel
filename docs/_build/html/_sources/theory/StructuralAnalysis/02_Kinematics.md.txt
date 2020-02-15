@@ -1,6 +1,0 @@
-# Mechanisms
-
-## Analytic
-
-## Geometric
-

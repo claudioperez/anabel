@@ -1578,7 +1578,7 @@ class EqResponse:
     def __init__(self,ground_motion):
         self.ground_motion = ground_motion
     
-    def RHA(period, damping=1.0, R=1.0):
+    def RHA(self, period, damping=1.0, R=1.0):
         g=386.4
         ground_motion = elcentro
         time = ground_motion[:,0]
@@ -1621,7 +1621,8 @@ def ElcentroRHA(zeta, omega):
 
 
 def characterize(model):
-    Bo = B_matrix(model).o.del_zeros()
+    # Bo = B_matrix(model).o.del_zeros()
+    Bo = B_matrix(model).o
     r = Bo.rank 
     nc = len(Bo[0])
     nr = len(Bo.T[0])

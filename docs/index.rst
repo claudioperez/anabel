@@ -25,18 +25,12 @@ EMA Documentation.
    :maxdepth:
    :caption: Contents:
    
-   submodules
-   auto_examples/index.rst
+   
+
    theory/index.rst
    basics.rst
    modules
 
-.. .. toctree::
-..    :maxdepth: 2
-..    :caption: My Modules:
-   
-..    ema 
-..    ema/analysis
 
 
 Indices and tables

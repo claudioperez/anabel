@@ -182,10 +182,6 @@ class Element(BasicLink):
 
         if hasattr( self , "mat" ):
             self.mat.commitHistory()
-    
-    
-            
-
 
 
 class Truss(Element):
@@ -351,9 +347,11 @@ class Beam(Element):
     
     nv = 3
     nn = 2
+    nq = 3
     ndm = 2
     ndf = 3
     force_dict = {'1':0, '2':0, '3': 0}
+    Qpl = np.zeros((2,nq))
     
     def __init__(self, tag, iNode, jNode, E, A, I):
         super().__init__(self.ndf, self.ndm, self.force_dict, [iNode,jNode])
@@ -365,7 +363,7 @@ class Beam(Element):
         self.q = {'1':0, '2':0, '3': 0}     # basic element force
         self.v = {'1':0, '2':0, '3': 0}
         self.w = {'x':0, 'y':0}             #':  "uniform element loads in x and y",
-       
+
     def __repr__(self):
         return 'el-{}'.format(self.tag) 
 
@@ -497,7 +495,6 @@ class Beam(Element):
             bg[:,0] = [0.0]*bg.shape[0]
             # bg = np.delete(bg, 0, axis=1)
 
-        
         bg = Structural_Matrix(bg)
         bg.tag = 'b'
         bg.column_data = ['x', 'ri', 'rj']

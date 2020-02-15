@@ -90,7 +90,7 @@ class Structural_Vector(np.ndarray):
     def __add__(self, other):
         if isinstance(other, type(self)):
             out = np.add(self, other).view(type(self))
-            transfer_vars(self,out)
+            transfer_vars(self, out)
         else:
             out = super().__add__(other)
         return out
@@ -172,8 +172,9 @@ class Structural_Matrix(np.ndarray):
         if (isinstance(other, Structural_Matrix)
             or isinstance(other, Structural_Vector)):
             out.row_data = self.row_data
-
         return out
+
+    
     
     def __truediv__(self, other):
         out = np.ndarray.__truediv__(self, other) 
@@ -218,7 +219,6 @@ class Structural_Matrix(np.ndarray):
         mat.column_data = self.row_data
         return mat
     
-
     @property
     def rank(self):
         """Return the rank of a matrix"""
@@ -247,7 +247,6 @@ class Structural_Matrix(np.ndarray):
     def lu(self):
         
         return scipy.linalg.lu(self)
-
 
     @property
     def c(self):
@@ -333,7 +332,6 @@ class Structural_Matrix(np.ndarray):
         newM.row_data = list(np.delete(self.row_data, delrows))
         return newM
         
-
     def add_cols(self, component):
         if "colinear" in component:
             vertical = [elem for elem in self.model.elems if elem.Dx==0.0]
@@ -449,8 +447,8 @@ class Static_matrix (Structural_Matrix):
         if rng is None:
             self.rng = None
         self.model = model
-        self.row_data = [str(dof) for dof in range(1, model.nt+1)]
-        self.column_data = [elem.tag+'_'+key for elem in model.elems for key in elem.rel.keys()]
+        self.row_data = np.array([str(dof) for dof in range(1, model.nt+1)])
+        self.column_data = np.array([elem.tag+'_'+key for elem in model.elems for key in elem.rel.keys()])
         if matrix is not None:
             fullnq = sum([len(elem.rel) for elem in model.elems])
             self[:,:] = np.zeros((model.nt,fullnq))
@@ -484,17 +482,27 @@ class Static_matrix (Structural_Matrix):
         # newB.column_data = self.column_data
         return newB
         
+    # @property
+    # def i(self):
+    #     """Removes rows of B_matrix corresponding to redundant forces"""
+    #     # reducedB = self.f.c.del_zeros()
+    #     reducedB = self.f.c
+    #     rdts = reducedB.model.redundants
+    #     tags = [q.elem.tag + '_'+str(q.nature) for q in rdts]
+    #     delcols = [reducedB.column_data.index(tag) for tag in tags]
+    #     newB = np.delete(reducedB, delcols, axis=1).view(Static_matrix)
+    #     transfer_vars(reducedB, newB)
+    #     newB.column_data = list(np.delete(reducedB.column_data, delcols))
+    #     return newB
+
     @property
     def i(self):
-        """Removes rows of B_matrix corresponding to redundant forces"""
-        # reducedB = self.f.c.del_zeros()
-        reducedB = self.f.c
-        rdts = reducedB.model.redundants
-        tags = [q.elem.tag + '_'+str(q.nature) for q in rdts]
-        delcols = [reducedB.column_data.index(tag) for tag in tags]
-        newB = np.delete(reducedB, delcols, axis=1).view(Static_matrix)
-        transfer_vars(reducedB, newB)
-        newB.column_data = list(np.delete(reducedB.column_data, delcols))
+        """Removes rows of B_matrix corresponding to primary (non-redundant) forces"""
+        Bf = self.f
+        idx_i = self.model.idx_i
+        newB = Bf[:,idx_i]
+        transfer_vars(Bf, newB)
+        newB.column_data = Bf.column_data[idx_i]
         return newB
     
     @property
@@ -540,19 +548,26 @@ class Static_matrix (Structural_Matrix):
     def fc(self):
         return self.f.c
     
+    # @property
+    # def x(self):
+    #     """Removes rows of B_matrix corresponding to primary (non-redundant) forces"""
+    #     # rdts = self.model.redundants
+    #     # tags = [q.elem.tag + '_'+str(q.nature) for q in rdts]
+    #     # cols = [self.column_data.index(tag) for tag in tags]
+    #     # newB = self[:,cols]
+    #     transfer_vars(self, newB)
+    #     newB.column_data = [self.column_data[col] for col in cols]
+    #     # newB.row_data = self.row_data
+    #     # newB.model = self.model
+    #     return newB
+
     @property
     def x(self):
-        """Removes rows of B_matrix corresponding to primary (non-redundant) forces
-        
-        """
-        rdts = self.model.redundants
-        tags = [q.elem.tag + '_'+str(q.nature) for q in rdts]
-        cols = [self.column_data.index(tag) for tag in tags]
-        newB = self[:,cols]
+        """Removes rows of B_matrix corresponding to primary (non-redundant) forces"""
+        idx_x = self.model.idx_x
+        newB = self[:,idx_x]
         transfer_vars(self, newB)
-        newB.column_data = [self.column_data[col] for col in cols]
-        # newB.row_data = self.row_data
-        # newB.model = self.model
+        newB.column_data = self.column_data[idx_x]
         return newB
 
 
@@ -575,14 +590,7 @@ class Static_matrix (Structural_Matrix):
         Bbarx.column_data = Bbarxi.column_data
         Bbarx.row_data = self.column_data
 
-        # for idxr, rw in enumerate(Bbarx.row_data):
-        #     if rw in Bbarxi.row_data:
-        #         for idxc, cl in enumerate(Bbarx.column_data):
-        #             print(rw,cl)
-        #             if cl in Bbarxi.column_data:
-        #                 Bbarx[idxr,idxc] = Bbarxi.get(rw,cl)
-        #             elif cl==rw:
-        #                 Bbarx[idxr, idxc] = 1.
+
         for idxc, cl in enumerate(Bbarx.column_data):
             for idxr, rw in enumerate(Bbarx.row_data):
                 if rw in Bbarxi.row_data:
@@ -646,7 +654,7 @@ class nStatic_matrix(Structural_Matrix):
         newB = np.delete(self, delrows, axis=0).view(type(self))
         transfer_vars(self, newB)
         # newB.model = self.model
-        newB.row_data = list(np.delete(self.row_data, delrows))
+        newB.row_data = np.delete(self.row_data, delrows)
         # newB.column_data = self.column_data
         return newB
         
@@ -677,7 +685,7 @@ class nStatic_matrix(Structural_Matrix):
         """Removes columns corresponding to element hinges/releases"""
         Af = self.f
         idx_c = self.model.idx_c
-        newA = Af[:idx_c]
+        newA = Af[:,idx_c]
         transfer_vars(Af, newA)
         newA.column_data = Af.column_data[idx_c]
         return newA
@@ -712,7 +720,7 @@ class nStatic_matrix(Structural_Matrix):
         cols = [self.column_data.index(tag) for tag in tags]
         newB = self[:,cols]
         transfer_vars(self, newB)
-        newB.column_data = [self.column_data[col] for col in cols]
+        newB.column_data = np.array([self.column_data[col] for col in cols])
         # newB.row_data = self.row_data
         # newB.model = self.model
         return newB
@@ -780,8 +788,28 @@ def nB_matrix(model):
             B[int(eidi)-1,ci:ci+nq] = bg[j,:]
         ci = ci+nq
     input_array = B
-    return np.asarray(input_array).view(cls)
+    # return np.asarray(input_array).view(nStatic_matrix)
+    matrix =  np.asarray(input_array)
     return nStatic_matrix(model, matrix, rng)
+
+def Bh_matrix(model):
+    """Returns a Static_matrix object"""
+    fullnq = sum([len(elem.rel) for elem in model.elems])
+    B = np.zeros((model.nt, fullnq))
+    ci = 0
+    for elem in model.elems:
+        eid = elem.dofs
+        bg = elem.bg_matrix(Roption=True)
+        nq = np.size(bg,1)
+        for j,eidi in enumerate(eid):
+            B[int(eidi)-1,ci:ci+nq] = bg[j,:]
+        ci = ci+nq
+    row_data = np.array([str(dof) for dof in range(1, model.nt+1)])
+    column_data = np.array([elem.tag+'_'+key for elem in model.elems for key in elem.rel.keys()])
+    rcdata = (row_data, column_data)
+    # return np.asarray(input_array).view(nStatic_matrix)
+    # matrix =  np.asarray(input_array)
+    return nStatic_matrix(B, model, rcdata)
 
 class Kinematic_matrix (Structural_Matrix):
     """Class for the kinematic matrix of a structural model with 2d/3d truss and 2d frame elements
@@ -1170,8 +1198,6 @@ class nKinematic_matrix (Structural_Matrix):
         # newA.row_data = list(np.delete(Af.row_data, delrows))
         return newA
 
-
-
 def A_matrix(Domain, matrix=None):
     """Returns a Kinematic_matrix object"""
     return Kinematic_matrix(Domain,matrix)
@@ -1199,8 +1225,8 @@ class Flexibility_matrix (Structural_Matrix):
         
         input_array = np.asarray(F).view(cls)
         input_array.model = model
-        input_array.column_data = [elem.tag+'_'+key for elem in model.elems for key in elem.rel.keys()]
-        input_array.row_data = [elem.tag+'_'+key for elem in model.elems for key in elem.rel.keys()]
+        input_array.column_data = np.array([elem.tag+'_'+key for elem in model.elems for key in elem.rel.keys()])
+        input_array.row_data = np.array([elem.tag+'_'+key for elem in model.elems for key in elem.rel.keys()])
         # input_array.rel = [rel for elem in model.elems for rel in elem.rel.values()]
 
         # # input_array.xx = np.asarray(Fxx).view(cls)
@@ -1212,8 +1238,8 @@ class Flexibility_matrix (Structural_Matrix):
 
         input_array.s = np.asarray(Fs).view(cls)
         input_array.s.model = model
-        input_array.s.column_data = [elem.tag+'_'+key for elem in model.elems for key in elem.rel.keys()]
-        input_array.s.row_data = [elem.tag+'_'+key for elem in model.elems for key in elem.rel.keys()]
+        input_array.s.column_data = np.array([elem.tag+'_'+key for elem in model.elems for key in elem.rel.keys()])
+        input_array.s.row_data =    np.array([elem.tag+'_'+key for elem in model.elems for key in elem.rel.keys()])
         # input_array.s.rel = [rel for elem in model.elems for rel in elem.rel.values()]
 
         return input_array
@@ -1566,7 +1592,7 @@ class Displacement_vector(column_vector):
         delrows = [idx for idx, dof in enumerate(self.row_data) if int(dof) > self.model.nf]
         newU = np.delete(self, delrows, axis=0).view(Displacement_vector)
         newU.row_data = list(np.delete(self.row_data, delrows))
-        newU.matrix = self.matrix
+        # newU.matrix = self.matrix
         newU.model = self.model
         return newU
 

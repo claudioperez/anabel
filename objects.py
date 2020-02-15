@@ -12,7 +12,6 @@ import sympy as sp
 import openseespy as ops
 
 
-
 class Model:
     def __init__(self, ndm, ndf):
         """Basic model object
@@ -137,7 +136,7 @@ class Model:
     @property
     def rdnt_forces(self):
         cforces = self.cforces
-        return np.array([q for elem in self.elems for q in cforces if not q.redundant ])
+        return np.array([q  for q in cforces if q.redundant ])
     
 
     @property
@@ -172,8 +171,15 @@ class Model:
     def idx_i(self):
         rdts = self.rdnt_forces
         forces = self.basic_forces
-        idx_i = np.where(np.isin(forces, rdts))[0]
+        idx_i = np.where(np.logical_not(np.isin(forces, rdts)))[0]
         return idx_i
+
+    @property
+    def idx_x(self):
+        rdts = self.rdnt_forces
+        forces = self.basic_forces
+        idx_x = np.where(np.isin(forces, rdts))[0]
+        return idx_x
 
     def node(self, tag: str, x: float, y: float, z=None, mass: float=None):
         newNode = Node(self, tag, self.ndf, x, y, z, mass)
@@ -325,11 +331,13 @@ class Model:
         jNode.elems.append(newElem)
         
         if Qpl is not None:
+            newElem.Qpl = np.zeros((3,2))
             newElem.Np = [Qpl[0], Qpl[0]]
             newElem.Mp = [[Qpl[1], Qpl[1]],[Qpl[2], Qpl[2]]]
             for i, key in enumerate(newElem.Qp['+']):
+                newElem.Qp['+'][key] = newElem.Qp['-'][key] = Qpl[i] # consider depraction of elem.Qp in favor of elem.Qpl
                 newElem.Qp['+'][key] = newElem.Qp['-'][key] = Qpl[i]
-                newElem.Qp['+'][key] = newElem.Qp['-'][key] = Qpl[i]
+                newElem.Qpl[i,:] = Qpl[i] # <- consider shifting to this format for storing plastic capacities
         return newElem
 
     def girder(self, nodes, mats=None, xsecs=None, story=None):

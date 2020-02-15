@@ -70,9 +70,11 @@ def FEDEAS(Domain):
         print("\n% Element: {}".format(elem.tag))
         print('ElemData{{{}}}.A = {};'.format(i+1, elem.A))
         print('ElemData{{{}}}.E = {};'.format(i+1, elem.E))
+        print('ElemData{{{}}}.Np = {};'.format(i+1, elem.Qpl[0,0]))
 
         if type(elem) is not ema.elements.Truss:
-            print('ElemData{{{}}}.I = {};'.format(i+1, elem.I))
+            print('\nElemData{{{}}}.I = {};'.format(i+1, elem.I))
+            print('ElemData{{{}}}.Mp = {};'.format(i+1, elem.Qpl[1,0]))
             rel = [1 if rel else 0 for rel in elem.rel.values()]
             print("ElemData{{{}}}.Release = [{};{};{}];".format(i+1, rel[0], rel[1], rel[2]))
 
@@ -87,7 +89,6 @@ def FEDEAS(Domain):
     # Nodal Loads
     print("\n%% Nodal loads")
     print('Pf = zeros({});'.format(Domain.nf))
-    P = np.zeros(Domain.nt)
     for node in Domain.nodes:
         p = node.p_vector()
         for i, dof in enumerate(node.dofs):

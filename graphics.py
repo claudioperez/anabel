@@ -192,7 +192,7 @@ def plot_modes(model, shapes, ax, scale=None, color=None, label=None):
             y = yl + y0
             plt.plot(x, y, zorder = 1, color=color)
     
-def plot_structure(Model, ax, labeled=False):
+def plot_structure(Model, ax, label=False):
     n =3
     ax.spines['right'].set_color('none')
     ax.spines['top'].set_color('none')
@@ -205,7 +205,7 @@ def plot_structure(Model, ax, labeled=False):
         y = np.linspace(elem.nodes[0].y0, elem.nodes[1].y0, n)
         # plt.plot(x, y, zorder = 1, color ='grey')
         ax.plot(x, y, **elem_style[0])
-        if labeled:
+        if label:
             # label element tag
             xl = x[1] - elem.sn*f
             yl = y[1] - elem.cs*f
@@ -262,7 +262,7 @@ def plot_structure(Model, ax, labeled=False):
     f = 0.4 # factor to tweak annotation distance
     for node in Model.nodes:
         ax.plot(node.x,node.y, color = 'black', marker = 's')
-        if labeled:
+        if label:
             if sum(node.rxns) == 0:
                 ax.annotate(node.tag, xy=(f+node.x, 0.5*f+node.y), zorder = 3, color = 'blue')
             else:
