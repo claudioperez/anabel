@@ -1797,12 +1797,18 @@ def P0_vector(model):
 def Pw_vector(model):
     P = np.zeros(model.nt)
     for elem in model.elems:
-        if len(elem.dofs)>4:
-            dofs = elem.dofs
+        dofs = elem.dofs
+        if len(dofs)==6:
             P[int(dofs[0])-1] +=  elem.w['y']*elem.L/2*elem.sn
             P[int(dofs[1])-1] += -elem.w['y']*elem.L/2*elem.cs
             P[int(dofs[3])-1] +=  elem.w['y']*elem.L/2*elem.sn
             P[int(dofs[4])-1] += -elem.w['y']*elem.L/2*elem.cs
+        else:
+            pw = elem.pw_vector()
+            for i,df in enumerate(dofs):
+                P[int(df)-1] +=  pw[i]
+
+
     row_data = [str(dof) for dof in range(1, model.nt+1)]
     return nForce_vector(P, model, row_data)
 

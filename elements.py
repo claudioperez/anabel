@@ -1,6 +1,8 @@
 import numpy as np
 import sympy as sp
 from abc import abstractmethod
+from numpy.polynomial import Polynomial
+from scipy.integrate import quad
 
 # from ema.utilities import Structural_Matrix, Structural_Vector
 from ema.matrices import Structural_Matrix, Structural_Vector
@@ -207,6 +209,18 @@ class Truss(Element):
 
     def __repr__(self):
         return 'truss-{}'.format(self.tag)
+    
+    def N(self):
+        L = self.L
+        N1 = Polynomial([1,-1/L])
+        N2 = Polynomial([0, 1/L])
+        return np.array([N1,N2])
+    
+    def B(self):
+        L = self.L
+        B1 = self.N()[0].deriv(1)
+        B2 = self.N()[1].deriv(1)
+        return np.array([B1,B2])
 
     def v0_vector(self):
         EA = self.E*self.A
@@ -225,13 +239,22 @@ class Truss(Element):
         q0 = self.q0['1']
         q0 = q0 - EA*e0
         return [q0]
+
+    def pw_vector(self):
+        L = self.L
+        pw = self.w['1']
+        N = self.N()
+        if isinstance(pw,np.polynomial.Polynomial) or isinstance(pw,float):
+            p1 = -quad(N[0]*pw,0,L)[0]
+            p2 = -quad(N[1]*pw,0,L)[0]
+        else:
+            print('Unsupported load vector pw')
+
+        return np.array([p1,0,p2,0])
     
     def ke_matrix(self):
         ag = self.ag()
         k = self.k_matrix()
-        # if not self.linear_geometry:
-        #     N = self.Q[0]
-        #     k += self.kg_matrix(N)
         return ag.T@(k*ag)
 
     def kg_matrix(self, N): 
@@ -310,6 +333,42 @@ class Truss(Element):
         Li = self.Li
         E_GL = (L**2 - Li**2) / (2*Li**2)
         return E_GL
+
+class TaperedTruss(Truss):
+    def k_matrix(self):
+        if isinstance(self.E,float):
+            E = Polynomial([self.E])
+        else:
+            E = self.E
+        if isinstance(self.A,float):
+            A = Polynomial([self.A])
+        else:
+            A = self.A
+        A = self.A 
+        L = self.L
+        B = self.B()
+        # ke = np.zeros((self.ndf,self.ndf))
+        # for i in range(self.ndf):
+        #     for j in range(self.ndf):
+        #         f = lambda x: B[i](x)*E(x)*A(x)*B[j](x)
+        #         ke[i,j] = quad(f,0,L)[0]
+
+        f = lambda x: B[0](x)*E(x)*A(x)*B[0](x)
+        k = Structural_Matrix([quad(f,0,L)[0]])
+        
+        # Metadata
+        k.tag = 'k'
+        k.row_data = ['q_'+ key for key in self.q0.keys()]
+        k.column_data = ['v_' + key for key in self.e0.keys()]
+        k.c_cidx = k.c_ridx = [int(key)-1 for key in self.rel.keys() if self.rel[key]]
+        return k
+    
+    def q0_vector(self):
+        # EA = self.E*self.A()
+        # e0 = self.e0['1']
+        # q0 = self.q0['1']
+        # q0 = q0 - EA*e0
+        return [0]
 
 class Truss3D(Element):
     ndf = 3

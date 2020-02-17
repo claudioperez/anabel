@@ -398,10 +398,33 @@ class Model:
             if not s == 0: self.girder(snodes, [girder_mat]*nb, [girder_sec]*nb, s-1)
             self.snodes.append(snodes)
 
-    def truss(self, tag: str, iNode, jNode, mat=None, xsec=None, Qpl=None):
+    def truss(self, tag: str, iNode, jNode, mat=None, xsec=None, Qpl=None,A=None,E=None):
         if mat is None: mat = self.materials['default']
+        if E is None: E = mat.E
+        # cross section
         if xsec is None: xsec = self.xsecs['default']
-        newElem = Truss(tag, iNode, jNode, mat.E, xsec.A)
+        if A is None: A = xsec.A
+
+        newElem = Truss(tag, iNode, jNode, E, A)
+        self.delems.update({newElem.tag:newElem})
+        self.elems.append(newElem)
+        iNode.elems.append(newElem)
+        jNode.elems.append(newElem)
+
+        if Qpl is not None:
+            newElem.Np = [Qpl[0], Qpl[0]]
+            newElem.Qp['+']['1'] = newElem.Qp['-']['1'] = Qpl[0]
+        return newElem
+
+    def taprod(self, tag: str, iNode, jNode, mat=None, xsec=None, Qpl=None,A=None,E=None):
+        """Construct a tapered rod element with variable E and A values."""
+        if mat is None: mat = self.materials['default']
+        if E is None: E = mat.E
+        # cross section
+        if xsec is None: xsec = self.xsecs['default']
+        if A is None: A = xsec.A
+        
+        newElem = TaperedTruss(tag, iNode, jNode, E, A)
         self.delems.update({newElem.tag:newElem})
         self.elems.append(newElem)
         iNode.elems.append(newElem)
