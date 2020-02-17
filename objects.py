@@ -29,6 +29,9 @@ class Model:
         self.DOF: list = None
 
         # Define DOF list indexing 
+        if ndf ==1:
+            self.prob_type = '1d'
+            self.ddof: dict = {'x': 0} # Degrees of freedom at each node
         if ndf ==2:
             self.prob_type = '2d-truss'
             self.ddof: dict = { 'x': 0, 'y': 1} # Degrees of freedom
@@ -181,8 +184,8 @@ class Model:
         idx_x = np.where(np.isin(forces, rdts))[0]
         return idx_x
 
-    def node(self, tag: str, x: float, y: float, z=None, mass: float=None):
-        newNode = Node(self, tag, self.ndf, x, y, z, mass)
+    def node(self, tag: str, x: float, y=None, z=None, mass: float=None):
+        newNode = Node(self, tag, self.ndf, [x, y, z], mass)
         self.nodes.append(newNode)
         self.dnodes.update({newNode.tag : newNode})
         return newNode
@@ -854,28 +857,27 @@ class State():
 # These should be created using the methods above
 #******************************************************************************
 class Node():
-    def __init__(self, model, tag: str, ndf, x: float, y: float, z=None, mass=None):
+    def __init__(self, model, tag: str, ndf, xyz, mass=None):
         if mass is None: mass=0.0
 
-        self.xyz = [x, y]
-        if not (z is None): self.xyz.append(z)
-
-        if z is None: 
-            z = 0.0
+        self.xyz = np.array([xi for xi in xyz if xi is not None])
         
         self.tag = tag
-        self.x0: float = x # x-coordinate in base configuration (unstrained, not necessarily unstressed).  
-        self.y0: float = y # y-coordinate in base configuration (unstrained, not necessarily unstressed).  
-        self.z0: float = z # z-coordinate in base configuration (unstrained, not necessarily unstressed).  
+        self.xyz0 = self.xyz # coordinates in base configuration (unstrained, not necessarily unstressed).
+        self.xyzi = self.xyz # coordinates in reference configuration.  
+
+        # self.x0: float = x # x-coordinate in base configuration (unstrained, not necessarily unstressed).  
+        # self.y0: float = y # y-coordinate in base configuration (unstrained, not necessarily unstressed).  
+        # self.z0: float = z # z-coordinate in base configuration (unstrained, not necessarily unstressed).  
         
         # Attributes for nonlinear analysis
-        self.xi: float = x # x-coordinate in reference configuration.  
-        self.yi: float = y # y-coordinate in reference configuration.  
-        self.zi: float = z # z-coordinate in reference configuration.  
+        # self.xi: float = x # x-coordinate in reference configuration.  
+        # self.yi: float = y # y-coordinate in reference configuration.  
+        # self.zi: float = z # z-coordinate in reference configuration.  
         
-        self.x: float = x
-        self.y: float = y
-        self.z: float = z
+        self.x: float = xyz[0]
+        self.y: float = xyz[1]
+        self.z: float = xyz[2]
 
         
         self.rxns = [0]*ndf

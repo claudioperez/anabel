@@ -33,7 +33,7 @@ class BasicLink():
     def __init__(self, ndf, ndm, nodes):
         self.nodes = nodes
         self.ndf: int = ndf
-        self.ndm = ndm
+        self.ndm: int = ndm
         
     @property
     def dofs(self):
@@ -44,17 +44,15 @@ class BasicLink():
     
     @property
     def L(self):
-        xyzi = np.array(self.nodes[0].xyz)
-        xyzj = np.array(self.nodes[1].xyz)
+        xyzi = self.nodes[0].xyz
+        xyzj = self.nodes[1].xyz
         L = np.linalg.norm(xyzi-xyzj)
         return L
     
     @property
     def L0(self):
-        n1 = self.nodes[0]
-        n2 = self.nodes[1]
-        xyzi = np.array([n1.x0, n1.y0, n1.z0])
-        xyzj = np.array([n2.x0, n2.y0, n2.z0])
+        xyzi = self.nodes[0].xyz0
+        xyzj = self.nodes[1].xyz0
         L = np.linalg.norm(xyzi-xyzj)
         return L
 
@@ -185,12 +183,67 @@ class Element(BasicLink):
         if hasattr( self , "mat" ):
             self.mat.commitHistory()
 
+class Rod(Element):
+    nv  = 1
+    nn  = 2
+    ndm = 1
+    ndf = 1 # number of dofs at each node
+    force_dict = {'1':0}
+
+    def __init__(self,tag,node, E, A):
+        super().__init__(self.ndf, self.ndm, force_dict, [node])
+        self.tag = tag
+        self.E = E 
+        self.A = A
+        self.q = {'1':0}
+        self.v = {'1':0}
+        
+        self.w = {'1':0.0}
+    
+    def N(self):
+        L = self.L
+        N1 = Polynomial([1,-1/L])
+        N2 = Polynomial([0, 1/L])
+        return np.array([N1,N2])
+    
+    def B(self):
+        L = self.L
+        B1 = self.N()[0].deriv(1)
+        B2 = self.N()[1].deriv(1)
+        return np.array([B1,B2])
+
+    def k_matrix(self):
+        if isinstance(self.E,float):
+            E = Polynomial([self.E])
+        else:
+            E = self.E
+        if isinstance(self.A,float):
+            A = Polynomial([self.A])
+        else:
+            A = self.A
+        
+        L = self.L
+        B = self.B()
+        k = Structural_Matrix([
+            [quad(E*A*(B@B.T)[i,j],0,L)[0] for j in range(2)] for i in range(2)
+            ])
+        
+        # Metadata
+        k.tag = 'k'
+        k.row_data = ke.column_data = ['u_'+str(int(dof)) for dof in self.dofs]
+        return k
+
+    def ke_matrix(self):
+        return self.k_matrix()
+
+
+
 
 class Truss(Element):
     nv = 1
     nn = 2
     ndm = 2
-    ndf = 2
+    ndf = 2 # number of dofs at each node
     force_dict = {'1':0}
 
     def __init__(self, tag, iNode, jNode, E, A, geo='lin'):
