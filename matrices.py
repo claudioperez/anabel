@@ -1790,9 +1790,24 @@ def P_vector(model, vector=None):
 
 def P0_vector(model):
     """Returns a  object"""   
-    arry = np.concatenate([elem.v0_vector() for elem in model.elems]) 
+    arry = np.concatenate([elem.p0_vector() for elem in model.elems]) 
     row_data = [elem.tag+'_'+key for elem in model.elems for key in elem.v.keys()] 
-    return nDeformation_vector(arry, model, row_data)
+    return nForce_vector(arry, model, row_data)
+
+def P0_vector(model):
+    P = np.zeros(model.nt)
+    for elem in model.elems:
+        dofs = elem.dofs
+        if hasattr(elem, 'q0_vector'):
+            p0 = elem.bg_matrix()@elem.q0_vector()
+        else:
+            p0 = np.zeros(len(dofs))
+
+        for i,df in enumerate(dofs):
+            P[int(df)-1] +=  p0[i]
+
+    row_data = [str(dof) for dof in range(1, model.nt+1)]
+    return nForce_vector(P, model, row_data)
 
 def Pw_vector(model):
     P = np.zeros(model.nt)

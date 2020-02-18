@@ -29,10 +29,11 @@ class Model:
         self.DOF: list = None
 
         # Define DOF list indexing 
-        if ndf ==1:
+        if ndm == 1:
             self.prob_type = '1d'
-            self.ddof: dict = {'x': 0} # Degrees of freedom at each node
-        if ndf ==2:
+            self.ddof: dict = {'x': 0}  # Degrees of freedom at each node
+        
+        if ndf == 2:
             self.prob_type = '2d-truss'
             self.ddof: dict = { 'x': 0, 'y': 1} # Degrees of freedom
         elif ndm == 2 and ndf ==3:

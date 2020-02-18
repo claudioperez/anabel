@@ -182,6 +182,10 @@ class Element(BasicLink):
 
         if hasattr( self , "mat" ):
             self.mat.commitHistory()
+    
+    def v0_vector(self):
+        return np.array([0]*self.ndf*self.nn)
+    
 
 class Rod(Element):
     nv  = 1
@@ -190,27 +194,33 @@ class Rod(Element):
     ndf = 1 # number of dofs at each node
     force_dict = {'1':0}
 
-    def __init__(self,tag,node, E, A):
-        super().__init__(self.ndf, self.ndm, force_dict, [node])
+    def __init__(self,tag, nodes, E, A):
+        super().__init__(self.ndf, self.ndm, self.force_dict, nodes)
         self.tag = tag
         self.E = E 
         self.A = A
         self.q = {'1':0}
         self.v = {'1':0}
-        
         self.w = {'1':0.0}
+
+        if isinstance(self.E,float):
+            self.E = Polynomial([self.E])
+
+        if isinstance(self.A,float):
+            self.A = Polynomial([self.A])
     
     def N(self):
         L = self.L
         N1 = Polynomial([1,-1/L])
         N2 = Polynomial([0, 1/L])
-        return np.array([N1,N2])
+        return np.array([[N1],[N2]])
     
     def B(self):
-        L = self.L
-        B1 = self.N()[0].deriv(1)
-        B2 = self.N()[1].deriv(1)
-        return np.array([B1,B2])
+        N = self.N()
+        # B1 = self.N()[0].deriv(1)
+        # B2 = self.N()[1].deriv(1)
+        # return np.array([B1,B2])
+        return Polynomial.deriv(N,1)
 
     def k_matrix(self):
         if isinstance(self.E,float):
@@ -235,6 +245,17 @@ class Rod(Element):
 
     def ke_matrix(self):
         return self.k_matrix()
+    
+    def pw_vector(self):
+        if all(self.w.values())==0.0:
+            return np.array([0.0]*self.ndf*self.nn)
+
+    def pr_vector(self,U_vector):
+        """Resisting force vector"""
+        u = np.array([u for u, dof in zip(U_vector,U_vector.row_data) if float(dof) in self.dofs])
+        B = self.B()
+        P = self.E*self.A*(B.T@u)
+        return P
 
 
 
@@ -421,6 +442,10 @@ class TaperedTruss(Truss):
         # e0 = self.e0['1']
         # q0 = self.q0['1']
         # q0 = q0 - EA*e0
+        return [0]
+    
+    def v0_vector(self):
+        
         return [0]
 
 class Truss3D(Element):

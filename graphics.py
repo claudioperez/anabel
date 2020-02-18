@@ -280,45 +280,46 @@ def plot_beam(Model, ax):
     f = 0.5 # parameter controling element label distance from element
     for elem in Model.elems:
         x = np.linspace(elem.nodes[0].x, elem.nodes[1].x, n)
-        y = np.linspace(elem.nodes[0].y, elem.nodes[1].y, n)
+        y = np.linspace(0.0, 0.0, n)
         plt.plot(x, y, zorder = 1, color ='grey')
         # label element tag
         xl = (x[0] + x[-1])/2
         yl = 0.0002
         ax.annotate(elem.tag, xy=(xl, yl))
 
-    f = 0.4
-    if Model.ndf == 3:
-        for elem in Model.elems:
-            if type(elem) == Truss:
-                x = elem.nodes[0].x + f*elem.cs
-                y = elem.nodes[0].y + f*elem.sn
-                plt.scatter(x, y, s=20, zorder=2, facecolors='white', edgecolors='black')
-                x = elem.nodes[1].x - f*elem.cs
-                y = elem.nodes[1].y - f*elem.sn
-                plt.scatter(x, y, s=20, zorder=2, facecolors='white', edgecolors='black')
+    # f = 0.1
+    # if Model.ndf == 3:
+    #     for elem in Model.elems:
+    #         if type(elem) == Truss:
+    #             x = elem.nodes[0].x + f*elem.L
+    #             y = 0.0
+    #             plt.scatter(x, y, s=20, zorder=2, facecolors='white', edgecolors='black')
+    #             x = elem.nodes[1].x - f*elem.L
+    #             y = 0.0
+    #             plt.scatter(x, y, s=20, zorder=2, facecolors='white', edgecolors='black')
 
     # show hinges
-    f = 0.5
+    f = 0.1
     for hinge in Model.hinges:
         if hinge.node == hinge.elem.nodes[0]:
-            x = hinge.node.x + f*hinge.elem.cs
-            y = hinge.node.y + f*hinge.elem.sn
+            x = hinge.node.x + f*hinge.elem.L
+            y = 0.0 
         else:
-            x = hinge.node.x - f*hinge.elem.cs
-            y = hinge.node.y - f*hinge.elem.sn
+            x = hinge.node.x - f*hinge.elem.L
+            y = 0.0 
+
         plt.scatter(x, y, s=20, zorder=2, facecolors = 'white', edgecolors='black')
 
 
     # plot nodes
     y_off = 0.0004 # factor to tweak annotation distance
     for node in Model.nodes:
-        plt.plot(node.x,node.y, color = 'black', marker = 's')
+        plt.plot(node.x,0.0, color = 'black', marker = 's')
         if sum(node.rxns) == 0:
-            ax.annotate(node.tag, xy=(node.x, y_off+node.y), zorder = 3, color = 'blue')
+            ax.annotate(node.tag, xy=(node.x, y_off), zorder = 3, color = 'blue')
         else:
             tag = node.tag + " "+ str(node.rxns)
-            ax.annotate(tag, xy=(node.x, y_off+node.y), zorder = 3, color = 'blue')
+            ax.annotate(tag, xy=(node.x, y_off), zorder = 3, color = 'blue')
 
 def plot_structure3d(Model, ax):
     n =3

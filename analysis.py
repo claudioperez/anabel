@@ -1880,18 +1880,19 @@ def SolveDispl(Model):
         Model object with predefined geometry and element/nodal loads."""
 
     # Create model static matrix
-    B = B_matrix(Model)
+    # B = B_matrix(Model)
 
     # Create model kinematic matrix
-    A = A_matrix(Model)
+    # A = A_matrix(Model)
 
     # Create nodal force vector
     # P = P_vector(B)
     P = P_vector(Model)
-    Q0 = Q0_vector(Model)
+    # Q0 = Q0_vector(Model)
 
     # Create initial element force vector
-    P0f = B.f @ Q0
+    # P0f = B.f @ Q0
+    P0f = P0_vector(Model).f
 
     Pw = Pw_vector(Model)
 
