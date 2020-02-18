@@ -185,6 +185,10 @@ class Element(BasicLink):
     
     def v0_vector(self):
         return np.array([0]*self.ndf*self.nn)
+        
+    def pw_vector(self):
+        if all(self.w.values())==0.0:
+            return np.array([0.0]*self.ndf*self.nn)
     
 
 class Rod(Element):
@@ -220,7 +224,7 @@ class Rod(Element):
         # B1 = self.N()[0].deriv(1)
         # B2 = self.N()[1].deriv(1)
         # return np.array([B1,B2])
-        return Polynomial.deriv(N,1)
+        return np.array([[Polynomial.deriv(Ni,1) for Ni in row] for row in N])
 
     def k_matrix(self):
         if isinstance(self.E,float):
@@ -240,21 +244,36 @@ class Rod(Element):
         
         # Metadata
         k.tag = 'k'
-        k.row_data = ke.column_data = ['u_'+str(int(dof)) for dof in self.dofs]
+        k.row_data = k.column_data = ['u_'+str(int(dof)) for dof in self.dofs]
         return k
 
     def ke_matrix(self):
         return self.k_matrix()
     
     def pw_vector(self):
-        if all(self.w.values())==0.0:
-            return np.array([0.0]*self.ndf*self.nn)
+        L = self.L
+        pw = self.w['1']
+        N = self.N()
+        if isinstance(pw,np.polynomial.Polynomial) or isinstance(pw,float):
+            # p1 = -quad(N[0]*pw,0,L)[0]
+            # p2 = -quad(N[1]*pw,0,L)[0]
+            p = np.array([[-quad(Ni*pw,0,L)[0] for Ni in row] for row in N])
+        else:
+            print('Unsupported load vector pw')
+
+        return p
+
+
+    def localize(self,U_vector):
+        dofs = [int(dof) for dof in self.dofs]
+        return np.array([U_vector.get(str(dof)) for dof in dofs])
 
     def pr_vector(self,U_vector):
         """Resisting force vector"""
-        u = np.array([u for u, dof in zip(U_vector,U_vector.row_data) if float(dof) in self.dofs])
+        dofs = [int(dof) for dof in self.dofs]
+        u = np.array([U_vector.get(str(dof)) for dof in dofs])
         B = self.B()
-        P = self.E*self.A*(B.T@u)
+        P = self.E*self.A*(B[0,0]*u[0] + B[1,0]*u[1])
         return P
 
 
@@ -445,7 +464,6 @@ class TaperedTruss(Truss):
         return [0]
     
     def v0_vector(self):
-        
         return [0]
 
 class Truss3D(Element):
