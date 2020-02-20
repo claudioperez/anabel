@@ -805,9 +805,11 @@ class DofSpace:
 
 ##<****************************Abstract objects*********************************
 class Material():
-    def __init__(self, tag, E):
+    def __init__(self, tag, E, nu=None):
         self.tag = tag
         self.E: float = E
+        self.elastic_modulus: float = E 
+        self.poisson_ratio = nu
 
 class XSect():
     def __init__(self, tag, A, I):
@@ -867,9 +869,9 @@ class Node():
         self.xyz0 = self.xyz # coordinates in base configuration (unstrained, not necessarily unstressed).
         self.xyzi = self.xyz # coordinates in reference configuration.  
 
-        # self.x0: float = x # x-coordinate in base configuration (unstrained, not necessarily unstressed).  
-        # self.y0: float = y # y-coordinate in base configuration (unstrained, not necessarily unstressed).  
-        # self.z0: float = z # z-coordinate in base configuration (unstrained, not necessarily unstressed).  
+        self.x0: float = xyz[0] # x-coordinate in base configuration (unstrained, not necessarily unstressed).  
+        self.y0: float = xyz[1] # y-coordinate in base configuration (unstrained, not necessarily unstressed).  
+        self.z0: float = xyz[2] # z-coordinate in base configuration (unstrained, not necessarily unstressed).  
         
         # Attributes for nonlinear analysis
         # self.xi: float = x # x-coordinate in reference configuration.  
@@ -910,11 +912,6 @@ class Rxn():
 
     def __repr__(self):
         return 'rxn-{}'.format(self.dirn)
-    
-    @property
-    def dof(self):
-        model = self.node.model
-        idof = self.dirn
 
 
 class Hinge():

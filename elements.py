@@ -263,12 +263,23 @@ class Rod(Element):
 
         return p
 
-
+    ## Post Processing
     def localize(self,U_vector):
         dofs = [int(dof) for dof in self.dofs]
         return np.array([U_vector.get(str(dof)) for dof in dofs])
+    
+    def displx(self,U_vector):
+        u = self.localize(U_vector)
+        N = self.N()
+        return N[0,0]*u[0] + N[1,0]*u[1]
+        
+    def strainx(self,U_vector):
+        dofs = [int(dof) for dof in self.dofs]
+        u = np.array([U_vector.get(str(dof)) for dof in dofs])
+        B = self.B()
+        return B[0,0]*u[0] + B[1,0]*u[1]
 
-    def pr_vector(self,U_vector):
+    def iforcex(self,U_vector):
         """Resisting force vector"""
         dofs = [int(dof) for dof in self.dofs]
         u = np.array([U_vector.get(str(dof)) for dof in dofs])
