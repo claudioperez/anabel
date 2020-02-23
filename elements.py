@@ -191,7 +191,7 @@ class Element(BasicLink):
             return np.array([0.0]*self.ndf*self.nn)
     
 
-class Rod(Element):
+class PolyRod(Element):
     nv  = 1
     nn  = 2
     ndm = 1
@@ -221,25 +221,108 @@ class Rod(Element):
     
     def B(self):
         N = self.N()
-        # B1 = self.N()[0].deriv(1)
-        # B2 = self.N()[1].deriv(1)
-        # return np.array([B1,B2])
         return np.array([[Polynomial.deriv(Ni,1) for Ni in row] for row in N])
 
     def k_matrix(self):
-        if isinstance(self.E,float):
-            E = Polynomial([self.E])
-        else:
-            E = self.E
-        if isinstance(self.A,float):
-            A = Polynomial([self.A])
-        else:
-            A = self.A
+        E = self.E
+        A = self.A
         
         L = self.L
         B = self.B()
         k = Structural_Matrix([
             [quad(E*A*(B@B.T)[i,j],0,L)[0] for j in range(2)] for i in range(2)
+            ])
+        
+        # Metadata
+        k.tag = 'k'
+        k.row_data = k.column_data = ['u_'+str(int(dof)) for dof in self.dofs]
+        return k
+
+    def ke_matrix(self):
+        return self.k_matrix()
+    
+    def pw_vector(self):
+        L = self.L
+        pw = self.w['1']
+        N = self.N()
+        if isinstance(pw,np.polynomial.Polynomial) or isinstance(pw,float):
+            # p1 = -quad(N[0]*pw,0,L)[0]
+            # p2 = -quad(N[1]*pw,0,L)[0]
+            p = np.array([[-quad(Ni*pw,0,L)[0] for Ni in row] for row in N])
+        else:
+            print('Unsupported load vector pw')
+
+        return p
+
+    ## Post Processing
+    def localize(self,U_vector):
+        dofs = [int(dof) for dof in self.dofs]
+        return np.array([U_vector.get(str(dof)) for dof in dofs])
+    
+    def displx(self,U_vector):
+        u = self.localize(U_vector)
+        N = self.N()
+        return N[0,0]*u[0] + N[1,0]*u[1]
+        
+    def strainx(self,U_vector):
+        dofs = [int(dof) for dof in self.dofs]
+        u = np.array([U_vector.get(str(dof)) for dof in dofs])
+        B = self.B()
+        return B[0,0]*u[0] + B[1,0]*u[1]
+
+    def iforcex(self,U_vector):
+        """Resisting force vector"""
+        dofs = [int(dof) for dof in self.dofs]
+        u = np.array([U_vector.get(str(dof)) for dof in dofs])
+        B = self.B()
+        P = self.E*self.A*(B[0,0]*u[0] + B[1,0]*u[1])
+        return P
+
+
+class TensorRod(Element):
+    nv  = 1
+    nn  = 2
+    ndm = 1
+    ndf = 1 # number of dofs at each node
+    force_dict = {'1':0}
+
+    def __init__(self,tag, nodes, E, A):
+        super().__init__(self.ndf, self.ndm, self.force_dict, nodes)
+        self.tag = tag
+        self.E = E 
+        self.A = A
+        self.q = {'1':0}
+        self.v = {'1':0}
+        self.w = {'1':0.0}
+
+        if isinstance(self.E,float):
+            self.E = tf.tensor([self.E])
+
+        if isinstance(self.A,float):
+            self.A = tf.tensor([self.A])
+    
+    def N(self):
+        L = self.L
+        N1 = Polynomial([1,-1/L])
+        N2 = Polynomial([0, 1/L])
+        return np.array([[N1],[N2]])
+    
+    def B(self):
+        N = self.N()
+        return np.array([[Polynomial.deriv(Ni,1) for Ni in row] for row in N])
+
+    def k_matrix(self):
+        E = self.E
+        A = self.A
+        
+        L = self.L
+        B = self.B()
+        def F(i,j):
+            pol = (B@B.T)[i,j]
+            return lambda x: pol(x)*E*A
+
+        k = Structural_Matrix([
+            [quad(F(i,j),0,L)[0] for j in range(2)] for i in range(2)
             ])
         
         # Metadata

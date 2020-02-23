@@ -287,17 +287,6 @@ def plot_beam(Model, ax):
         yl = 0.0002
         ax.annotate(elem.tag, xy=(xl, yl))
 
-    # f = 0.1
-    # if Model.ndf == 3:
-    #     for elem in Model.elems:
-    #         if type(elem) == Truss:
-    #             x = elem.nodes[0].x + f*elem.L
-    #             y = 0.0
-    #             plt.scatter(x, y, s=20, zorder=2, facecolors='white', edgecolors='black')
-    #             x = elem.nodes[1].x - f*elem.L
-    #             y = 0.0
-    #             plt.scatter(x, y, s=20, zorder=2, facecolors='white', edgecolors='black')
-
     # show hinges
     f = 0.1
     for hinge in Model.hinges:

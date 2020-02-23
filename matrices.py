@@ -239,9 +239,9 @@ class Structural_Matrix(np.ndarray):
         "Return a basis for the kernel (nullspace) of a matrix."
         kernel = scipy.linalg.null_space(self) 
         ker = Structural_Matrix(kernel)
+        transfer_vars(self,ker)
         ker.row_data = self.column_data 
         ker.column_data = [str(i+1) for i in range(len(ker[0]))]
-        ker.model = self.model
         return ker
 
     def lu(self):

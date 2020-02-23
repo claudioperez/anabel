@@ -142,7 +142,6 @@ class Model:
         cforces = self.cforces
         return np.array([q  for q in cforces if q.redundant ])
     
-
     @property
     def cforces(self):
         return np.array([q for elem in self.elems for q in elem.basic_forces if not q.rel])
@@ -166,7 +165,10 @@ class Model:
         eforces = self.eforces
         idx_e = np.where(np.isin(cforces,eforces))[0]
         return idx_e
-
+    
+    @property
+    def idx_f(self):
+        return np.arange(0,self.nf)
     @property
     def idxx_f(self):
         return None
@@ -247,6 +249,7 @@ class Model:
             self.rxns.append(newRxn)
             node.rxns[self.ddof[dirn]] = 1
             return newRxn
+    
     def boun(self, node, ones):
         for i, dof in enumerate(self.ddof):
             if ones[i]:
@@ -267,13 +270,6 @@ class Model:
         """
         self.fix(node, 'y')
         return
-
-    # def connect(self, connodes, elemType):
-    #     tempNodes = []
-    #     for point in connodes:
-    #         tempNodes.append(self.nodes.index(point))
-    #     # self.CON.append(tempNodes)
-    #     return 0
 
  # Other
     def material(self, tag: str, E: float):
@@ -834,15 +830,6 @@ class State():
         self.method = method
 
 
-    
-    # def nLoad(self, node, dirn, Quant):
-    #     """chargement"""
-    #     nodes = self.model.nodes
-    #     nodeNum = nodes.index(node)
-    #     dof = self.model.DOF[nodeNum][self.model.ddof[dirn]]
-    #     self.data['P'][str(dof)] = Quant
-    #     return sp.symbols('P^'+node.tag+"_"+dirn)
-
     def eload(self, elem, mag, dirn='y'):
         if type(elem) is str:
             elem = self.model.delems[elem]    
@@ -901,8 +888,6 @@ class Node():
         # if self.model.DOF == None: self.model.numDOF()
         idx = self.model.nodes.index(self)
         return self.model.DOF[idx]
-
-
 
 
 class Rxn():
