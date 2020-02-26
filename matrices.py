@@ -1784,15 +1784,14 @@ def P_vector(model, vector=None):
         p = node.p_vector()
         for i, dof in enumerate(node.dofs):
             P[int(dof)-1] += p[i]
-        # P = np.concatenate([node.p_vector() for node in Static_matrix.model.nodes])
     row_data = [str(dof) for dof in range(1, model.nt+1)]
     return nForce_vector(P, model, row_data)
 
-def P0_vector(model):
-    """Returns a  object"""   
-    arry = np.concatenate([elem.p0_vector() for elem in model.elems]) 
-    row_data = [elem.tag+'_'+key for elem in model.elems for key in elem.v.keys()] 
-    return nForce_vector(arry, model, row_data)
+# def P0_vector(model):
+#     """Returns a _ object"""   
+#     arry = np.concatenate([elem.p0_vector() for elem in model.elems]) 
+#     row_data = [elem.tag+'_'+key for elem in model.elems for key in elem.v.keys()] 
+#     return nForce_vector(arry, model, row_data)
 
 def P0_vector(model):
     P = np.zeros(model.nt)

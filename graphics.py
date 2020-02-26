@@ -270,7 +270,7 @@ def plot_structure(Model, ax, label=False):
                 ax.annotate(tag, xy=(f+node.x, 0.5*f+node.y), zorder = 3, color = 'blue')
 
 
-def plot_beam(Model, ax):
+def plot_beam(Model, ax,label=False):
     n =3
     ax.spines['right'].set_color('none')
     ax.spines['top'].set_color('none')
@@ -285,7 +285,8 @@ def plot_beam(Model, ax):
         # label element tag
         xl = (x[0] + x[-1])/2
         yl = 0.0002
-        ax.annotate(elem.tag, xy=(xl, yl))
+        if label:
+            ax.annotate(elem.tag, xy=(xl, yl))
 
     # show hinges
     f = 0.1
@@ -308,7 +309,8 @@ def plot_beam(Model, ax):
             ax.annotate(node.tag, xy=(node.x, y_off), zorder = 3, color = 'blue')
         else:
             tag = node.tag + " "+ str(node.rxns)
-            ax.annotate(tag, xy=(node.x, y_off), zorder = 3, color = 'blue')
+            if label:
+                ax.annotate(tag, xy=(node.x, y_off), zorder = 3, color = 'blue')
 
 def plot_structure3d(Model, ax):
     n =3

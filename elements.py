@@ -314,9 +314,9 @@ class TensorRod(Element):
     def k_matrix(self):
         E = self.E
         A = self.A
-        
         L = self.L
         B = self.B()
+
         def F(i,j):
             pol = (B@B.T)[i,j]
             return lambda x: pol(x)*E*A
