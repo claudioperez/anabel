@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7050 64-bit) (preloaded format=pdflatex 2019.6.21)  2 MAR 2020 09:49
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7050 64-bit) (preloaded format=pdflatex 2019.6.21)  2 MAR 2020 14:51
 entering extended mode
 **./main.tex
 (main.tex
@@ -589,29 +589,29 @@ File: bkm-pdftex.def 2016/05/17 v1.26 bookmark driver for pdfTeX (HO)
 )) (main.aux)
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 126.
-LaTeX Font Info:    ... okay on input line 126.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 126.
-LaTeX Font Info:    ... okay on input line 126.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 126.
-LaTeX Font Info:    ... okay on input line 126.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 126.
-LaTeX Font Info:    ... okay on input line 126.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 126.
-LaTeX Font Info:    ... okay on input line 126.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 126.
-LaTeX Font Info:    ... okay on input line 126.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 126.
-LaTeX Font Info:    ... okay on input line 126.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 126.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 126.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 115.
+LaTeX Font Info:    ... okay on input line 115.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 115.
+LaTeX Font Info:    ... okay on input line 115.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 115.
+LaTeX Font Info:    ... okay on input line 115.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 115.
+LaTeX Font Info:    ... okay on input line 115.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 115.
+LaTeX Font Info:    ... okay on input line 115.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 115.
+LaTeX Font Info:    ... okay on input line 115.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 115.
+LaTeX Font Info:    ... okay on input line 115.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 115.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 115.
 
 
 ("C:\Users\claud\AppData\Local\Programs\MiKTeX 2.9\tex/latex/base\ts1cmr.fd"
 File: ts1cmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 126.
-LaTeX Font Info:    Try loading font information for T1+lmr on input line 126.
+LaTeX Font Info:    ... okay on input line 115.
+LaTeX Font Info:    Try loading font information for T1+lmr on input line 115.
 
 ("C:\Users\claud\AppData\Local\Programs\MiKTeX 2.9\tex/latex/lm\t1lmr.fd"
 File: t1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
@@ -651,7 +651,7 @@ File: t1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
 \AtBeginShipoutBox=\box55
-Package hyperref Info: Link coloring OFF on input line 126.
+Package hyperref Info: Link coloring OFF on input line 115.
 
 ("C:\Users\claud\AppData\Local\Programs\MiKTeX 2.9\tex/latex/hyperref\nameref.s
 ty"
@@ -663,10 +663,10 @@ Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
 \c@section@level=\count129
 )
-LaTeX Info: Redefining \ref on input line 126.
-LaTeX Info: Redefining \pageref on input line 126.
-LaTeX Info: Redefining \nameref on input line 126.
-LaTeX Info: Redefining \microtypecontext on input line 126.
+LaTeX Info: Redefining \ref on input line 115.
+LaTeX Info: Redefining \pageref on input line 115.
+LaTeX Info: Redefining \nameref on input line 115.
+LaTeX Info: Redefining \microtypecontext on input line 115.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using protrusion set `basicmath'.
@@ -697,36 +697,36 @@ df.mkii"
 \makeMPintoPDFobject=\count135
 \everyMPtoPDFconversion=\toks26
 )
-LaTeX Font Info:    Try loading font information for OT1+lmr on input line 142.
+LaTeX Font Info:    Try loading font information for OT1+lmr on input line 135.
 
  ("C:\Users\claud\AppData\Local\Programs\MiKTeX 2.9\tex/latex/lm\ot1lmr.fd"
 File: ot1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OML+lmm on input line 142.
+LaTeX Font Info:    Try loading font information for OML+lmm on input line 135.
 
 
 ("C:\Users\claud\AppData\Local\Programs\MiKTeX 2.9\tex/latex/lm\omllmm.fd"
 File: omllmm.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 142
+LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 135
 .
 
 ("C:\Users\claud\AppData\Local\Programs\MiKTeX 2.9\tex/latex/lm\omslmsy.fd"
 File: omslmsy.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMX+lmex on input line 142
+LaTeX Font Info:    Try loading font information for OMX+lmex on input line 135
 .
 
 ("C:\Users\claud\AppData\Local\Programs\MiKTeX 2.9\tex/latex/lm\omxlmex.fd"
 File: omxlmex.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <14.4> on input line 142.
+(Font)              <8> on input line 135.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <10> on input line 142.
+(Font)              <6> on input line 135.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <7> on input line 142.
-LaTeX Font Info:    Try loading font information for U+msa on input line 142.
+(Font)              <5> on input line 135.
+LaTeX Font Info:    Try loading font information for U+msa on input line 135.
 
 ("C:\Users\claud\AppData\Local\Programs\MiKTeX 2.9\tex/latex/amsfonts\umsa.fd"
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
@@ -735,7 +735,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 fg"
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 142.
+LaTeX Font Info:    Try loading font information for U+msb on input line 135.
 
 ("C:\Users\claud\AppData\Local\Programs\MiKTeX 2.9\tex/latex/amsfonts\umsb.fd"
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -744,52 +744,129 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 fg"
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
 )
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 146.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 146.
-LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 146.
-LaTeX Font Info:    Try loading font information for T1+lmtt on input line 147.
+LaTeX Font Info:    Try loading font information for T1+lmtt on input line 136.
 
  ("C:\Users\claud\AppData\Local\Programs\MiKTeX 2.9\tex/latex/lm\t1lmtt.fd"
 File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
+) (Math/Calculus.tex
+
+LaTeX Warning: Command \textrightarrow invalid in math mode on input line 75.
+
+LaTeX Font Info:    Try loading font information for TS1+lmr on input line 75.
+("C:\Users\claud\AppData\Local\Programs\MiKTeX 2.9\tex/latex/lm\ts1lmr.fd"
+File: ts1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
+)
+
+LaTeX Warning: Command \textrightarrow invalid in math mode on input line 75.
+
+
+LaTeX Warning: Command \texttimes invalid in math mode on input line 76.
+
+
+LaTeX Warning: Command \texttimes invalid in math mode on input line 76.
+
+
+Overfull \hbox (88.15485pt too wide) detected at line 77
+[] [] [][] \OML/lmm/m/it/8 f\OT1/lmr/m/n/8 (\OML/lmm/m/it/8 x; y; z\OT1/lmr/m/n
+/8 )\OML/lmm/m/it/8 dxdydz \OT1/lmr/m/n/8 = [] [] [][] \OML/lmm/m/it/8 f\OT1/lm
+r/m/n/8 (\OML/lmm/m/it/8 x\OT1/lmr/m/n/8 (\OML/lmm/m/it/8 u; v; w\OT1/lmr/m/n/8
+ )\OML/lmm/m/it/8 ; y\OT1/lmr/m/n/8 (\OML/lmm/m/it/8 u; v; w\OT1/lmr/m/n/8 )\OM
+L/lmm/m/it/8 ; z\OT1/lmr/m/n/8 (\OML/lmm/m/it/8 u; v; w\OT1/lmr/m/n/8 )) [] \OM
+L/lmm/m/it/8 dudvdw
+ []
+
+
+! LaTeX Error: There's no line here to end.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.90 ...2} v_{i}}{\partial x_{j} \partial x_{j}}\\
+                                                  \]
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.90 ...2} v_{i}}{\partial x_{j} \partial x_{j}}\\
+                                                  \]
+I've inserted a begin-math/end-math symbol since I think
+you left one out. Proceed, with fingers crossed.
+
+! Display math should end with $$.
+<to be read again> 
+                   \par 
+l.90 ...2} v_{i}}{\partial x_{j} \partial x_{j}}\\
+                                                  \]
+The `$' that I just saw supposedly matches a previous `$$'.
+So I shall assume that you typed `$$' both times.
+
+
+! LaTeX Error: Bad math environment delimiter.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.90 ... v_{i}}{\partial x_{j} \partial x_{j}}\\\]
+                                                  
+Your command was ignored.
+Type  I <command> <return>  to replace it with another command,
+or  <return>  to continue without it.
+
+! Missing $ inserted.
+<inserted text> 
+                $
+l.90 ... v_{i}}{\partial x_{j} \partial x_{j}}\\\]
+                                                  
+I've inserted something that you may have forgotten.
+(See the <inserted text> above.)
+With luck, this will get me unwedged. But if you
+really didn't forget anything, try typing `2' now; then
+my insertion and my current dilemma will both disappear.
+
+! Display math should end with $$.
+<to be read again> 
+                   \endgroup 
+l.90 ... v_{i}}{\partial x_{j} \partial x_{j}}\\\]
+                                                  
+The `$' that I just saw supposedly matches a previous `$$'.
+So I shall assume that you typed `$$' both times.
+
 ) (Mechanics/02_Kinematics.tex
 Overfull \hbox (33.4675pt too wide) in paragraph at lines 16--17
 $[][]$  
  []
 
-)
-LaTeX Font Info:    Try loading font information for TS1+lmr on input line 175.
-
- ("C:\Users\claud\AppData\Local\Programs\MiKTeX 2.9\tex/latex/lm\ts1lmr.fd"
-File: ts1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
-)
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 181.
-
-[1
+) [1
 
 {C:/Users/claud/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 181.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 170.
+
+[2]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 170.
  (main.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 181.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 181.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 181.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 170.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 170.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 170.
  ) 
 Here is how much of TeX's memory you used:
- 9822 strings out of 492895
- 149682 string characters out of 3123735
- 298316 words of memory out of 3000000
- 13521 multiletter control sequences out of 15000+200000
- 93476 words of font info for 88 fonts, out of 3000000 for 9000
+ 9802 strings out of 492895
+ 149298 string characters out of 3123735
+ 296704 words of memory out of 3000000
+ 13485 multiletter control sequences out of 15000+200000
+ 71158 words of font info for 67 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 32i,10n,38p,921b,451s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 32i,10n,38p,921b,534s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Users/claud/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-ts1.e
 nc}{C:/Users/claud/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-ec.e
 nc}{C:/Users/claud/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-rm.e
 nc}{C:/Users/claud/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-math
-sy.enc}{C:/Users/claud/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-
-mathit.enc}{C:/Users/claud/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm
+it.enc}{C:/Users/claud/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-
+mathsy.enc}{C:/Users/claud/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm
 /lm-mathex.enc}<C:/Users/claud/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/pu
 blic/lm/lmbx10.pfb><C:/Users/claud/AppData/Local/Programs/MiKTeX 2.9/fonts/type
 1/public/lm/lmbx12.pfb><C:/Users/claud/AppData/Local/Programs/MiKTeX 2.9/fonts/
@@ -800,18 +877,19 @@ fonts/type1/public/lm/lmbx9.pfb><C:/Users/claud/AppData/Local/Programs/MiKTeX 2
 eX 2.9/fonts/type1/public/lm/lmmi5.pfb><C:/Users/claud/AppData/Local/Programs/M
 iKTeX 2.9/fonts/type1/public/lm/lmmi6.pfb><C:/Users/claud/AppData/Local/Program
 s/MiKTeX 2.9/fonts/type1/public/lm/lmmi8.pfb><C:/Users/claud/AppData/Local/Prog
-rams/MiKTeX 2.9/fonts/type1/public/lm/lmmib10.pfb><C:/Users/claud/AppData/Local
-/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmr5.pfb><C:/Users/claud/AppData/Loc
-al/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmr6.pfb><C:/Users/claud/AppData/L
-ocal/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmr7.pfb><C:/Users/claud/AppData
-/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmr8.pfb><C:/Users/claud/AppDa
-ta/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmri8.pfb><C:/Users/claud/Ap
-pData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmsy6.pfb><C:/Users/claud
-/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmsy8.pfb><C:/Users/cl
-aud/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmtt8.pfb>
-Output written on main.pdf (1 page, 294411 bytes).
+rams/MiKTeX 2.9/fonts/type1/public/lm/lmr5.pfb><C:/Users/claud/AppData/Local/Pr
+ograms/MiKTeX 2.9/fonts/type1/public/lm/lmr6.pfb><C:/Users/claud/AppData/Local/
+Programs/MiKTeX 2.9/fonts/type1/public/lm/lmr7.pfb><C:/Users/claud/AppData/Loca
+l/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmr8.pfb><C:/Users/claud/AppData/Lo
+cal/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmri8.pfb><C:/Users/claud/AppData
+/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmsy6.pfb><C:/Users/claud/AppD
+ata/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmsy8.pfb><C:/Users/claud/A
+ppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmtt8.pfb><C:/Users/clau
+d/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/amsfonts/symbols/msbm10.
+pfb>
+Output written on main.pdf (2 pages, 336178 bytes).
 PDF statistics:
- 136 PDF objects out of 1000 (max. 8388607)
- 15 named destinations out of 1000 (max. 500000)
- 14393 words of extra memory for PDF output out of 14400 (max. 10000000)
+ 175 PDF objects out of 1000 (max. 8388607)
+ 36 named destinations out of 1000 (max. 500000)
+ 12377 words of extra memory for PDF output out of 14400 (max. 10000000)
 
