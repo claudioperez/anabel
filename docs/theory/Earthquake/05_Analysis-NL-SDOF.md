@@ -1,13 +1,14 @@
 # 5 - Nonlinear SDOF Analysis
 
-## 1. Nonlinear RSA
-----------
+## 5.1 Nonlinear RSA
+
 
 ### ASCE 7
 
 
-## 2. Equivalent Linearization
-----------
+
+## 5.2 Equivalent Linearization
+
 
 Iterative process where $\Delta_{max}$ is used to find $[K,\zeta]_{eff}$.
 
@@ -16,14 +17,13 @@ Used for base-isolated structures.
 1. Apply $P$, obtain $V_{base}$ (Pushover analysis)
 2. Use $T_0$ and $\zeta$  find $\Delta_i = Sa(T_0,\zeta)T_0$
 
-## 3. Capacity Spectrum
-----------
+## 5.3 Capacity Spectrum
+
 
 1. Guess $\zeta$, find 
 
 
-## 4. Coefficient Method (ASCE 41)
-----------
+## 5.4 Coefficient Method (ASCE 41)
 
 $\delta_{t}=C_{0} C_{1} C_{2} S_{a} \frac{T_{e}^{2}}{4 \pi^{2}} g$
 
