@@ -1,17 +1,22 @@
 \hypertarget{mdof-analysis}{%
 \section{6 - MDOF Analysis}\label{mdof-analysis}}
 
-\hypertarget{linear-static}{%
-\subsection{1. Linear Static}\label{linear-static}}
+\hypertarget{linear-static---elf-asce-7}{%
+\subsection{1. Linear Static - ELF (ASCE
+7)}\label{linear-static---elf-asce-7}}
 
-\hypertarget{elf-asce-7}{%
-\subsubsection{ELF (ASCE 7)}\label{elf-asce-7}}
+\hypertarget{linear-dynamic---modal-rsa}{%
+\subsection{2. Linear Dynamic - Modal
+RSA}\label{linear-dynamic---modal-rsa}}
 
-\hypertarget{linear-dynamic}{%
-\subsection{2. Linear Dynamic}\label{linear-dynamic}}
-
-\hypertarget{modal-rsa}{%
-\subsubsection{Modal RSA}\label{modal-rsa}}
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Reduce spectrum by \(\frac{I_e}{R}\)
+\item
+  Conduct modal analysis subject to \(V_b\geq V_{ELF}\)
+\end{enumerate}
 
 \hypertarget{nonlinear-static}{%
 \subsection{3. Nonlinear Static}\label{nonlinear-static}}
@@ -27,4 +32,18 @@
   Capacity Spectrum
 \item
   Coefficient Method (ASCE 41)
+\end{enumerate}
+
+\hypertarget{mdof---sdof}{%
+\subsubsection{MDOF -\textgreater{} SDOF}\label{mdof---sdof}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Bilinearize
+\item
+  plot \(V/M^*_n\) vs \(D_1=\dfrac{u_{roof}}{\Gamma \Phi_{roof, n}}\)
+\item
+  \(\omega = \sqrt{\dfrac{V_{yn}}{M^*_{n}D_{yn}}}\)
 \end{enumerate}

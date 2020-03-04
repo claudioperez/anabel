@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7050 64-bit) (preloaded format=pdflatex 2019.6.21)  2 MAR 2020 16:00
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (MiKTeX 2.9.7050 64-bit) (preloaded format=pdflatex 2019.6.21)  2 MAR 2020 23:29
 entering extended mode
 **./ce227-1.tex
 (ce227-1.tex
@@ -235,6 +235,25 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 )
 \Hy@SectionHShift=\skip48
 )
+("C:\Users\claud\AppData\Local\Programs\MiKTeX 2.9\tex/latex/tools\longtable.st
+y"
+Package: longtable 2014/10/28 v4.11 Multi-page Table package (DPC)+ FMi change
+\LTleft=\skip49
+\LTright=\skip50
+\LTpre=\skip51
+\LTpost=\skip52
+\LTchunksize=\count113
+\LTcapwidth=\dimen126
+\LT@head=\box53
+\LT@firsthead=\box54
+\LT@foot=\box55
+\LT@lastfoot=\box56
+\LT@cols=\count114
+\LT@rows=\count115
+\c@LT@tables=\count116
+\c@LT@chunks=\count117
+\LT@p@ftn=\toks16
+) (preamble/HeadingStyle.tex) (preamble/PandocPreamble.tex
 ("C:\Users\claud\AppData\Local\Programs\MiKTeX 2.9\tex/latex/lm\lmodern.sty"
 Package: lmodern 2009/10/30 v1.6 Latin Modern Fonts
 LaTeX Font Info:    Overwriting symbol font `operators' in version `normal'
@@ -277,7 +296,7 @@ Package: amssymb 2013/01/14 v3.01 AMS font symbols
 ("C:\Users\claud\AppData\Local\Programs\MiKTeX 2.9\tex/latex/amsfonts\amsfonts.
 sty"
 Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
-\@emptytoks=\toks16
+\@emptytoks=\toks17
 \symAMSa=\mathgroup4
 \symAMSb=\mathgroup5
 LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
@@ -286,7 +305,7 @@ LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
 ("C:\Users\claud\AppData\Local\Programs\MiKTeX 2.9\tex/latex/amsmath\amsmath.st
 y"
 Package: amsmath 2018/12/01 v2.17b AMS math features
-\@mathmargin=\skip49
+\@mathmargin=\skip53
 
 For additional information on amsmath, use the `?' option.
 
@@ -297,53 +316,53 @@ Package: amstext 2000/06/29 v2.01 AMS text
 ("C:\Users\claud\AppData\Local\Programs\MiKTeX 2.9\tex/latex/amsmath\amsgen.sty
 "
 File: amsgen.sty 1999/11/30 v2.0 generic functions
-\@emptytoks=\toks17
-\ex@=\dimen126
+\@emptytoks=\toks18
+\ex@=\dimen127
 ))
 ("C:\Users\claud\AppData\Local\Programs\MiKTeX 2.9\tex/latex/amsmath\amsbsy.sty
 "
 Package: amsbsy 1999/11/29 v1.2d Bold Symbols
-\pmbraise@=\dimen127
+\pmbraise@=\dimen128
 )
 ("C:\Users\claud\AppData\Local\Programs\MiKTeX 2.9\tex/latex/amsmath\amsopn.sty
 "
 Package: amsopn 2016/03/08 v2.02 operator names
 )
-\inf@bad=\count113
+\inf@bad=\count118
 LaTeX Info: Redefining \frac on input line 223.
-\uproot@=\count114
-\leftroot@=\count115
+\uproot@=\count119
+\leftroot@=\count120
 LaTeX Info: Redefining \overline on input line 385.
-\classnum@=\count116
-\DOTSCASE@=\count117
+\classnum@=\count121
+\DOTSCASE@=\count122
 LaTeX Info: Redefining \ldots on input line 482.
 LaTeX Info: Redefining \dots on input line 485.
 LaTeX Info: Redefining \cdots on input line 606.
-\Mathstrutbox@=\box53
-\strutbox@=\box54
-\big@size=\dimen128
+\Mathstrutbox@=\box57
+\strutbox@=\box58
+\big@size=\dimen129
 LaTeX Font Info:    Redeclaring font encoding OML on input line 729.
 LaTeX Font Info:    Redeclaring font encoding OMS on input line 730.
-\macc@depth=\count118
-\c@MaxMatrixCols=\count119
+\macc@depth=\count123
+\c@MaxMatrixCols=\count124
 \dotsspace@=\muskip11
-\c@parentequation=\count120
-\dspbrk@lvl=\count121
-\tag@help=\toks18
-\row@=\count122
-\column@=\count123
-\maxfields@=\count124
-\andhelp@=\toks19
-\eqnshift@=\dimen129
-\alignsep@=\dimen130
-\tagshift@=\dimen131
-\tagwidth@=\dimen132
-\totwidth@=\dimen133
-\lineht@=\dimen134
-\@envbody=\toks20
-\multlinegap=\skip50
-\multlinetaggap=\skip51
-\mathdisplay@stack=\toks21
+\c@parentequation=\count125
+\dspbrk@lvl=\count126
+\tag@help=\toks19
+\row@=\count127
+\column@=\count128
+\maxfields@=\count129
+\andhelp@=\toks20
+\eqnshift@=\dimen130
+\alignsep@=\dimen131
+\tagshift@=\dimen132
+\tagwidth@=\dimen133
+\totwidth@=\dimen134
+\lineht@=\dimen135
+\@envbody=\toks21
+\multlinegap=\skip54
+\multlinetaggap=\skip55
+\mathdisplay@stack=\toks22
 LaTeX Info: Redefining \[ on input line 2844.
 LaTeX Info: Redefining \] on input line 2845.
 )
@@ -356,8 +375,8 @@ LaTeX Font Info:    Redeclaring font encoding T1 on input line 48.
 ))
 ("C:\Users\claud\AppData\Local\Programs\MiKTeX 2.9\tex/latex/base\inputenc.sty"
 Package: inputenc 2018/08/11 v1.3c Input encoding file
-\inpenc@prehook=\toks22
-\inpenc@posthook=\toks23
+\inpenc@prehook=\toks23
+\inpenc@posthook=\toks24
 ) ("C:\Users\claud\AppData\Local\Programs\MiKTeX 2.9\tex/latex/base\textcomp.st
 y"
 Package: textcomp 2018/08/11 v2.0j Standard LaTeX package
@@ -522,12 +541,12 @@ tim
 ("C:\Users\claud\AppData\Local\Programs\MiKTeX 2.9\tex/latex/microtype\microtyp
 e.sty"
 Package: microtype 2019/11/18 v2.7d Micro-typographical refinements (RS)
-\MT@toks=\toks24
-\MT@count=\count125
+\MT@toks=\toks25
+\MT@count=\count130
 LaTeX Info: Redefining \textls on input line 790.
-\MT@outer@kern=\dimen135
+\MT@outer@kern=\dimen136
 LaTeX Info: Redefining \textmicrotypecontext on input line 1354.
-\MT@listname@count=\count126
+\MT@listname@count=\count131
 
 ("C:\Users\claud\AppData\Local\Programs\MiKTeX 2.9\tex/latex/microtype\microtyp
 e-pdftex.def"
@@ -535,7 +554,7 @@ File: microtype-pdftex.def 2019/11/18 v2.7d Definitions specific to pdftex (RS)
 
 LaTeX Info: Redefining \lsstyle on input line 914.
 LaTeX Info: Redefining \lslig on input line 914.
-\MT@outer@space=\skip52
+\MT@outer@space=\skip56
 )
 Package microtype Info: Loading configuration file microtype.cfg.
 
@@ -550,7 +569,7 @@ Package: parskip 2019-01-16 v2.0c non-zero parskip adjustments
 ("C:\Users\claud\AppData\Local\Programs\MiKTeX 2.9\tex/latex/etoolbox\etoolbox.
 sty"
 Package: etoolbox 2018/08/19 v2.5f e-TeX tools for LaTeX (JAW)
-\etb@tempcnta=\count127
+\etb@tempcnta=\count132
 ))
 ("C:\Users\claud\AppData\Local\Programs\MiKTeX 2.9\tex/latex/xcolor\xcolor.sty"
 Package: xcolor 2016/05/11 v2.12 LaTeX color extensions (UK)
@@ -585,34 +604,43 @@ Package: bookmark 2016/05/17 v1.26 PDF bookmarks (HO)
 ("C:\Users\claud\AppData\Local\Programs\MiKTeX 2.9\tex/latex/oberdiek\bkm-pdfte
 x.def"
 File: bkm-pdftex.def 2016/05/17 v1.26 bookmark driver for pdfTeX (HO)
-\BKM@id=\count128
-)) (ce227-1.aux)
+\BKM@id=\count133
+))) (preamble/FontStyle.tex)
+
+LaTeX Warning: Unused global option(s):
+    [9pt].
+
+(ce227-1.aux
+
+LaTeX Warning: Label `general' multiply defined.
+
+
+LaTeX Warning: Label `moment-frames' multiply defined.
+
+)
 \openout1 = `ce227-1.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 115.
-LaTeX Font Info:    ... okay on input line 115.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 115.
-LaTeX Font Info:    ... okay on input line 115.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 115.
-LaTeX Font Info:    ... okay on input line 115.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 115.
-LaTeX Font Info:    ... okay on input line 115.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 115.
-LaTeX Font Info:    ... okay on input line 115.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 115.
-LaTeX Font Info:    ... okay on input line 115.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 115.
-LaTeX Font Info:    ... okay on input line 115.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 115.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 115.
-
-
-("C:\Users\claud\AppData\Local\Programs\MiKTeX 2.9\tex/latex/base\ts1cmr.fd"
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 63.
+LaTeX Font Info:    ... okay on input line 63.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 63.
+LaTeX Font Info:    ... okay on input line 63.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 63.
+LaTeX Font Info:    ... okay on input line 63.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 63.
+LaTeX Font Info:    ... okay on input line 63.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 63.
+LaTeX Font Info:    ... okay on input line 63.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 63.
+LaTeX Font Info:    ... okay on input line 63.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 63.
+LaTeX Font Info:    ... okay on input line 63.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 63.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 63.
+ ("C:\Users\claud\AppData\Local\Programs\MiKTeX 2.9\tex/latex/base\ts1cmr.fd"
 File: ts1cmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 115.
-LaTeX Font Info:    Try loading font information for T1+lmr on input line 115.
-
+LaTeX Font Info:    ... okay on input line 63.
+LaTeX Font Info:    Try loading font information for T1+lmr on input line 63.
 ("C:\Users\claud\AppData\Local\Programs\MiKTeX 2.9\tex/latex/lm\t1lmr.fd"
 File: t1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
@@ -650,8 +678,8 @@ File: t1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
-\AtBeginShipoutBox=\box55
-Package hyperref Info: Link coloring OFF on input line 115.
+\AtBeginShipoutBox=\box59
+Package hyperref Info: Link coloring OFF on input line 63.
 
 ("C:\Users\claud\AppData\Local\Programs\MiKTeX 2.9\tex/latex/hyperref\nameref.s
 ty"
@@ -661,12 +689,12 @@ Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
 estring.sty"
 Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
-\c@section@level=\count129
+\c@section@level=\count134
 )
-LaTeX Info: Redefining \ref on input line 115.
-LaTeX Info: Redefining \pageref on input line 115.
-LaTeX Info: Redefining \nameref on input line 115.
-LaTeX Info: Redefining \microtypecontext on input line 115.
+LaTeX Info: Redefining \ref on input line 63.
+LaTeX Info: Redefining \pageref on input line 63.
+LaTeX Info: Redefining \nameref on input line 63.
+LaTeX Info: Redefining \microtypecontext on input line 63.
 Package microtype Info: Generating PDF output.
 Package microtype Info: Character protrusion enabled (level 2).
 Package microtype Info: Using protrusion set `basicmath'.
@@ -685,52 +713,48 @@ File: mt-cmr.cfg 2013/05/19 v2.2 microtype config. file: Computer Modern Roman
 ("C:\Users\claud\AppData\Local\Programs\MiKTeX 2.9\tex/context/base/mkii\supp-p
 df.mkii"
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count130
-\scratchdimen=\dimen136
-\scratchbox=\box56
-\nofMPsegments=\count131
-\nofMParguments=\count132
-\everyMPshowfont=\toks25
-\MPscratchCnt=\count133
-\MPscratchDim=\dimen137
-\MPnumerator=\count134
-\makeMPintoPDFobject=\count135
-\everyMPtoPDFconversion=\toks26
-) (Earthquake/03_Response-LN.tex
-LaTeX Font Info:    Try loading font information for TS1+lmr on input line 10.
-
-("C:\Users\claud\AppData\Local\Programs\MiKTeX 2.9\tex/latex/lm\ts1lmr.fd"
-File: ts1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
-)
-LaTeX Font Info:    Try loading font information for OT1+lmr on input line 11.
+\scratchcounter=\count135
+\scratchdimen=\dimen137
+\scratchbox=\box60
+\nofMPsegments=\count136
+\nofMParguments=\count137
+\everyMPshowfont=\toks26
+\MPscratchCnt=\count138
+\MPscratchDim=\dimen138
+\MPnumerator=\count139
+\makeMPintoPDFobject=\count140
+\everyMPtoPDFconversion=\toks27
+) (Earthquake/02_Performance-Objectives.tex
+Package microtype Info: Character `029' is missing
+(microtype)             in font `T1/lmr/m/sc/12'.
+(microtype)             Ignoring protrusion settings for this character.
+LaTeX Font Info:    Try loading font information for OT1+lmr on input line 4.
 
 ("C:\Users\claud\AppData\Local\Programs\MiKTeX 2.9\tex/latex/lm\ot1lmr.fd"
 File: ot1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OML+lmm on input line 11.
+LaTeX Font Info:    Try loading font information for OML+lmm on input line 4.
 
 ("C:\Users\claud\AppData\Local\Programs\MiKTeX 2.9\tex/latex/lm\omllmm.fd"
 File: omllmm.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 11.
-
+LaTeX Font Info:    Try loading font information for OMS+lmsy on input line 4.
 
 ("C:\Users\claud\AppData\Local\Programs\MiKTeX 2.9\tex/latex/lm\omslmsy.fd"
 File: omslmsy.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
-LaTeX Font Info:    Try loading font information for OMX+lmex on input line 11.
-
+LaTeX Font Info:    Try loading font information for OMX+lmex on input line 4.
 
 ("C:\Users\claud\AppData\Local\Programs\MiKTeX 2.9\tex/latex/lm\omxlmex.fd"
 File: omxlmex.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <8> on input line 11.
+(Font)              <8> on input line 4.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <6> on input line 11.
+(Font)              <6> on input line 4.
 LaTeX Font Info:    External font `lmex10' loaded for size
-(Font)              <5> on input line 11.
-LaTeX Font Info:    Try loading font information for U+msa on input line 11.
+(Font)              <5> on input line 4.
+LaTeX Font Info:    Try loading font information for U+msa on input line 4.
 
 ("C:\Users\claud\AppData\Local\Programs\MiKTeX 2.9\tex/latex/amsfonts\umsa.fd"
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
@@ -739,7 +763,7 @@ File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 fg"
 File: mt-msa.cfg 2006/02/04 v1.1 microtype config. file: AMS symbols (a) (RS)
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 11.
+LaTeX Font Info:    Try loading font information for U+msb on input line 4.
 
 ("C:\Users\claud\AppData\Local\Programs\MiKTeX 2.9\tex/latex/amsfonts\umsb.fd"
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -747,10 +771,32 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ("C:\Users\claud\AppData\Local\Programs\MiKTeX 2.9\tex/latex/microtype\mt-msb.c
 fg"
 File: mt-msb.cfg 2005/06/01 v1.0 microtype config. file: AMS symbols (b) (RS)
-)) (Earthquake/04_Response-NL.tex) (Earthquake/05_Analysis-NL-SDOF.tex)
-(Earthquake/06_Analysis-NL-MDOF.tex)
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 167.
- [1
+)) (Earthquake/03_Response-LN.tex
+Package microtype Info: Character `029' is missing
+(microtype)             in font `T1/lmr/m/sc/10'.
+(microtype)             Ignoring protrusion settings for this character.
+
+
+LaTeX Font Warning: Font shape `T1/lmr/bx/sc' undefined
+(Font)              using `T1/lmr/bx/n' instead on input line 5.
+
+LaTeX Font Info:    Try loading font information for TS1+lmr on input line 10.
+("C:\Users\claud\AppData\Local\Programs\MiKTeX 2.9\tex/latex/lm\ts1lmr.fd"
+File: ts1lmr.fd 2009/10/30 v1.6 Font defs for Latin Modern
+))
+(Earthquake/04_Response-NL.tex
+Overfull \hbox (13.34775pt too wide) detected at line 7
+\OML/lmm/m/it/8 R \OT1/lmr/m/n/8 = [] \OML/lmm/m/it/8  \OT1/lmr/m/n/8 = [] \OM
+L/lmm/m/it/8  \OT1/lmr/m/n/8 = [] \OML/lmm/m/it/8  \OT1/lmr/m/n/8 = []
+ []
+
+LaTeX Font Info:    External font `lmex10' loaded for size
+(Font)              <9> on input line 17.
+) (Earthquake/05_Analysis-NL-SDOF.tex) (Earthquake/06_Analysis-NL-MDOF.tex)
+(Earthquake/07_Seismic-Systems.tex) (Earthquake/08_Preliminary-Design.tex)
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 141.
+
+[1
 
 {C:/Users/claud/AppData/Local/MiKTeX/2.9/pdftex/config/pdftex.map}pdfTeX warnin
 g (ext4): destination with the same identifier (name{general}) has been already
@@ -758,52 +804,63 @@ g (ext4): destination with the same identifier (name{general}) has been already
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.167 \end{document}
+l.141 \end{document}
+                    pdfTeX warning (ext4): destination with the same identifier
+ (name{moment-frames}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.141 \end{document}
                     ]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 167.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 141.
  (ce227-1.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 167.
-Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 167.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 141.
+Package atveryend Info: Empty hook `AtEndAfterFileList' on input line 141.
 
 
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 167.
+
+LaTeX Warning: There were multiply-defined labels.
+
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 141.
  ) 
 Here is how much of TeX's memory you used:
- 9778 strings out of 492895
- 148943 string characters out of 3123735
- 299803 words of memory out of 3000000
- 13457 multiletter control sequences out of 15000+200000
- 61689 words of font info for 59 fonts, out of 3000000 for 9000
+ 9990 strings out of 492895
+ 152138 string characters out of 3123735
+ 327910 words of memory out of 3000000
+ 13579 multiletter control sequences out of 15000+200000
+ 68585 words of font info for 71 fonts, out of 3000000 for 9000
  1141 hyphenation exceptions out of 8191
- 32i,10n,38p,924b,447s stack positions out of 5000i,500n,10000p,200000b,50000s
-{C:/Users/claud/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-ts1.e
-nc}{C:/Users/claud/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-ec.e
-nc}{C:/Users/claud/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-math
-sy.enc}{C:/Users/claud/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-
-mathex.enc}{C:/Users/claud/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm
-/lm-mathit.enc}{C:/Users/claud/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvip
-s/lm/lm-rm.enc}<C:/Users/claud/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/pu
+ 34i,10n,38p,960b,451s stack positions out of 5000i,500n,10000p,200000b,50000s
+{C:/Users/claud/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-ec.en
+c}{C:/Users/claud/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-mathe
+x.enc}{C:/Users/claud/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-r
+m.enc}{C:/Users/claud/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/lm-m
+athsy.enc}{C:/Users/claud/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips/lm/
+lm-mathit.enc}{C:/Users/claud/AppData/Local/Programs/MiKTeX 2.9/fonts/enc/dvips
+/lm/lm-ts1.enc}<C:/Users/claud/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/pu
 blic/lm/lmbx10.pfb><C:/Users/claud/AppData/Local/Programs/MiKTeX 2.9/fonts/type
 1/public/lm/lmbx12.pfb><C:/Users/claud/AppData/Local/Programs/MiKTeX 2.9/fonts/
 type1/public/lm/lmbx8.pfb><C:/Users/claud/AppData/Local/Programs/MiKTeX 2.9/fon
 ts/type1/public/lm/lmbx9.pfb><C:/Users/claud/AppData/Local/Programs/MiKTeX 2.9/
-fonts/type1/public/lm/lmex10.pfb><C:/Users/claud/AppData/Local/Programs/MiKTeX 
-2.9/fonts/type1/public/lm/lmmi5.pfb><C:/Users/claud/AppData/Local/Programs/MiKT
-eX 2.9/fonts/type1/public/lm/lmmi6.pfb><C:/Users/claud/AppData/Local/Programs/M
-iKTeX 2.9/fonts/type1/public/lm/lmmi8.pfb><C:/Users/claud/AppData/Local/Program
-s/MiKTeX 2.9/fonts/type1/public/lm/lmr5.pfb><C:/Users/claud/AppData/Local/Progr
-ams/MiKTeX 2.9/fonts/type1/public/lm/lmr6.pfb><C:/Users/claud/AppData/Local/Pro
-grams/MiKTeX 2.9/fonts/type1/public/lm/lmr7.pfb><C:/Users/claud/AppData/Local/P
-rograms/MiKTeX 2.9/fonts/type1/public/lm/lmr8.pfb><C:/Users/claud/AppData/Local
-/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmri8.pfb><C:/Users/claud/AppData/Lo
-cal/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmsy5.pfb><C:/Users/claud/AppData
-/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmsy6.pfb><C:/Users/claud/AppD
-ata/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmsy8.pfb>
-Output written on ce227-1.pdf (1 page, 279627 bytes).
+fonts/type1/public/lm/lmcsc10.pfb><C:/Users/claud/AppData/Local/Programs/MiKTeX
+ 2.9/fonts/type1/public/lm/lmex10.pfb><C:/Users/claud/AppData/Local/Programs/Mi
+KTeX 2.9/fonts/type1/public/lm/lmmi5.pfb><C:/Users/claud/AppData/Local/Programs
+/MiKTeX 2.9/fonts/type1/public/lm/lmmi6.pfb><C:/Users/claud/AppData/Local/Progr
+ams/MiKTeX 2.9/fonts/type1/public/lm/lmmi8.pfb><C:/Users/claud/AppData/Local/Pr
+ograms/MiKTeX 2.9/fonts/type1/public/lm/lmmi9.pfb><C:/Users/claud/AppData/Local
+/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmr5.pfb><C:/Users/claud/AppData/Loc
+al/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmr6.pfb><C:/Users/claud/AppData/L
+ocal/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmr7.pfb><C:/Users/claud/AppData
+/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmr8.pfb><C:/Users/claud/AppDa
+ta/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmri8.pfb><C:/Users/claud/Ap
+pData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmsy5.pfb><C:/Users/claud
+/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmsy6.pfb><C:/Users/cl
+aud/AppData/Local/Programs/MiKTeX 2.9/fonts/type1/public/lm/lmsy8.pfb>
+Output written on ce227-1.pdf (1 page, 327331 bytes).
 PDF statistics:
- 218 PDF objects out of 1000 (max. 8388607)
- 52 named destinations out of 1000 (max. 500000)
- 12465 words of extra memory for PDF output out of 14400 (max. 10000000)
+ 328 PDF objects out of 1000 (max. 8388607)
+ 102 named destinations out of 1000 (max. 500000)
+ 18729 words of extra memory for PDF output out of 20736 (max. 10000000)
 

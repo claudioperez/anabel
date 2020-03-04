@@ -1,10 +1,10 @@
-\documentclass[10pt,landscape]{article}
+\documentclass[9pt,landscape]{article}
 \usepackage{multicol}
 \usepackage{calc}
 \usepackage{ifthen}
 \usepackage[landscape]{geometry}
 \usepackage{hyperref}
-
+\usepackage{longtable}
 % To make this come out properly in landscape mode, do one of the following
 % 1.
 %  pdflatex latexsheet.tex
@@ -15,13 +15,10 @@
 %  ps2pdf latexsheet.ps
 
 
-
-
 % 2008-04
 % Changed page margin code to use the geometry package. Also added code for
 % conditional page margins, depending on paper size. Thanks to Uwe Ziegenhagen
 % for the suggestions.
-
 
 
 % This sets page margins to .5 inch if using letter paper, and to 1cm
@@ -38,25 +35,12 @@
 \pagestyle{empty}
  
 
-% Redefine section commands to use less space
-\makeatletter
-\renewcommand{\section}{\@startsection{section}{1}{0mm}%
-                                {-1ex plus -.5ex minus -.2ex}%
-                                {0.5ex plus .2ex}%x
-                                {\normalfont\large\bfseries}}
-\renewcommand{\subsection}{\@startsection{subsection}{2}{0mm}%
-                                {-1explus -.5ex minus -.2ex}%
-                                {0.5ex plus .2ex}%
-                                {\normalfont\normalsize\bfseries}}
-\renewcommand{\subsubsection}{\@startsection{subsubsection}{3}{0mm}%
-                                {-1ex plus -.5ex minus -.2ex}%
-                                {1ex plus .2ex}%
-                                {\normalfont\small\bfseries}}
-\makeatother
+% Redefine section heading styles to use less space
+\input{preamble/HeadingStyle.tex}
 
 % Define BibTeX command
-\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
-    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+%\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+%    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
 % Don't print section numbers
 \setcounter{secnumdepth}{0}
@@ -67,48 +51,12 @@
 
 
 % -----------------------------------------------------------------------
+%\input{preamble/longtableFix.tex}
 
+\input{preamble/PandocPreamble.tex}
 
+\input{preamble/FontStyle.tex}
 
-\usepackage{lmodern}
-\usepackage{amssymb,amsmath}
-\usepackage{ifxetex,ifluatex}
-\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
-  \usepackage[T1]{fontenc}
-  \usepackage[utf8]{inputenc}
-  \usepackage{textcomp} % provide euro and other symbols
-\else % if luatex or xetex
-  \usepackage{unicode-math}
-  \defaultfontfeatures{Scale=MatchLowercase}
-  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
-\fi
-% Use upquote if available, for straight quotes in verbatim environments
-\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
-\IfFileExists{microtype.sty}{% use microtype if available
-  \usepackage[]{microtype}
-  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
-}{}
-\makeatletter
-\@ifundefined{KOMAClassName}{% if non-KOMA class
-  \IfFileExists{parskip.sty}{%
-    \usepackage{parskip}
-  }{% else
-    \setlength{\parindent}{0pt}
-    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
-}{% if KOMA class
-  \KOMAoptions{parskip=half}}
-\makeatother
-\usepackage{xcolor}
-\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
-\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
-\hypersetup{
-  hidelinks,
-  pdfcreator={LaTeX via pandoc}}
-\urlstyle{same} % disable monospaced font for URLs
-\setlength{\emergencystretch}{3em} % prevent overfull lines
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
-\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
 
 
 
@@ -116,7 +64,7 @@
 
 \raggedright
 \footnotesize
-\begin{multicols}{3}
+\begin{multicols}{4}
 
 
 % multicol parameters
@@ -137,30 +85,56 @@
 
 \hrule
 
+\vspace{1.5mm}
+\input{Earthquake/02_Performance-Objectives.tex}
+\hrule
+\vspace{1.5mm}
+
+%\begin{multicols}{3}
+%[
+%All human things are subject to decay. And when fate summons, Monarchs must obey.
+%]
+%Hello, here is some text without a meaning.  This text should show what 
+%a printed text will look like at this place.
+%If you read this text, you will get no information.  Really?  Is there 
+%no information?  Is there...
+%\end{multicols}
+
+
+\vspace{1.5mm}
 \input{Earthquake/03_Response-LN.tex}
 \hrule
-\vspace{4mm}
 
+\vspace{1.5mm}
 \input{Earthquake/04_Response-NL.tex}
 \hrule
-\vspace{4mm}
+\vspace{1.5mm}
 
 
+\vspace{1.5mm}
 \input{Earthquake/05_Analysis-NL-SDOF.tex}
 \hrule
+\vspace{1.5mm}
 
+\vspace{1.5mm}
 \input{Earthquake/06_Analysis-NL-MDOF.tex}
 \hrule
 
 
+\vspace{1.5mm}
+\input{Earthquake/07_Seismic-Systems.tex}
+\hrule
 
+\vspace{1.5mm}
+\input{Earthquake/08_Preliminary-Design.tex}
+\hrule
 
 \rule{0.3\linewidth}{0.25pt}
 \scriptsize
 
-Copyright \copyright\ 2020 Claudio Perez
+%Copyright \copyright\ 2020 Claudio Perez
 
-\href{http://wch.github.io/latexsheet/}{http://wch.github.io/latexsheet/}
+\href{http://claudioperez.github.io/}{http://claudioperez.github.io/}
 
 
 \end{multicols}
