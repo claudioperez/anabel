@@ -3,10 +3,53 @@ import scipy.linalg
 import pandas as pd
 
 import ema.matrices as em
+import tensorflow as tf
 
+class LinearGraph:
+    """Solve elements in a Model object for free DOF displacements
+    
+    Parameters
+    -------------
+    Model: ema.Model
+        Model object with predefined geometry and element/nodal loads."""
 
-class PlasticAnalysis():
-    pass 
+    def __init__(self,model,grad_vars=None):
+        self.model = model 
+        self.grad_vars = grad_vars
+    
+    def run(self):
+        mdl = self.model 
+        nf = mdl.nf+1
+        self.Pf = em.P_tensor(mdl)[0:nf]
+
+        # Form structure stiffness matrix
+        self.K = em.K_tensor(mdl)
+        self.Kf = self.K[0:nf,0:nf]
+        
+        Uf = tf.linalg.solve(self.Kf,-self.Pf)
+
+        # Find global free displacements
+        self.Uf = Uf
+        return Uf
+
+    def gradient(self,wrt):
+        mdl = self.model 
+        nf = mdl.nf+1
+        self.Pf = Pf = em.P_tensor(mdl)[0:nf]
+        with tf.GradientTape() as tape:
+            tape.watch(wrt)
+
+            # Form structure stiffness matrix
+            self.K = em.K_tensor(mdl)
+            self.Kf = self.K[0:nf,0:nf]
+            
+            Uf = tf.linalg.solve(self.Kf,-self.Pf)
+
+            # Find global free displacements
+            self.Uf = Uf
+        self.grad = tape.gradient(Uf,Pf)
+        # self.jacobian = tape.jacobian(Uf,Pf)
+        return Uf
 
 class Event2Event():
     def __init__ (self, Model, Pref=None):

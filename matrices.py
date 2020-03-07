@@ -17,8 +17,8 @@ import numpy as np
 import pandas as pd
 import scipy.linalg
 import matplotlib.pyplot as plt
-# import ema.elements 
-import sympy as sp
+# import sympy as sp
+import tensorflow as tf
 
 # from ema.utilities import Structural_Matrix, Structural_Vector, transfer_vars
 
@@ -105,8 +105,6 @@ class Structural_Vector(np.ndarray):
         self[idx] = value
 
     def rows(self, component):
-        # rows = [self.row_data.index(item) for item in component]
-        # idx = np.array([i for i,j in enumerate(self.row_data) if str(j) == key])
         idx = np.where(np.isin(self.row_data,component))[0]
         newV = self[idx]
         newV.row_data = np.array(self.row_data)[idx]
@@ -481,19 +479,6 @@ class Static_matrix (Structural_Matrix):
         newB.row_data = list(np.delete(self.row_data, delrows))
         # newB.column_data = self.column_data
         return newB
-        
-    # @property
-    # def i(self):
-    #     """Removes rows of B_matrix corresponding to redundant forces"""
-    #     # reducedB = self.f.c.del_zeros()
-    #     reducedB = self.f.c
-    #     rdts = reducedB.model.redundants
-    #     tags = [q.elem.tag + '_'+str(q.nature) for q in rdts]
-    #     delcols = [reducedB.column_data.index(tag) for tag in tags]
-    #     newB = np.delete(reducedB, delcols, axis=1).view(Static_matrix)
-    #     transfer_vars(reducedB, newB)
-    #     newB.column_data = list(np.delete(reducedB.column_data, delcols))
-    #     return newB
 
     @property
     def i(self):
@@ -519,13 +504,10 @@ class Static_matrix (Structural_Matrix):
         
         Bf = self.f
         tags = [elem.tag + "_" + rel for elem in self.model.elems for rel in elem.rel if elem.rel[rel]]
-        # delcols = [idx for idx, rel in enumerate(self.model.rel) if rel==1]
         delcols = [Bf.column_data.index(tag) for tag in tags]
         newB = np.delete(Bf, delcols, axis=1).view(type(self))
         transfer_vars(Bf, newB)
         newB.column_data = list(np.delete(Bf.column_data, delcols))
-        # newB.row_data = self.row_data
-        # newB.rel = self.rel
         return newB
 
     @property
@@ -539,27 +521,11 @@ class Static_matrix (Structural_Matrix):
         transfer_vars(Bf, newB)
         newB.column_data = list(np.delete(Bf.column_data, delcols))
         newB = newB.del_zeros()
-        
-        # newB.row_data = self.row_data
-        # newB.rel = self.rel
         return newB
 
     @property
     def fc(self):
         return self.f.c
-    
-    # @property
-    # def x(self):
-    #     """Removes rows of B_matrix corresponding to primary (non-redundant) forces"""
-    #     # rdts = self.model.redundants
-    #     # tags = [q.elem.tag + '_'+str(q.nature) for q in rdts]
-    #     # cols = [self.column_data.index(tag) for tag in tags]
-    #     # newB = self[:,cols]
-    #     transfer_vars(self, newB)
-    #     newB.column_data = [self.column_data[col] for col in cols]
-    #     # newB.row_data = self.row_data
-    #     # newB.model = self.model
-    #     return newB
 
     @property
     def x(self):
@@ -590,7 +556,6 @@ class Static_matrix (Structural_Matrix):
         Bbarx.column_data = Bbarxi.column_data
         Bbarx.row_data = self.column_data
 
-
         for idxc, cl in enumerate(Bbarx.column_data):
             for idxr, rw in enumerate(Bbarx.row_data):
                 if rw in Bbarxi.row_data:
@@ -608,15 +573,12 @@ class Static_matrix (Structural_Matrix):
     def c0(self):
         Bf = self.f
         tags = [elem.tag + "_" + rel for elem in self.model.elems for rel in elem.rel if elem.rel[rel]]
-        # delcols = [idx for idx, rel in enumerate(self.model.rel) if rel==1]
         delcols = [Bf.column_data.index(tag) for tag in tags]
         newB = Bf 
         for col in delcols:
             newB[:,col] = [0.]*len(Bf[:,0])
         transfer_vars(Bf, newB)
         newB.column_data = list(np.delete(Bf.column_data, delcols))
-        # newB.row_data = self.row_data
-        # newB.rel = self.rel
         return newB
 
 class nStatic_matrix(Structural_Matrix):
@@ -646,16 +608,14 @@ class nStatic_matrix(Structural_Matrix):
         else:
             vect = Structural_Matrix.__matmul__(self, Vector)
         return vect
-  #<
+
     @property
     def f(self):
         delrows = [idx for idx, dof in enumerate(self.row_data) if int(dof) > self.model.nf]
         
         newB = np.delete(self, delrows, axis=0).view(type(self))
         transfer_vars(self, newB)
-        # newB.model = self.model
         newB.row_data = np.delete(self.row_data, delrows)
-        # newB.column_data = self.column_data
         return newB
         
     @property
@@ -701,9 +661,6 @@ class nStatic_matrix(Structural_Matrix):
         transfer_vars(Bf, newB)
         newB.column_data = list(np.delete(Bf.column_data, delcols))
         newB = newB.del_zeros()
-        
-        # newB.row_data = self.row_data
-        # newB.rel = self.rel
         return newB
 
     @property
@@ -807,8 +764,6 @@ def Bh_matrix(model):
     row_data = np.array([str(dof) for dof in range(1, model.nt+1)])
     column_data = np.array([elem.tag+'_'+key for elem in model.elems for key in elem.rel.keys()])
     rcdata = (row_data, column_data)
-    # return np.asarray(input_array).view(nStatic_matrix)
-    # matrix =  np.asarray(input_array)
     return nStatic_matrix(B, model, rcdata)
 
 class Kinematic_matrix (Structural_Matrix):
@@ -852,8 +807,6 @@ class Kinematic_matrix (Structural_Matrix):
         self.row_data = np.array([elem.tag+'_'+key for elem in model.elems for key in elem.v.keys()])
         self.basic_deformations = np.array([v for elem in model.elems for v in elem.basic_deformations])
         
-        
-        # self.rel = [rel for elem in model.elems for rel in elem.rel.values()]
         self.idx_h = []
         if matrix is not None:
             fullnq = sum([len(elem.rel) for elem in model.elems])
@@ -871,52 +824,15 @@ class Kinematic_matrix (Structural_Matrix):
             vect.row_data = self.row_data
             vect.matrix = self
         elif isinstance(Vector, Displacement_vector):
-            # print('b')
-            vect = np.matmul(self, Vector).view(Deformation_vector)
-            # vect = np.matmul(self, Vector).view(Structural_Vector)  
+            vect = np.matmul(self, Vector).view(Deformation_vector) 
             vect.row_data = self.row_data
             vect.matrix = self
         else:
-            # print('else')
             vect = Structural_Matrix.__matmul__(self, Vector)
 
         
         return vect
 
-    # def remove(self, component):
-    #     if "frame-axial" in component:
-    #         """Remove rows corresponding to frame axial deformations"""
-
-    #         rows=[]
-    #         for elem in self.model.elems:
-    #             if type(elem)== ema.elements.Beam:
-    #                 rows.append(self.row_data.index(elem.tag+'_1'))
-
-    #         newA = np.delete(self, rows, axis=0).view(Kinematic_matrix)
-    #         newA.row_data = list(np.delete(self.row_data, rows))
-    #         newA.model = self.model
-    #         newA.column_data = self.column_data
-    #         # newA.rel = list(np.delete(self.rel, rows))
-    #         return newA 
-
-    #     if type(component) is list:
-    #         newA = self
-    #         for item in component:
-    #             if item in self.column_data: 
-    #                 delcol = self.column_data.index(item)
-    #                 newA = np.delete(self, delcol, axis=1).view(Kinematic_matrix)
-    #                 newA.row_data = self.row_data
-    #                 newA.model = self.model
-    #                 newA.column_data = list(np.delete(self.column_data, delcol))
-    #                 # newA.rel = self.rel
-    #             else:
-    #                 delrow = self.row_data.index(item)
-    #                 newA = np.delete(self, delrow, axis=0).view(Kinematic_matrix)
-    #                 newA.column_data = self.column_data
-    #                 newA.model = self.model
-    #                 newA.row_data = list(np.delete(self.row_data, delrow))
-    #                 # newA.rel = self.rel
-    #         return newA
 
     def combine(self, component):
         if "colinear" in component:
@@ -1218,10 +1134,8 @@ class Flexibility_matrix (Structural_Matrix):
 
         B = Static_matrix(model)
         Fsr = ema.utilities.del_zeros(Fs)
-        # Fsr = Fs
 
         F = B.bari.T@(Fsr@B.bari)
-        # Fxx = B.barx.T@Fsr@B.barx
         
         input_array = np.asarray(F).view(cls)
         input_array.model = model
@@ -1338,22 +1252,6 @@ class Diag_matrix (Structural_Matrix):
         newA.row_data = self.row_data[idx_c]
         return newA
 
-    # @property 
-    # def c(self):
-    #     """Removes rows corresponding to element hinges/releases"""
-    #     # rows = [idx for idx, rel in enumerate(self.model.rel) if rel==1]
-        
-    #     forces = [q for elem in self.model.elems for q in elem.basic_forces if (q.rel or (q.plastic_event is None))]
-    #     delrows = [np.where(self.basic_forces==force) for force in forces]
-        
-    #     newF = np.delete(self, delrows, axis=0).view(type(self))
-    #     newF = np.delete(newF, delrows, axis=1).view(type(self))
-    #     newF.row_data = list(np.delete(self.row_data, delrows))
-    #     newF.column_data = list(np.delete(self.column_data, delrows))
-    #     newF.model = self.model
-    #     newF.tag = self.tag + "_c"
-    #     return newF
-
 def Fs_matrix(model, Roption=True):
     """Returns a Flexibility_matrix object"""  
     if Roption:
@@ -1387,27 +1285,17 @@ class Stiffness_matrix (Structural_Matrix):
     """
     tag = 'K'
     def __new__(cls, arry, model, Roption=None):
-        # K = np.zeros((model.nt, model.nt))
-        # for elem in model.elems:
-        #     ke = elem.ke_matrix()
-        #     for i, dof in enumerate(elem.dofs):
-        #         for j, doff in enumerate(elem.dofs):
-        #             K[int(dof)-1, int(doff)-1] += ke[i, j]
 
         input_array = np.asarray(arry).view(cls)
         input_array.model = model
-        # input_array.column_data = ['U_{'+str(dof)+'}' for dof in range(1, model.nt+1)]
         input_array.column_data = [str(dof) for dof in range(1, model.nt+1)]
         input_array.row_data = ['P_{'+str(dof)+'}' for dof in range(1, model.nt+1)]
-    
-        # input_array.s = DiagStiff_matrix(model)
         
         return input_array
 
     def __init__(self, arry, model, Roption=None):
         self.subs = [None]
         pass
-    
     
 
     def __matmul__(self, Vector):
@@ -1446,6 +1334,19 @@ def K_matrix(Model):
 
     return Stiffness_matrix(K, Model, Roption=None)
 
+def K_tensor(Model,U=None):
+    """Returns a Stiffness_matrix object"""
+    K = np.zeros((Model.nt, Model.nt))
+    for elem in Model.elems:
+        ke = elem.ke_matrix(U)
+        for i, dof in enumerate(elem.dofs):
+            for j, doff in enumerate(elem.dofs):
+                K[int(dof)-1, int(doff)-1] += ke[i, j]
+    return K
+
+def AssemblyTensor(Model):
+    pass
+
 def Kt_matrix(Model, State):
     """Returns a Stiffness_matrix object"""
     K = np.zeros((Model.nt, Model.nt))
@@ -1470,10 +1371,8 @@ class Mass_matrix (Structural_Matrix):
                 if 'r' not in list(ddof.keys())[i]:
                     if node.mass != 0.0: mass_dofs.append(str(dof))
                     M[int(dof)-1, int(dof)-1] += node.mass
-        # for i in range(model.nt):
-        #     for j in range(i):
-        #         print(i, j)
-        #         M[i,j] = 
+
+
         input_array = np.asarray(M).view(cls)
         input_array.model = Model
         input_array.mass_dofs = mass_dofs
@@ -1504,71 +1403,6 @@ class Mass_matrix (Structural_Matrix):
         newK.row_data = list(np.delete(self.row_data, delrows))
         newK.column_data = list(np.delete(self.column_data, delrows))
         return newK
-
- # class Deformation_vector (row_vector, np.ndarray):
-    #     tag = "V"
-    #     def __new__(cls, Matrix, Vector=None, part=None):
-    #         if part == 'initial':
-    #             V = np.concatenate([elem.v0_vector() for elem in Matrix.model.elems])
-    #         else:
-    #             V = np.zeros((len(Matrix.row_data)))
-    #         input_array = np.asarray(V).view(cls)
-    #         input_array.matrix = Matrix
-    #         return input_array
-
-    #     def __init__(self, Matrix, Vector=None, part=None):
-    #         self.part = part 
-    #         self.subs = [None]
-    #         if part is None: 
-    #             self.o = Deformation_vector(Matrix, part='initial')
-    #             self.o.subs.append('initial')
-    #             pass
-    #         self.row_data = Matrix.row_data
-            
-    #         if Vector is not None:
-    #             for key in Vector.row_data:
-    #                 if key in self.row_data:
-    #                     self.set_item(key, Vector.rows([key]))
-        
-    #     @property 
-    #     def c(self):
-    #         """Removes rows corresponding to element hinges/releases"""
-    #         # rows = [idx for idx, rel in enumerate(self.matrix.model.rel) if rel]
-    #         tags = [elem.tag + "_" + rel for elem in self.matrix.model.elems for rel in elem.rel if elem.rel[rel]]
-    #         delrows = [self.row_data.index(tag) for tag in tags]
-            
-    #         newV = np.delete(self, delrows, axis=0).view(type(self))
-    #         transfer_vars(self,newV)
-    #         newV.row_data = list(np.delete(self.row_data, delrows))
-    #         newV.subs.append('continuous')
-    #         return newV  
-        
-    #     @property
-    #     def i(self):
-    #         """Removes rows corresponding to redundant forces"""
-    #         rdts = self.matrix.model.redundants
-    #         tags = [q.elem.tag + '_'+str(q.nature) for q in rdts]
-    #         delrows = [self.row_data.index(tag) for tag in tags]
-    #         newV = np.delete(self, delrows, axis=0).view(type(self))
-    #         transfer_vars(self,newV)
-    #         newV.row_data = list(np.delete(self.row_data, delrows))
-    #         newV.subs.append('primary')
-    #         return newV
-
-    #     @property
-    #     def x(self):
-    #         """Removes rows of corresponding to primary forces
-            
-    #         """
-    #         rdts = self.matrix.model.redundants
-    #         tags = [q.elem.tag + '_'+str(q.nature) for q in rdts]
-    #         rows = [self.row_data.index(tag) for tag in tags]
-    #         newV = self[rows]
-    #         newV.row_data = [self.row_data[row] for row in rows]
-    #         transfer_vars(self, newV)
-    #         return newV
-
-##>*****************************************************************************
 
 
 class Displacement_vector(column_vector):
@@ -1666,7 +1500,7 @@ class iForce_vector(Structural_Vector):
     
     @property
     def c(self):
-        """Removes rows corresponding to element hinges/releases"""
+        """Remove rows corresponding to element hinges/releases"""
         idx_c = self.model.idx_c
         newQ = self[idx_c]
         transfer_vars(self, newQ)
@@ -1675,9 +1509,7 @@ class iForce_vector(Structural_Vector):
     
     @property
     def x(self):
-        """Removes rows of corresponding to primary forces
-        
-        """
+        """Remove rows of corresponding to primary forces"""
         rdts = self.model.redundants
         tags = [q.elem.tag + '_'+str(q.nature) for q in rdts]
         rows = [self.row_data.index(tag) for tag in tags]
@@ -1787,6 +1619,15 @@ def P_vector(model, vector=None):
     row_data = [str(dof) for dof in range(1, model.nt+1)]
     return nForce_vector(P, model, row_data)
 
+def P_tensor(model):
+    P = tf.concat([node.p_tensor() for node in model.nodes],0)
+    dofs = tf.concat(model.DOF,0) - 1
+    dofs = tf.where(tf.math.less(dofs,model.nf+1))
+    dofs = tf.squeeze(dofs)
+    print(dofs)
+    P = tf.gather(P,dofs)
+    return P
+
 # def P0_vector(model):
 #     """Returns a _ object"""   
 #     arry = np.concatenate([elem.p0_vector() for elem in model.elems]) 
@@ -1891,11 +1732,8 @@ def V0_vector(model):
     row_data = [elem.tag+'_'+key for elem in model.elems for key in elem.v.keys()] 
     return Deformation_vector(arry, model, row_data)
 
-
 def Aub_matrix(model, alpha):
     """Return the interaction upperbound matrix"""  
     aub  = np.array([elem.aub_matrix(alpha) for elem in model.elems])
     A = scipy.linalg.block_diag(*aub)
     return A
-
-

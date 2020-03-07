@@ -8,8 +8,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import copy
 from ema.elements import *
-import sympy as sp
-import openseespy as ops
+import tensorflow as tf
 
 
 class Model:
@@ -339,6 +338,45 @@ class Model:
                 newElem.Qp['+'][key] = newElem.Qp['-'][key] = Qpl[i]
                 newElem.Qpl[i,:] = Qpl[i] # <- consider shifting to this format for storing plastic capacities
         return newElem
+    
+    def tensor_beam(self, tag: str, iNode, jNode, mat=None, sec=None, Qpl=None):
+        """Add a 2D linear Euler-Bernouli beam object to model
+        
+        Parameters
+        ---------
+        tag : str
+            string used for identifying object
+        iNode : ema.Node
+            node object at element i-end
+        jNode : ema.Node
+            node object at element j-end
+        mat : ema.Material 
+
+        sec : ema.Section
+        
+
+        """
+
+        if mat is None:
+            mat = self.materials['default']
+        if sec is None:
+            sec = self.xsecs['default']
+        newElem = TensorBeam(tag, iNode, jNode, mat.E, sec.A, sec.I)
+        self.elems.append(newElem)
+        self.delems.update({newElem.tag:newElem})
+        # self.connect([iNode, jNode], "Beam") # considering deprecation
+        iNode.elems.append(newElem)
+        jNode.elems.append(newElem)
+        
+        if Qpl is not None:
+            newElem.Qpl = np.zeros((3,2))
+            newElem.Np = [Qpl[0], Qpl[0]]
+            newElem.Mp = [[Qpl[1], Qpl[1]],[Qpl[2], Qpl[2]]]
+            for i, key in enumerate(newElem.Qp['+']):
+                newElem.Qp['+'][key] = newElem.Qp['-'][key] = Qpl[i] # consider depraction of elem.Qp in favor of elem.Qpl
+                newElem.Qp['+'][key] = newElem.Qp['-'][key] = Qpl[i]
+                newElem.Qpl[i,:] = Qpl[i] # <- consider shifting to this format for storing plastic capacities
+        return newElem
 
     def girder(self, nodes, mats=None, xsecs=None, story=None):
         tags=[chr(i) for i in range(ord("a"), ord("a") + 26)]
@@ -406,6 +444,24 @@ class Model:
         if A is None: A = xsec.A
 
         newElem = Truss(tag, iNode, jNode, E, A)
+        self.delems.update({newElem.tag:newElem})
+        self.elems.append(newElem)
+        iNode.elems.append(newElem)
+        jNode.elems.append(newElem)
+
+        if Qpl is not None:
+            newElem.Np = [Qpl[0], Qpl[0]]
+            newElem.Qp['+']['1'] = newElem.Qp['-']['1'] = Qpl[0]
+        return newElem
+    
+    def tensor_truss(self, tag: str, iNode, jNode, mat=None, xsec=None, Qpl=None,A=None,E=None):
+        if mat is None: mat = self.materials['default']
+        if E is None: E = mat.E
+        # cross section
+        if xsec is None: xsec = self.xsecs['default']
+        if A is None: A = xsec.A
+
+        newElem = TensorTruss(tag, iNode, jNode, E, A)
         self.delems.update({newElem.tag:newElem})
         self.elems.append(newElem)
         iNode.elems.append(newElem)
@@ -483,6 +539,17 @@ class Model:
                     except: pass
                 node.x += delta[0]
                 node.y += delta[1]
+
+
+class TensorModel(Model):
+    
+    def node(self, tag: str, x: float, y=None, z=None, mass: float=None):
+        x = tf.constant(x)
+        y = tf.constant(y)
+        newNode = Node(self, tag, self.ndf, [x, y, z], mass)
+        self.nodes.append(newNode)
+        self.dnodes.update({newNode.tag : newNode})
+        return newNode
 
 class rModel(Model):
     def __init__(self, ndm, ndf):
@@ -882,6 +949,10 @@ class Node():
 
     def p_vector(self):
         return np.array(list(self.p.values()))
+
+    def p_tensor(self):
+        p = tf.Variable([[p] for p in self.p.values()])
+        return p
         
     @property
     def dofs(self):

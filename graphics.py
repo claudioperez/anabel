@@ -116,7 +116,6 @@ def plot_U(model, U_vect, ax, scale=None, color=None, chords=False):
             y = hinge.node.y - f*hinge.elem.sn
         plt.scatter(x, y, **hinge_style[0])
 
-
 def plot_modes(model, shapes, ax, scale=None, color=None, label=None):
     """Only works for 2D"""
     if scale is None: scale = 5 # factor to scale up displacements
@@ -257,7 +256,6 @@ def plot_structure(Model, ax, label=False):
                 y = node.y0-ry_offset[i]#*np.sign(node.elems[0].sn)
                 ax.plot(x, y, **rxn_style[i])
 
-
     # plot nodes
     f = 0.4 # factor to tweak annotation distance
     for node in Model.nodes:
@@ -299,7 +297,6 @@ def plot_beam(Model, ax,label=False):
             y = 0.0 
 
         plt.scatter(x, y, s=20, zorder=2, facecolors = 'white', edgecolors='black')
-
 
     # plot nodes
     y_off = 0.0004 # factor to tweak annotation distance

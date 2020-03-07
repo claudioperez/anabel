@@ -1,6 +1,6 @@
 import numpy as np
 import pandas as pd
-import sympy as sp
+# import sympy as sp
 from . import export
 import scipy.linalg
 from . import ipyutils

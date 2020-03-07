@@ -1,8 +1,9 @@
 import numpy as np
-import sympy as sp
+# import sympy as sp
 from abc import abstractmethod
 from numpy.polynomial import Polynomial
 from scipy.integrate import quad
+import tensorflow as tf
 
 # from ema.utilities import Structural_Matrix, Structural_Vector
 from ema.matrices import Structural_Matrix, Structural_Vector
@@ -372,13 +373,91 @@ class TensorRod(Element):
 
 
 
+class TensorTruss(Element):
+    nv = 1
+    nn = 2
+    nq = 1
+    ndm = 2
+    ndf = 2 # number of dofs at each node
+    force_dict = {'1':0}
+    Qpl = tf.zeros((2,nq))
+
+    def __init__(self, tag, iNode, jNode, E, A, geom='lin'):
+        super().__init__(self.ndf, self.ndm, self.force_dict, [iNode, jNode])
+        self.type = '2D truss'
+        self.tag = tag
+        
+        self.E = tf.constant([E])
+        self.A = tf.constant([A])
+        self.geom = geom
+        self.Q = tf.constant([0.0])
+
+        self.q = {'1':tf.constant(0.0)}
+        self.v = {'1':tf.constant(0.0)}
+        
+        self.w = {'1':0.0}
+
+    def __repr__(self):
+        return 'truss-{}'.format(self.tag)
+
+    def v0_vector(self):
+        EA = self.E*self.A
+        L = self.L
+        e0 = self.e0
+        q0 = self.q0
+        w = self.w
+        v0 =  np.array([e0['1']*L])
+        v0 += [q0['1']*L/EA]
+        v0 += [w['1']*L*L/(2*EA)]
+        return v0
+        
+    def q0_vector(self):
+        EA = self.E*self.A
+        e0 = self.e0['1']
+        q0 = self.q0['1']
+        q0 = q0 - EA*e0
+        return [q0]
+    
+    def ke_matrix(self,U):
+        ag = self.ag(U)
+        k = self.k_matrix(U)
+        return ag.T@(k*ag)
+
+    def kg_matrix(self, U): 
+        """return element local stiffness Matrix"""
+        E = self.E
+        A = self.A
+        L = self.L
+        k = tf.math.divide(N,L)
+        return k
+
+    def k_matrix(self,U): 
+        """return element local stiffness Matrix"""
+
+        E = self.E
+        A = self.A
+        L = self.L
+        k = tf.math.multiply(E,A)
+        k = tf.math.divide(k,L)
+        return k
+
+    
+    def ag(self,u): 
+        cs = self.cs
+        sn = self.sn
+        ag = np.array([[-cs],[-sn] , [cs], [sn]]).T
+        return ag
+    
+
 
 class Truss(Element):
     nv = 1
     nn = 2
+    nq = 1
     ndm = 2
     ndf = 2 # number of dofs at each node
     force_dict = {'1':0}
+    Qpl = np.zeros((2,nq))
 
     def __init__(self, tag, iNode, jNode, E, A, geo='lin'):
         super().__init__(self.ndf, self.ndm, self.force_dict, [iNode, jNode])
@@ -638,6 +717,239 @@ class Beam(Element):
     def enq(self): 
         """element number of forces, considering deprecation"""
         # output like [1, 1, 1]
+        return [1 for x in self.q]
+
+    def ag(self):
+        cs = self.cs
+        sn = self.sn
+        L = self.L
+        ag = np.array([[ -cs ,  -sn , 0,  cs ,   sn , 0],
+                       [-sn/L,  cs/L, 1, sn/L, -cs/L, 0],
+                       [-sn/L,  cs/L, 0, sn/L, -cs/L, 1]])
+        
+        if self.dofs[0] == self.dofs[3] or self.dofs[1] == self.dofs[4]:
+            ag[0,:] = [0.0]*ag.shape[1]
+        return ag
+
+    def ah(self):
+        MR = [1 if x else 0 for x in self.rel.values()]
+        ah = np.array([[1-MR[0],          0          ,             0        ],
+                       [   0   ,       1-MR[1]       ,  -0.5*(1-MR[2])*MR[1]],
+                       [   0   , -0.5*(1-MR[1])*MR[2],          1-MR[2]     ]])
+        return ah
+
+    def k_matrix(self): 
+        """return element local stiffness Matrix"""
+        E = self.E
+        A = self.A
+        I = self.I
+        L = self.L
+        EI = E*I
+        ah = self.ah()
+        k = np.array([[E*A/L,    0   ,   0   ],
+                      [  0  , 4*EI/L , 2*EI/L],
+                      [  0  , 2*EI/L , 4*EI/L]])
+        k = ah.T @ k @ ah
+
+        # Assemble matrix metadata
+        k = Structural_Matrix(k)
+        k.tag = 'k'
+        k.row_data = ['q_'+ key for key in self.q0.keys()]
+        k.column_data = ['v_' + key for key in self.v0.keys()]
+        k.c_cidx = k.c_ridx = [int(key)-1 for key in self.rel.keys() if self.rel[key]]
+        return k
+
+    def f_matrix(self, Roption=False):
+        """Flexibility matrix of an element.
+
+        """
+        EA = self.E*self.A
+        EI = self.E*self.I
+        L = self.L
+        f = Structural_Matrix([
+            [L/EA,     0    ,      0   ],
+            [  0 ,  L/(3*EI), -L/(6*EI)],
+            [  0 , -L/(6*EI),  L/(3*EI)]])
+        ide = set(range(3))
+
+        if Roption:  
+            if self.rel["2"]:
+                f[:,1] = [0.0]*f.shape[0]
+                f[1,:] = [0.0]*f.shape[1]
+
+            if self.rel["3"]:
+                f[:,2] = [0.0]*f.shape[0]
+                f[2,:] = [0.0]*f.shape[1]
+
+        # Define matrix metadata
+        f.tag = 'f'
+        f.column_data = ['q_'+ key for key in self.q0.keys()]
+        f.row_data = ['v_' + key for key in self.v0.keys()]
+        f.c_cidx = f.c_ridx = [int(key)-1 for key in self.rel.keys() if self.rel[key]]
+        return f
+
+    def ke_matrix(self): 
+        """return element global stiffness Matrix"""
+
+        k  = self.k_matrix()
+        ag = self.ag()
+        
+        ke = ag.T @ k @ ag
+        ke = Structural_Matrix(ke) 
+        ke.row_data = ke.column_data = ['u_'+str(int(dof)) for dof in self.dofs]
+        return ke
+
+    def bg_matrix(self, Roption=False): 
+        """return element global static matrix, bg"""
+
+        cs = self.cs
+        sn = self.sn
+        L  = self.L
+        #                x      ri      rj   Global
+        bg = np.array([[-cs, -sn/L,  -sn/L],  # x
+                       [-sn,  cs/L,   cs/L],  # y
+                       [0.0,   1.0,    0.0],  # rz
+                       [ cs,  sn/L,   sn/L],
+                       [ sn, -cs/L,  -cs/L],
+                       [0.0,   0.0,    1.0]])
+        if Roption:
+            if self.rel['2']:
+                bg[:,1] = [0.0]*bg.shape[0]
+
+            if self.rel['3']:
+                bg[:,2] = [0.0]*bg.shape[0]
+
+        if self.dofs[0] == self.dofs[3] or self.dofs[1] == self.dofs[4]:
+            bg[:,0] = [0.0]*bg.shape[0]
+            # bg = np.delete(bg, 0, axis=1)
+
+        bg = Structural_Matrix(bg)
+        bg.tag = 'b'
+        bg.column_data = ['x', 'ri', 'rj']
+        bg.row_data = ['x', 'y', 'rz']
+        bg.c_cidx = bg.c_ridx = [int(key)-1 for key in self.rel.keys() if self.rel[key]]
+
+
+        return bg
+    
+    def m_matrix(self):
+        m = np.array([
+            [140, 0.0, 0.0,  70.0, 0.0, 0.0],
+            [0.0, ],
+            [0.0, ],
+            [70., ],
+            [0.0, ],
+            [0.0, ],
+        ])
+        return m
+
+    def v0_vector(self):
+        EA = self.E*self.A
+        EI = self.E*self.I
+        L = self.L
+        e0 = self.e0
+        w = self.w
+        v0 =  np.array([e0['1']*L, -e0['2']*L/2, e0['2']*L/2])
+        v0 += np.array([w['x']*L*L/(2*EA), w['y']*L**3/(24*EI), -w['y']*L**3/(24*EI)])
+        v0 = Structural_Matrix(v0)
+        v0.tag = 'v'
+        v0.column_data = ['v_0']
+        v0.row_data = ['axial', 'i-rotation', 'j-rotation']
+        v0.c_cidx = False
+        v0.c_ridx = [int(key)-1 for key in self.rel.keys() if self.rel[key]]
+        return v0 
+
+    def q0_vector(self):
+        L = self.L
+        E = self.E 
+        A = self.A 
+        I = self.I
+        e0= self.e0 
+        w = self.w
+        q0 =  np.array([-e0['1']*E*A, +e0['2']*E*I, -e0['2']*E*I])
+        if self.rel['2']:
+            q0[1] *= 0
+            q0[1] *= 1.5 
+        if self.rel['3']:
+            q0[2] *= 0
+            q0[2] *= 1.5 
+
+        q0[1] += -w['y']*L**2/12*((not self.rel['2']) and (not self.rel['3'])) - w['y']*L**2/8*(self.rel['3'])
+        q0[2] += +w['y']*L**2/12*((not self.rel['2']) and (not self.rel['3'])) + w['y']*L**2/8*(self.rel['2'])
+
+        # Metadata
+        q0 = Structural_Matrix(q0)
+        q0.tag = 'q'
+        q0.column_data = ['q_0']
+        q0.row_data = ['axial', 'M_i', 'M_j']
+        q0.c_cidx = False
+        q0.c_ridx = [int(key)-1 for key in self.rel.keys() if self.rel[key]]
+
+        return q0 
+
+    def κ(self, k, state=None, form=None):
+        """Defines element curvature and calculates the resulting end deformations.
+
+        """
+        if form ==None: form = 'uniform'
+        if state==None: state = -1
+        L = self.L
+        table = {
+            'uniform': [-0.5*k*L, 0.5*k*L],
+            'ilinear': [-k/3*L, k/6*L],
+            'jlinear': [-k/6*L, k/2*L],
+            'parabolic': [-k/3*L, k/3*L],
+        }
+        self.nodes[0].model.states[state]['v0'][self.tag]['2'] = table[form][0]
+        self.nodes[0].model.states[state]['v0'][self.tag]["3"]= table[form][1]
+        return
+
+class TensorBeam(Element): 
+    """linear 2D Euler-Bernouli frame element"""
+    
+    nv = 3
+    nn = 2
+    nq = 3
+    ndm = 2
+    ndf = 3
+    force_dict = {'1':0, '2':0, '3': 0}
+    Qpl = np.zeros((2,nq))
+    
+    def __init__(self, tag, iNode, jNode, E, A, I):
+        super().__init__(self.ndf, self.ndm, self.force_dict, [iNode,jNode])
+        self.type = '2D beam'
+        self.tag = tag
+        self.E = tf.constant(E)
+        self.A = tf.constant(A)
+        self.I = tf.constant(I)
+        self.q = {'1':tf.constant(0), '2':tf.constant(0), '3': tf.constant(0)}     # basic element force
+        self.v = {'1':tf.constant(0), '2':tf.constant(0), '3': tf.constant(0)}
+        self.w = {'x':tf.constant(0), 'y':tf.constant(0)}             #':  "uniform element loads in x and y",
+
+    def __repr__(self):
+        return 'el-{}'.format(self.tag) 
+
+    def Elastic_curve(self, x, end_rotations, scale=10, global_coord=False):
+        n = len(x)
+        L = self.L
+        N1 = 1-3*(x/L)**2+2*(x/L)**3
+        N2 = L*(x/L-2*(x/L)**2+(x/L)**3)
+        N3 = 3*(x/L)**2-2*(x/L)**3
+        N4 = L*((x/L)**3-(x/L)**2)
+        vi = end_rotations[0]
+        vj = end_rotations[1]
+        y = np.array(vi*N2+vj*N4)*scale
+        xy = np.concatenate(([x],[y]))
+        if global_coord:
+            x0 = self.nodes[0].x
+            y0 = self.nodes[0].y
+            Rz = self.Rz_matrix()[0:2,0:2]
+            xy = Rz@xy + [[x0]*n,[y0]*n]
+        return xy
+
+    @property
+    def enq(self): 
+        """element number of forces, considering deprecation"""
         return [1 for x in self.q]
 
     def ag(self):

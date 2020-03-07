@@ -1,5 +1,5 @@
 import numpy as np 
-from numba import njit, jit
+# from numba import njit, jit
 from scipy.integrate import solve_ivp
 
 

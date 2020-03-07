@@ -1,0 +1,45 @@
+\hypertarget{solution-strategies}{%
+\section{7 Solution Strategies}\label{solution-strategies}}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  Load Incrementation:
+  \(P_{f}^{(k)}=P_{f}^{(k-1)}+\Delta \lambda P_{\text {ref }}\)
+\item
+  Use the solution at \(k-1\) as initial guess \(U_{0}^{(k)}=U^{(k-1)}\)
+\item
+  Structure State Determination:
+  \(P_{r}^{(k)}=P_{r}\left(U_{0}^{(k)}\right)\) and
+  \(K_{t}^{(k)}=K_{t}\left(U_{0}^{(k)}\right)\)
+\item
+  Determine \(P_{u}^{(k)}=P_{f}^{(k)}-P_{r}^{(k)}\)
+\item
+  Determine \(\Delta U_{0}^{(k)}=K_{t}^{(k)} \backslash P_{u}^{(k)}\)
+\item
+  Update the solution \(U_{1}^{(k)}=U_{0}^{(k)}+\Delta U_{0}^{(k)}\)
+\item
+  Equilibrium Iterations For \(i=1 \ldots n\) and constant \(k\) without
+  superscript ( \(k\) ) except for \(P_{f}\).
+
+  \begin{itemize}
+  \tightlist
+  \item
+    State Determination: \(P_{r}\left(U_{i}\right)\) and
+    \(K_{t}\left(U_{i}\right)\)
+  \item
+    Nodal force unbalance
+    \(P_{u}\left(U_{i}\right)=P_{f}^{(k)}-P_{r}\left(U_{i}\right)\)
+  \item
+    Solution correction
+    \(\Delta U_{i}=K_{t}\left(U_{i}\right) \backslash P_{u}\left(U_{i}\right)\)
+  \item
+    Update estimate \(U_{i+1}=U_{i}+\Delta U_{i}\)
+  \end{itemize}
+
+  Repeat steps (a)-(d) until the error norm satisfies the specified
+  tolerance.
+\item
+  On convergence of the equilibrium iterations determine the resisting
+  forces for the final \(U^{(k)}\)
+\end{enumerate}
