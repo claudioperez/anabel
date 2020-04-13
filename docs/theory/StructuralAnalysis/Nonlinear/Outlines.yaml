@@ -1,0 +1,254 @@
+crisfield-2012:
+    PART I BASIC CONCEPTS AND SOLUTION TECHNIQUES
+        1 Preliminaries 3		
+            1.1 A Simple Example of Non-linear Behaviour 3	
+            1.2 A Review of Concepts from Linear Algebra 5	
+            1.3 Vectors and Tensors 12	
+            1.4 Stress and Strain Tensors 17	
+            1.5 Elasticity 23	
+            1.6 The PyFEM Finite Element Library 25
+            References 29
+        2 Non-linear Finite Element Analysis 31
+            2.1 Equilibrium and Virtual Work 31
+            2.2 Spatial Discretisation by Finite Elements 33
+            2.3 PyFEM: Shape Function Utilities 38
+            2.4 Incremental-iterative Analysis 41
+            2.5 Load versus Displacement Control 50
+            2.6 PyFEM: A Linear Finite Element Code with Displacement Control 53
+            References 62	
+        3 Geometrically Non-linear Analysis 63		
+            3.1 Truss Elements 64	
+                3.1.1 Total Lagrange Formulation 67
+                3.1.2 Updated Lagrange Formulation 70
+                3.1.3 Corotational Formulation 72
+            3.2 PyFEM: The Shallow Truss Problem 76	
+            3.3 Stress and Deformation Measures in Continua 85	
+            3.4 Geometrically Non-linear Formulation of Continuum Elements
+                3.4.1 Total and Updated Lagrange Formulations 91
+                3.4.2 Corotational Formulation 96
+            3.5 Linear Buckling Analysis 100	
+            3.6 PyFEM: A Geometrically Non-linear Continuum Element 103	
+            References 110	
+        4 Solution Techniques in Quasi-static Analysis 113		
+            4.1 Line Searches 113	
+            4.2 Path-following or Arc-length Methods 116	
+            4.3 PyFEM: Implementation of Riks’ Arc-length Solver 124	
+            4.4 Stability and Uniqueness in Discretised Systems 129	
+                4.4.1 Stability of a Discrete System 129
+                4.4.2 Uniqueness and Bifurcation in a Discrete System 130
+                4.4.3 Branch Switching 134
+            4.5 Load Stepping and Convergence Criteria 134	
+            4.6 Quasi-Newton Methods 138	
+            References 141
+        5 Solution Techniques for Non-linear Dynamics 143		
+            5.1 The Semi-discrete Equations 143	
+            5.2 Explicit Time Integration 144	
+            5.3 PyFEM: Implementation of an Explicit Solver 149	
+            5.4 Implicit Time Integration 152	
+                5.4.1 The Newmark Family 153
+                5.4.2 The HHT α-method 154
+                5.4.3 Alternative Implicit Methods for Time Integration 155
+            5.5 Stability and Accuracy in the Presence of Non-linearities 156	
+            5.6 Energy-conserving Algorithms 161	
+            5.7 Time Step Size Control and Element Technology 164	
+            References 165	
+    PART II MATERIAL NON-LINEARITIES		
+        6 Damage Mechanics 169	
+            6.1 The Concept of Damage 169	
+            6.2 Isotropic Elasticity-based Damage 171	
+            6.3 PyFEM: A Plane-strain Damage Model 175	
+            6.4 Stability, Ellipticity and Mesh Sensitivity 179	
+            6.4.1 Stability and Ellipticity 179	
+            6.4.2 Mesh Sensitivity 182	
+            6.5 Cohesive-zone Models 185	
+            6.6 Element Technology: Embedded Discontinuities 190	
+            6.7 Complex Damage Models 198	
+                6.7.1 Anisotropic Damage Models 198
+                6.7.2 Microplane Models 199
+            6.8 Crack Models for Concrete and Other Quasi-brittle Materials 201	
+                6.8.1 Elasticity-based Smeared Crack Models 201
+                6.8.2 Reinforcement and Tension Stiffening 206
+            6.9 Regularised Damage Models 210	
+            6.9.1 Non-local Damage Models 210	
+            6.9.2 Gradient Damage Models 211	
+            References 215	
+        7 Plasticity 219
+            7.1 A Simple Slip Model 219
+            7.2 Flow Theory of Plasticity 223
+            7.2.1 Yield Function 223	
+            7.2.2 Flow Rule 228	
+            7.2.3 Hardening Behaviour 232		
+            7.3 Integration of the Stress-strain Relation 239
+            7.4 Tangent Stiffness Operators 249
+            7.5 Multi-surface Plasticity 252
+            7.5.1 Koiter’s Generalisation 252		
+            7.5.2 Rankine Plasticity for Concrete 254		
+            7.5.3 Tresca and Mohr-Coulomb Plasticity 260		
+            7.6 Soil Plasticity: Cam-clay Model 267		
+            7.7 Coupled Damage-Plasticity Models 270		
+            7.8 Element Technology: Volumetric Locking 271		
+            References 277		
+        8 Time-dependent Material Models 281		
+            8.1 Linear Visco-elasticity 281		
+            8.1.1 One-dimensional Linear Visco-elasticity 282		
+            8.1.2 Three-dimensional Visco-elasticity 284		
+            8.1.3 Algorithmic Aspects 285		
+            8.2 Creep Models 287		
+            8.3 Visco-plasticity 289		
+            8.3.1 One-dimensional Visco-plasticity 289		
+            8.3.2 Integration of the Rate Equations 291		
+            8.3.3 Perzyna Visco-plasticity 292		
+            8.3.4 Duvaut-Lions Visco-plasticity 294		
+            8.3.5 Consistency Model 296		
+            8.3.6 Propagative or Dynamic Instabilities 298		
+            References 303		
+    PART III STRUCTURAL ELEMENTS
+        9 Beams and Arches 307		
+            9.1 A Shallow Arch 307		
+            9.1.1 Kirchhoff Formulation 307		
+            viii Contents		
+            9.1.2 Including Shear Deformation: Timoshenko Beam 314		
+            9.2 PyFEM: A Kirchhoff Beam Element 317		
+            9.3 Corotational Elements 321		
+            9.3.1 Kirchhoff Theory 321		
+            9.3.2 Timoshenko Beam Theory 326		
+            9.4 A Two-dimensional Isoparametric Degenerate Continuum Beam Element 328		
+            9.5 A Three-dimensional Isoparametric Degenerate Continuum Beam Element 333		
+            References 341		
+        10 Plates and Shells 343		
+            10.1 Shallow-shell Formulations 344		
+            10.2 An Isoparametric Degenerate Continuum Shell Element 351
+            10.3 Solid-like Shell Elements 356		
+            10.4 Shell Plasticity: Ilyushin’s Criterion 357		
+            References 361		
+    PART IV LARGE STRAINS		
+        11 Hyperelasticity 365		
+        11.1 More Continuum Mechanics 365		
+        11.1.1 Momentum Balance and Stress Tensors 365		
+        11.1.2 Objective Stress Rates 368		
+        11.1.3 Principal Stretches and Invariants 372		
+        11.2 Strain Energy Functions 374		
+        11.2.1 Incompressibility and Near-incompressibility 376		
+        11.2.2 Strain Energy as a Function of Stretch Invariants 378		
+        11.2.3 Strain Energy as a Function of Principal Stretches 382		
+        11.2.4 Logarithmic Extension of Linear Elasticity: Hencky Model 386	
+        11.3 Element Technology 389		
+        11.3.1 u/p Formulation 389		
+        11.3.2 Enhanced Assumed Strain Elements 392		
+        11.3.3 F-bar Approach 395		
+        11.3.4 Corotational Approach 396		
+        References 398		
+        12 Large-strain Elasto-plasticity 401		
+        12.1 Eulerian Formulations 402		
+        12.2 Multiplicative Elasto-plasticity 407		
+        12.3 Multiplicative Elasto-plasticity versus Rate Formulations 411		
+        12.4 Integration of the Rate Equations 414		
+        12.5 Exponential Return-mapping Algorithms 418		
+        References 422		
+        Contents ix		
+    PART V ADVANCED DISCRETISATION CONCEPTS		
+        13 Interfaces and Discontinuities 427		
+            13.1 Interface Elements 428		
+            13.2 Discontinuous Galerkin Methods 436		
+            References 439		
+        14 Meshless and Partition-of-unity Methods 441		
+            14.1 Meshless Methods 442		
+            14.1.1 The Element-free Galerkin Method 442
+            14.1.2 Application to Fracture 446
+            14.1.3 Higher-order Damage Mechanics 448
+            14.1.4 Volumetric Locking 450
+            14.2 Partition-of-unity Approaches 451
+            14.2.1 Application to Fracture 455
+            14.2.2 Extension to Large Deformations 460
+            14.2.3 Dynamic Fracture 465
+            14.2.4 Weak Discontinuities 468
+            References 470
+        15 Isogeometric Finite Element Analysis 473
+            15.1 Basis Functions in Computer Aided Geometric Design 473
+            15.1.1 Univariate B-splines 474
+            15.1.2 Univariate NURBS 478
+            15.1.3 Multivariate B-splines and NURBS Patches 478
+            15.1.4 T-splines 480
+            15.2 Isogeometric Finite Elements 483
+            15.2.1 B´ezier Element Representation 483
+            15.2.2 B´ezier Extraction 485
+            15.3 PyFEM: Shape Functions for Isogeometric Analysis 487
+            15.4 Isogeometric Analysis in Non-linear Solid Mechanics 490
+            15.4.1 Design-through-analysis of Shell Structures 491
+            15.4.2 Higher-order Damage Models 496
+            15.4.3 Cohesive Zone Models 500
+            References 506
+    Index 509
+
+felippa-xxx:
+    Part I: Fundamentals of Nonlinear Structural Analysis			
+        Chapter 1: Overview			
+        Chapter 2: A Tour of Nonlinear Analysis. 			
+        Chapter 3: Residual Force Equations. 			
+        Chapter 4: One-Parameter Residual Equations.			
+        Chapter 5: Critical Points and Related Properties. 			
+        Chapter 6: Conservative Systems. 			
+    Part II: Total Lagrangian, Geometrically Nonlinear Finite Elements			
+        Chapter 7: Review of Continuum Mechanics: Kinematics 		
+        Chapter 8: Review of Continuum Mechanics: Field Equations. 		
+        Chapter 9: TL Bar Elements: Formulation & Implementation. 		
+        Chapter 10: TL Bar Elements: Truss Analysis.		
+        Chapter 11: The TL Plane Beam Element: Formulation.		
+        Chapter 12: The TL Plane Beam Element: Implementation.		    
+    Part III: Corotational, Geometrically Nonlinear Finite Elements			
+        Chapter 13: CR Formulation Overview I.		
+        Chapter 14: CR Formulation Overview II.		
+        Chapter 15: Unified Kinematic Description: Space Bar.		
+        Chapter 16: The CR Formulation: BE Plane Beam.		
+        Chapter 17, 18, 19 : Placeholder.     
+    Part IV: Solution Methods			
+        Chapter 20: Overview of Solution Methods.		
+        Chapter 21: Purely Incremental Methods: Load Control.		
+        Chapter 22: Purely Incremental Methods: General Control.		
+        Chapter 23: Purely Incremental Methods: Implementation. To be finished.		
+        Chapter 24: Purely Incremental Methods: Benchmark Examples. Under construction.		
+        Chapter 25: Conventional Newton Methods. Under complete renovation; dont print yet.		
+        Chapter 26: Newton Methods: General Control and Variants. To be rewritten.		
+        Chapter 27: Corrective Methods: Implementation. Under construction.		        
+    Part V: Structural Stability			
+        Chapter 28: Structural Stability: Basic Concepts.		
+            §28.1 Introduction 28-3
+            §28.2 Terminology 28-3
+            §28.3 Testing Stability 28-3
+                §28.3.1 Stability of Static Equilibrium 28-3
+                §28.3.2 Stability of Dynamic Equilibrium 28-5
+            §28.4 Static Stability Loss 28-6	
+                §28.4.1 Buckling or Snapping? 28-6
+                §28.4.2 Response Diagrams 28-7
+                §28.4.3 Primary Equilibrium Path and the Design Critical Load 28-7
+                §28.4.4 Stability Models 28-8
+                §28.4.5 Stability Equations Derivation 28-9
+            §28.5 Single-DOFEquilibrium Analysis Examples 28-9	
+                §28.5.1 TSPHRC Column: Geometrically Exact Analysis 28-9
+                §28.5.2 TSPHRC Column: LPB Analysis 28-11
+                §28.5.3 ESPHRC Column: Geometrically Exact Analysis 28-12
+                §28.5.4 ESPHRC Column: LPB Analysis 28-13
+                §28.5.5 Two-Strut Propped Column: Geometrically Exact Analysis 28-15
+            §28.6 Multiple-DOFEquilibrium Analysis Examples 28-16	
+                §28.6.1 PP3S Column 28-16
+            §28. Notes and Bibliography 28-18
+            §28. Exercises 28-19
+        Chapter 29: Linearized Prebuckling: Formulation.
+        Chapter 30: Linearized Prebuckling: Implementation.
+        Chapter 31: Linearized Prebuckling: Examples and Limitations.	
+        Chapter 32: Qualitative Analysis of Critical Points.
+        Chapter 33: Nonlinear Bifurcation Analysis.
+        Chapter 34: Imperfections.
+        Chapter 35: Nonconservative Loading: Overview. 
+        Chapter 36: Aero- and Hydrodynamic Loading. 
+        Chapter 37: Dynamic Stability: Formulation.
+        Chapter 38: Dynamic Stability: Examples.
+    Appendices
+        Appendix A: The Mathematics of Finite Rotations.
+        Appendix B: Matrices for EICR Formulation.			
+        Appendix C: Choice of Best CR Fit Frame.			
+        Appendix D: CR Nomenclature.			
+        Appendix H: The C1 TL Beam.			
+        Appendix S: Accelerators and Line Search.			
+        Appendix T: Detecting and Traversing Critical Points.			
+        Appendix R: References.

@@ -1598,8 +1598,6 @@ class EqResponse:
         return t, D
 
 
-
-
 def ElcentroRHA(zeta, omega):
     g=386.4
     ground_motion = elcentro

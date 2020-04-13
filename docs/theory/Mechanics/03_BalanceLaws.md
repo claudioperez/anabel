@@ -1,5 +1,57 @@
 # III Balance Laws
 
+## Momentum Balance - Stress
+
+$$\begin{array}{llll}
+\hline \text { Cauchy stress } \sigma & \text { Nominal stress } \mathbf{P} & \begin{array}{l}
+\text { 2nd Piola-Kirchhoff stress, }  \mathbf{S}
+\end{array} & \begin{array}{l}
+\text { Corotational Cauchy stress, } \hat{\boldsymbol{\sigma}}
+\end{array} \\
+\hline \sigma= & J^{-1} \mathbf{F} \cdot \mathbf{P} & \mathrm{J}^{-1} \mathbf{F} \cdot \mathbf{S} \cdot \mathbf{F}^{T} & \mathbf{R} \cdot \hat{\boldsymbol{\sigma}} \cdot \mathbf{R}^{T} \\
+\mathbf{P}=\mathbf{J F}^{-1} \cdot \boldsymbol{\sigma} & & \mathbf{S} \cdot \mathbf{F}^{T} & \boldsymbol{J U}^{-1} \cdot \hat{\boldsymbol{\sigma}} \cdot \mathbf{R}^{T} \\
+\mathbf{S}=J \mathbf{F}^{-1} \cdot \boldsymbol{\sigma} \cdot \mathbf{F}^{-T} & \mathbf{P} \cdot \mathbf{F}^{-T} & \boldsymbol{J U}^{-1} \cdot \hat{\boldsymbol{\sigma}} \cdot \mathbf{U}^{-1} \\
+\hat{\boldsymbol{\sigma}}=\mathbf{R}^{T} \cdot \boldsymbol{\sigma} \cdot \mathbf{R} & \boldsymbol{J}^{-1} \mathbf{U} \cdot \mathbf{P} \cdot \mathbf{R} & \boldsymbol{J}^{-1} \mathbf{U} \cdot \mathbf{S} \cdot \mathbf{U} & \\
+\boldsymbol{\tau}=J \boldsymbol{\sigma} & \mathbf{F} \cdot \mathbf{P} & \mathbf{F} \cdot \mathbf{S} \cdot \mathbf{F}^{T} & J \mathbf{R} \cdot \hat{\boldsymbol{\sigma}} \cdot \mathbf{R}^{T} \\
+\hline\end{array}\\ \text { Notes: } \begin{array}{c}
+d \mathbf{x}=\mathbf{F} \cdot d \mathbf{X}=\mathbf{R} \cdot \mathbf{U} \cdot d \mathbf{X} \\
+\mathbf{U} \text { is the stretch tensor; see Section } 3.7 .1 \\
+d \mathbf{x}=\mathbf{R} \cdot d \mathbf{X}=\mathbf{R} \cdot d \hat{\mathbf{x}} \text { in rotation }
+\end{array} \\
+\tau=\text { Kirchhoff stress }
+$$
+from Belytschko, Nonlinear Finite Elements for Continua and Structures
+
+
+### Cauchy Stress - Infinitesimal Strain
+
+### 1st Piola-Kirchhoff stress tensor
+
+Relates forces in the present ("spatial") configuration with areas in the reference ("material") configuration
+
+$$\boldsymbol{P}=J \boldsymbol{\sigma} \boldsymbol{F}^{-T}$$
+
+In terms of components with respect to an orthonormal basis, the first Piola-Kirchhoff stress is given by
+$$
+P_{i L}=J \sigma_{i k} F_{L k}^{-1}=J \sigma_{i k} \frac{\partial X_{L}}{\partial x_{k}}
+$$
+
+### 2nd Piola-Kirchhoff stress tensor
+
+the 2nd Piola-Kirchhoff stress tensor {\displaystyle {\boldsymbol {S}}}{\boldsymbol {S}} relates forces in the reference configuration to areas in the reference configuration.
+$$
+\boldsymbol{S}=J \boldsymbol{F}^{-1} \cdot \boldsymbol{\sigma} \cdot \boldsymbol{F}^{-T}
+$$
+In index notation with respect to an orthonormal basis,
+$$
+S_{I L}=J F_{I k}^{-1} F_{L m}^{-1} \sigma_{k m}=J \frac{\partial X_{I}}{\partial x_{k}} \frac{\partial X_{L}}{\partial x_{m}} \sigma_{k m}
+$$
+
+### Biot Stress tensor
+
+### Kirchhoff Stress tensor
+
+
 ## 5. Energy-Entropy Balance
 
 Infinitesimal specializations boxed.

@@ -1,4 +1,4 @@
-# Multivariate Normal
+# Transformations
 
 ## Properties of the standard normal space
 
@@ -20,3 +20,15 @@ where 𝜓(𝛽)=𝜙(𝛽)/Φ(−𝛽). One can show that 𝜓(𝛽)≅𝛽 so 
 𝑝2≅Φ(−𝛽)Π1√1+𝛽𝜅𝑖𝑛−1𝑖=1
 The above two approximations work well as long as −1<𝜓(𝛽)𝜅𝑖 and −1<𝛽𝜅𝑖, respectively, for each 𝑖.
 1. Consider the hypersphere 𝛽2−Σ𝑢𝑖2=0𝑛𝑖=1 of radius 𝛽. Owing to the fact that the sum of 𝑛 squared standard normal random variables has the chi-square distribution with 𝑛 degrees of freedom, the probability content outside the hypersphere (see Figure 6.1d for the two-dimensional case) is given by
+
+### Nataf
+
+$$\mathbf{U} =\mathbf{L}_{0}^{-1} \mathbf{Z} =\mathbf{L}_{0}^{-1}\left\{\begin{array}{c}
+\Phi^{-1}\left[F_{1}\left(X_{1}\right)\right] \\
+\vdots \\
+\Phi^{-1}\left[F_{n}\left(X_{n}\right)\right]
+\end{array}\right\}$$
+
+$$\mathbf{J}_{\mathbf{u}, \mathbf{x}} =\mathbf{J}_{\mathbf{u}, \mathbf{z}} \mathbf{J}_{\mathbf{z}, \mathbf{x}} =\mathbf{L}_{0}^{-1} \operatorname{diag}\left[\frac{f_{i}\left(x_{i}\right)}{\phi\left(z_{i}\right)}\right]$$
+
+$$\mathbf{J}_{\mathbf{x}, \mathbf{u}}=\operatorname{diag}\left[\phi\left(z_{i}\right) / f_{i}\left(x_{i}\right)\right] \mathbf{L}_{\mathbf{0}}$$

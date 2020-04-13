@@ -16,14 +16,14 @@ where $n$ is the dimension of the vector space.
 
 Hence the adjugate is
 
-\begin{align*}
+$$\begin{aligned}
 {(\text{adj}(A))^{a}}_{b}
 &= \frac{\partial}{\partial {A^{b}}_{a}} \left( \frac{1}{n!}\delta^{c_1\dots c_n}_{d_1\dots d_n}{A^{d_1}}_{c_1}\cdots{A^{d_n}}_{c_n} \right)\\
 &= \frac{1}{n!} \delta^{c_1\dots c_n}_{d_1\dots d_n} \frac{\partial}{\partial {A^{b}}_{a}} \left({A^{d_1}}_{c_1}\cdots{A^{d_n}}_{c_n} \right)
-\end{align*}
+\end{aligned}$$
 
 If we perform the calculation (for instance, in $n=3$) we get
-$$\begin{align}
+$$\begin{aligned}
 {(\text{adj}(A))^{a}}_{b}
 &= \frac{1}{3!} \delta^{ijk}_{lmn}
 \frac{\partial}{\partial {A^{b}}_{a}} \left( {A^{l}}_{i}{A^{m}}_{j}{A^{n}}_{k} \right)\\
@@ -46,7 +46,7 @@ $$\begin{align}
 \delta^{ija}_{lmb} {A^{l}}_{i}{A^{m}}_{j}
 \right)\\
 &= \frac{1}{2!}\delta^{aij}_{bmn} {A^{m}}_{i}{A^{n}}_{j}
-\end{align}$$
+\end{aligned}$$
 
 hence the inverse (in the $n=3$ case) is
 

@@ -5,7 +5,6 @@ import ema.matrices as mv
 from ema.matrices import U_vector
 
 
-
 node_style = [{'color':'black', 'marker':'s', 'markersize':3, 'zorder':2},
                                {'marker':'s', 'markersize':3, 'zorder':2}]
 
@@ -191,7 +190,8 @@ def plot_modes(model, shapes, ax, scale=None, color=None, label=None):
             y = yl + y0
             plt.plot(x, y, zorder = 1, color=color)
     
-def plot_structure(Model, ax, label=False):
+def plot_structure(Model, ax=None, label=False):
+    if ax is None: _,ax = plt.subplots()
     n =3
     ax.spines['right'].set_color('none')
     ax.spines['top'].set_color('none')
@@ -266,7 +266,7 @@ def plot_structure(Model, ax, label=False):
             else:
                 tag = node.tag + " "+ str(node.rxns)
                 ax.annotate(tag, xy=(f+node.x, 0.5*f+node.y), zorder = 3, color = 'blue')
-
+    return ax
 
 def plot_beam(Model, ax,label=False):
     n =3
@@ -325,16 +325,28 @@ def plot_structure3d(Model, ax):
         yl = y[1]- elem.cs*f
         zl = z[1] - elem.cz*f
         ax.plot(x, y, z, color ='black')
-#         ax.annotate(elem.tag, xyz = (xl, yl, zl))
+ #         ax.annotate(elem.tag, xyz = (xl, yl, zl))
         ax.text(xl, yl, zl, elem.tag, color='red')
         # plot nodes
     f = 0.4 # factor to tweak annotation distance
     for node in Model.nodes:
         ax.scatter(node.x,node.y, node.z, color = 'black', marker = 's')
-#             if sum(node.rxns) == 0:
+ #             if sum(node.rxns) == 0:
 
-#                 ax.annotate(node.tag, xy=(f+node.x, 0.5*f+node.y), zorder = 3, color = 'blue')
-#             else:
-#                 tag = node.tag + " "+ str(node.rxns)
-#                 ax.annotate(tag, xy=(f+node.x, 0.5*f+node.y), zorder = 3, color = 'blue')
+ #                 ax.annotate(node.tag, xy=(f+node.x, 0.5*f+node.y), zorder = 3, color = 'blue')
+ #             else:
+ #                 tag = node.tag + " "+ str(node.rxns)
+ #                 ax.annotate(tag, xy=(f+node.x, 0.5*f+node.y), zorder = 3, color = 'blue')
     return ax
+
+def plot_2dshape(xyz,N,node=1,ax=None):
+    if ax is None: _,ax = plt.subplots(1,1,subplot_kw={'projection':'3d'})
+
+    xx, yy = np.meshgrid(xyz[:,0],xyz[:,1])
+    z = N[(i-1)*2,0](xx,yy)
+
+
+
+
+
+

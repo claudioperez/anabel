@@ -1,0 +1,298 @@
+
+
+Table 5.1: Arguments of FEAP Element Subprogram.
+d(*):
+  description: Element data parameters (Moduli, body loads, etc.)
+ul(ndf,nen,j) 
+  description: Element nodal solution parameters
+nen is number of nodes on an element (max)
+j = 1: Displacement u(k)
+n+a
+j = 2: Increment u(k)
+n+a 􀀀 un
+j = 3: Increment u(k)
+n+1 􀀀 u(k􀀀1)
+n+1
+j = 4: Rate v(k)
+n+a
+j = 5: Rate a(k)
+n+a
+j = 6: Rate vn
+xl:
+  datatype: (ndm,nen) 
+  description: Element nodal reference coordinates
+ix:
+  datatype: (nen) 
+  description: Element global node numbers
+tl:
+  datatype: (nen) 
+  description: Element nodal temperature values
+s:
+  datatype: (nst,nst) 
+  description: Element matrix (e.g., stiness, mass)
+r:
+  datatype: (ndf,nen) 
+  description: Element vector (e.g., residual, mass). may also be used as r(nst)
+ndf:
+  description: Number unknowns (max) per node
+ndm:
+  description: Space dimension of mesh
+nst:
+  description: Size of element arrays S and R. N.B. Normally nst = ndf*nen
+isw:
+  description: Task parameter to control computation
+See prototype element in Figure 5.1
+
+
+Table 5.2: Task Options for FEAP Element Subprogram. R = Required; O = Optional;
+E = For eigensolutions
+
+isw Type Description Access Calling
+Task Command Program
+-1 O Set name in utx(1) Called by default pcontr
+ 0 O Output label SHOW ELEM pmacr5
+ 1 R Input d(*) parameters Mesh:MATE,n pmatin
+ 2 O Check elements Soln:CHECk pform
+ 3 R Compute tangent/residual Soln:TANG pform Store in S/r UTAN pform
+ 4 O Output element variables Soln:STRE pform
+ 5 E Compute cons/lump mass Soln:MASS pform, formrb
+Store in S/r MASS,LUMP pform
+ 6 R Compute residual Soln:FORM,REAC pform
+Plot:REAC pform
+ 7 O Surface load/tangents Mesh:SLOAd ploadl
+ 8 O Nodal projections Soln:STRE NODE pform
+Plot:STRE,PSTR pform
+ 9 O Damping Soln:DAMP pform
+10 O Augmented Lagrangian update Soln:AUGM pform
+11 O Error estimator Soln:ERRO pform
+12 R History update. For special treatments
+else return
+Soln:TIME pform
+13 O Energy/momentum Soln:TPLO,ENER pform
+14 R Initialize history BATCh,INTEr pform
+15 O Body force Mesh:BODY pform
+16 O J integrals Soln: JINT pform
+17 O Set after activation Soln:ACTI pform
+18 O Set after deactivation Soln:DEAC pform
+19 NOT AVAILABLE: used in
+modal/base. Uses isw = 5
+Soln:BASE pform
+20 O Element plotting Plot:PELE pform
+21 O Critical time step calculation Soln:TIME EXPL pform
+22 O stress/strain volume average Soln:STRE AVER pform
+23 O Compute element loads only Soln:ARCL pform
+25 O Zienkiewicz-Zhu projection Soln:ZZHU pform
+26 R Used to compute mesh boundary Called by default. pextndc
+
+
+
+Table 5.3: Common Name Variable Definition
+bdata:
+  o Page eject option
+  head Title record
+cdata: 
+  numnp: Number of mesh nodes
+  numel: Number of mesh elements
+  nummat: Number of material sets
+  nen: Maximum nodes/element
+  neq: Number active equations
+  ipr: Real variable precision
+counts: 
+  nstep: Total number of time steps
+  niter: Number of iterations current step
+  naugm: Number of augments current step
+  titer: Total iterations
+  taubm: Total augments
+  iaugm: Augmenting counter
+  iform: Number residuals in line search
+eldata:
+  dm: Element proportional load
+  n_el: Current element number
+  ma: Current element material set
+  mct: Print counter
+  iel: User element number
+  nel: Number nodes on current element
+elplot:
+  tt: Element stress values for TPLOt
+eltran 
+  bpr Principal stretch
+  ctan Element multipliers
+eluser:
+  ut: Element user values for TPLOt
+
+
+
+Material Parameters:
+   1 E Young's modulus
+   2  Poisson ratio
+   3  Thermal expansion coecient
+   4  Mass density
+   5 - Quadrature order for arrays
+   6 - Quadrature order for outputs
+   7 a Mass interpolation (a = 0: Diagonal; a = 1: Consistent
+   8 q Loading intensity (plates/shells)
+   9 T0 Stress free reference temperature
+  10  Shear factor (plates/shells/beams)
+  11 b1 Body force/volume in 1-directions
+  12 b2 Body force/volume in 2-directions
+  13 b3 Body force/volume in 3-directions
+  14 h Thickness (plates/shells)
+  15 nh1 History variable counter
+  16 stype Two dimensional type: 
+    1 - plane stress; 
+    2 - plane strain;
+    3 - axisymmetric2
+  17 etype Element formulation: 
+    1 - displ; 
+    2 - mixed; 
+    3 - enhanced
+  18 dtype Deformation type: <: finite; > small
+  19 tdof Thermal degree-of-freedom
+  20 imat Non-linear elastic material type
+  21 d11 Material moduli
+  22 d22 Material moduli
+  23 d33 Material moduli
+  24 d12 Material moduli
+  25 d23 Material moduli
+  26 d31 Material moduli
+  27 g12 Material moduli
+  28 g23 Material moduli
+  29 g31 Material moduli
+  30 C Fung pseudo elastic model modulus
+  31   Orthotropic angle x1 principal axis 1
+  32 A Area cross section (beam/truss)
+  33 I11 Inertia cross section (beam/truss)
+  34 I22 Inertia cross section (beam/truss)
+  35 I12 Inertia cross section (beam/truss)
+  36 J Polar inertia cross section (beam/truss)
+  37 1 Shear factor plate
+  38 2 Shear factor plate
+  39 - Non-linear 
+  ag (beam/truss)
+  40 - Inelastic material model type
+  41 Y0 Initial yield stress (Mises)
+  42 Y1 Final yield stress (Mises)
+  43  Exponential hardening rate
+  44 Hiso Isotropic hardening modulus (linear)
+  45 Hkin Kinematic hardening modulus (linear)
+  46 - Yield 
+  ag
+  47 1 Orthotropic thermal stress
+  48 2 Orthotropic thermal stress
+  49 3 Orthotropic thermal stress
+  50 - Error estimator parameter
+  51 1 Viscoelastic shear parameter
+  52 1 Viscoelastic relaxation time
+  53 2 Viscoelastic shear parameter
+  54 2 Viscoelastic relaxation time
+  55 3 Viscoelastic shear parameter
+  56 3 Viscoelastic relaxation time
+  57 nvis Number of viscoelastic terms (1-3)
+  58 - Damage limit
+  59 - Damage rate
+  60 k Penalty parameter
+  61 K1 Fourier thermal conductivity
+  62 K2 Fourier thermal conductivity
+  63 K3 Fourier thermal conductivity
+  64 c Fourier specic heat
+  65 ! Angular velocity
+  66 Q Body heat
+  67 - Heat constitution added indicator
+  68 - Follower loading indicator
+  69 - Rotational mass factor
+  70 - Damping factor
+  71 g1 Ground acceleration factor
+  72 g2 Ground acceleration factor
+  73 g3 Ground acceleration factor
+  74 p1 Ground acceleration proportional load number
+  75 p2 Ground acceleration proportional load number
+  76 p3 Ground acceleration proportional load number
+  77 a0 Rayleigh damping mass ratio
+  78 a1 Rayleigh damping stiffness ratio
+  79 - Plate/Shell/Rod shear activation flag
+  80 Method: Type 1
+  81 Method: Type 2
+  82 - Truss/Rod quadrature number
+  83 - Axial loading value
+  84 - Constitutive start indicator
+  85 - Polar angle indicator
+  86 - Polar angle coord 1
+  87 - Polar angle coord 2
+  88 - Polar angle coord 3
+  89 - Constitution transient type
+  90 d31 Plane stress recovery
+  91 d32 Plane stress recovery
+  92 3 Plane stress recovery
+  93 sref Shear center type
+  94 y1 Shear center coordinate
+  95 y2 Shear center coordinate
+  96 lref Reference vector type
+  97 n1 Reference vector parameter
+  98 n2 Reference vector parameter
+  99 n3 Reference vector parameter
+  100 - Cross section shape type: 
+    1 = rectangles; 
+    2 = tube;
+    3 = Wide ange; 
+    4 = Channel; 
+    5 = Angle; 
+    5 = Circle
+  101-126 - Shape data
+  127 - Surface convection (h)
+  128 - Free-stream temperature (T1)
+  129 - Reference absolute temperature
+  130 nseg Number of hardening segments
+  131-148 - Segment data sets epYisoHkin
+  149 - Total variables on frame section
+  150 - Piezoelectric flag
+  151-159 - Piezoelectric data
+  160 - Initial stress flag
+  161-166 ij Initial stresses (constant)
+  167 - Tension/compression only indicator
+  168 - Thermal activation indictator
+  169 - Mechanical activation indictator
+  170 - Volume model number (default 1)
+  171 a1 Fung model energy parameter
+  172 a2 Fung model energy parameter
+  173 a3 Fung model energy parameter
+  174 a4 Fung model energy parameter
+  175 a5 Fung model energy parameter
+  176 a6 Fung model energy parameter
+  177 a7 Fung model energy parameter
+  178 a8 Fung model energy parameter
+  179 a9 Fung model energy parameter
+  180-181 - Viscoplastic rate parameters
+  182 - Nodal quadrature parameters
+  183 m ML 􀀀MC mass scaling factor
+  184 c Estimate on maximum wave speed
+  185 - Augmentation switch: <on/off>
+  186 - Augmentation explicit indicator
+  187 Implicit = 0; Explicit = 1 element integration
+  188 - Number stress components in rod elements
+  189 - Nurbs & VEM flag
+  190-192 - Nurbs quadrature values/direction
+  193 tmat Thermal material numbers
+  194 ietype Element type
+  195 T 􀀀 frac Fraction of work to heat
+  196 q 􀀀 prop Proportional load factor for pressure loading
+  197-198 - Body patch loading values
+  199 - Axisymmetric 1-d: Plane stress in thickness
+  200 nsiz Size of modulus or compliance array
+  201-236 - Anisotropic Modulus or Compliance array
+  237 - Number of element global equations (nge
+  238 - Partition of element global equations
+  239 - Unused
+  240 - 0 = Element based; 1 = nodal based formulation
+  241 - Number of active element degrees of freedom
+  242-248 V1,V2 Plastic Vector orientation
+  249-255 - Reference vector types and values
+  260-279 nstv Number structure vectors/values
+  280-282 gi Thermal-elastic temperature function
+  283 - Unused
+  283-286 - Delete element data
+  287 - Total energy computation switch
+  288 - Shell thickness change flag
+  289 - Rate switch (on=0,off=1)
+  290-293 - Constitutive equation coordinate frame
+  294 - Rotatory inertia on/off flag
+  295-296 - Body force user parameters

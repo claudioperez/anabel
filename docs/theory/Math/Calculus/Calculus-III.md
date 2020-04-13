@@ -68,6 +68,18 @@ $$\begin{aligned}
 &=u(b) v(b)-u(a) v(a)-\int_{a}^{b} u^{\prime}(x) v(x) d x
 \end{aligned}$$
 
+$$\int u \, d v=u v-\int v \, d u$$
+
+$$\int_{a}^{b} u d v=\left.u v\right|_{a} ^{b}-\int_{a}^{b} v d u$$
+
+Green's Theorem 
+
+$$\int \int_{\text {Area }}\left(\frac{\partial Q}{\partial x}-\frac{\partial P}{\partial y}\right) d x d y=\oint_{C} P d x+\oint_{C} Q d y$$
+
+Divergence Theorem
+
+$$\int_{D} \nabla \cdot \mathbf{Q} d V=\int_{\partial D} \hat{\mathbf{n}} \cdot \mathbf{Q} d S$$
+
 ##### Divergence Theorem
 
 $\begin{array}{rl}{\int \varphi n_{i} d a} & {=\int_{R} \frac{\partial \varphi}{\partial x_{i}} d v} \\ {\int_{\partial R} v_{i} n_{i} d a} & {=\int_{R} \frac{\partial v_{i}}{\partial x_{i}} d v} \\ {\int_{\partial R} T_{i j} n_{j} d a} & {=\int_{R} \frac{\partial T_{i j}}{\partial x_{j}} d v} \\ {\partial R} & {R}\end{array}$

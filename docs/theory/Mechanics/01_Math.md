@@ -50,6 +50,8 @@ $\mathbb{I}^{\mathrm{sym}} \rightarrow \frac{1}{2}\left(\delta_{i k} \delta_{j l
 
 $$(\mathbf{u} \otimes \mathbf{v}) \mathbf{w}=(\mathbf{v} \cdot \mathbf{w}) \mathbf{u}$$
 
+$$\mathbf{a} \otimes \mathbf{b}=a_{i} b_{j} \mathbf{g}^{i} \otimes \mathbf{g}^{j}=a_{i} b^{j} \mathbf{g}^{i} \otimes \mathbf{g}_{j}$$
+
 ###### 1.2.8
 
 $$(\mathbf{S T})_{i j}=S_{i k} T_{k j}$$

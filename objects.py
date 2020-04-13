@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import copy
 from ema.elements import *
-import tensorflow as tf
+# import tensorflow as tf
 
 
 class Model:
@@ -26,6 +26,7 @@ class Model:
         self.ndf: int = ndf
         self.ndm: int = ndm
         self.DOF: list = None
+        self.dtype='float32'
 
         # Define DOF list indexing 
         if ndm == 1:
@@ -299,6 +300,22 @@ class Model:
         
         return element
 
+    def add_elements(self, elements):
+        """Add a general element to model
+        
+        Parameters
+        ---------
+        element : obj
+
+        """
+        for element in elements:
+            self.elems.append(element)
+            self.delems.update({element.tag:element})
+            for node in element.nodes:
+                node.elems.append(element)
+        
+        return elements
+
 
     def beam(self, tag: str, iNode, jNode, mat=None, sec=None, Qpl=None):
         """Add a 2D linear Euler-Bernouli beam object to model
@@ -541,15 +558,7 @@ class Model:
                 node.y += delta[1]
 
 
-class TensorModel(Model):
-    
-    def node(self, tag: str, x: float, y=None, z=None, mass: float=None):
-        x = tf.constant(x)
-        y = tf.constant(y)
-        newNode = Node(self, tag, self.ndf, [x, y, z], mass)
-        self.nodes.append(newNode)
-        self.dnodes.update({newNode.tag : newNode})
-        return newNode
+
 
 class rModel(Model):
     def __init__(self, ndm, ndf):
@@ -879,7 +888,7 @@ class XSect():
         self.tag = tag
         self.A: float = A
         self.I: float = I
-
+    
 def  UnitProperties(): # Legacy; consider removing and adding unit materials to model by default
     return (Material('unit', 1.0), XSect('unit', 1.0, 1.0))
 
@@ -950,15 +959,15 @@ class Node():
     def p_vector(self):
         return np.array(list(self.p.values()))
 
-    def p_tensor(self):
-        p = tf.Variable([[p] for p in self.p.values()])
-        return p
+    # def p_tensor(self):
+    #     p = tf.Variable([[p] for p in self.p.values()])
+    #     return p
         
     @property
     def dofs(self):
         # if self.model.DOF == None: self.model.numDOF()
         idx = self.model.nodes.index(self)
-        return self.model.DOF[idx]
+        return np.array(self.model.DOF[idx],dtype=int)
 
 
 class Rxn():

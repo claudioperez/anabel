@@ -1,32 +1,6 @@
 
 # I Math
 
-## Calculus
-
-$\frac{d}{d x} \int_{a}^{x} f(t) d t=f(x)$
-
-## Calculus of Variations
-
-*First variation* of a functional, $I$:
-$\left.\delta I\{u ; w\} \stackrel{\text { def }}{=} \frac{d}{d \zeta} I\{u(x)+\zeta w(x)\}\right|_{\zeta=0}$
-
-The condition:
-$\delta I\{u ; w\}=0$
-for all admissible $w$ is a necessary condition for $u(x)$ to be a minimizer of $I$.
-
-**Euler-Lagrance Equation**
-$$\frac{\partial F}{\partial u}-\frac{d}{d x}\left(\frac{\partial F}{\partial u^{\prime}}\right)=0 \quad \forall x \in\left(x_{0}, x_{1}\right)$$
-
-**Taking variations**
-
-$\delta I=\left.\frac{d}{d \zeta} I(\Psi+\zeta \delta \Psi)\right|_{\zeta=0}$
-
-$\delta F=\left(\frac{\partial F}{\partial u}\right) \delta u+\left(\frac{\partial F}{\partial u^{\prime}}\right) \delta u^{\prime}$
-
-$\begin{aligned} \delta I & \equiv \int_{x_{0}}^{x_{1}} \delta F\left(x, u, u^{\prime}\right) d x \\ &=\int_{x_{0}}^{x_{1}}\left(\frac{\partial F}{\partial u} \delta u+\frac{\partial F}{\partial u^{\prime}} \delta u^{\prime}\right) d x \\ &=\left.\frac{\partial F}{\partial u^{\prime}} \delta u\right|_{x_{0}} ^{x_{1}}+\int_{x_{0}}^{x_{1}}\left[\frac{\partial F}{\partial u}-\frac{d}{d x}\left(\frac{\partial F}{\partial u^{\prime}}\right)\right] \delta u d x \end{aligned}$
-
-$\left.\delta H \equiv \delta\left(u^{\prime}\right) \stackrel{\text { def }}{=} \frac{d}{d \zeta} H\{u+\zeta \delta u\}\right|_{\zeta=0}=\left.\frac{d}{d \zeta}\left(u^{\prime}+\zeta(\delta u)^{\prime}\right)\right|_{\zeta=0}=(\delta u)^{\prime}$
-
 ## Tensors
 
 ### 1 Algebra
@@ -49,6 +23,15 @@ $\mathbb{I}^{\mathrm{sym}} \rightarrow \frac{1}{2}\left(\delta_{i k} \delta_{j l
 ###### 1.2.3 Outer Product
 
 $$(\mathbf{u} \otimes \mathbf{v}) \mathbf{w}=(\mathbf{v} \cdot \mathbf{w}) \mathbf{u}$$
+
+$$\mathbf{a} \otimes \mathbf{b}=a_{i} b_{j} \mathbf{g}^{i} \otimes \mathbf{g}^{j}=a_{i} b^{j} \mathbf{g}^{i} \otimes \mathbf{g}_{j}$$
+
+$$(\mathbf{a} \otimes \mathbf{b})_{i j}=a_{i} b_{j}, \quad(\mathbf{a} \otimes \mathbf{b})_{i}^{j}=a_{i} b^{j}$$
+
+$$\begin{array}{l}
+(\mathbf{a} \otimes \mathbf{b} \otimes \mathbf{c})_{i j k}=a_{i} b_{j} c_{k} \\
+(\mathbf{a} \otimes \mathbf{b} \otimes \mathbf{c})_{i k}^{j}=a_{i} b^{j} c_{k}
+\end{array}$$
 
 ###### 1.2.8
 
@@ -104,17 +87,17 @@ Given a [[coordinate system]] {{math|''x''<sup>''i''</sup>}} for {{math|''i'' {{
 :<math>\mathbf{e}_i = \frac{\partial}{\partial x^i} = \partial_i,\quad i = 1,\, 2,\, \dots,\, n</math>
 
 define what is referred to as the local [[basis of a vector space|basis]] of the tangent space to {{math|''M''}} at each point of its domain. These can be used to define the [[metric tensor]]:
-:<math>g_{ij} = \mathbf{e}_i \cdot \mathbf{e}_j</math>
+$$g_{ij} = \mathbf{e}_i \cdot \mathbf{e}_j$$
 
 and its inverse:
 
-:<math>g^{ij} = \left( g^{-1} \right)_{ij}</math>
+$$g^{ij} = \left( g^{-1} \right)_{ij}$$
 
 which can in turn be used to define the dual basis:
 
 $$\mathbf{e}^i = \mathbf{e}_j g^{ji},\quad i = 1,\, 2,\, \dots,\, n$$
 
-Some texts write <math>\mathbf{g}_i</math> for <math>\mathbf{e}_i</math>, so that the metric tensor takes the particularly beguiling form <math>g_{ij} = \mathbf{g}_i \cdot \mathbf{g}_j</math>. This convention also leaves use of the symbol <math>e_i</math> unambiguously for the [[vierbein]].
+Some texts write $\mathbf{g}_i$ for $\mathbf{e}_i$, so that the metric tensor takes the particularly beguiling form $g_{ij} = \mathbf{g}_i \cdot \mathbf{g}_j$. This convention also leaves use of the symbol $e_i$ unambiguously for the [[vierbein]].
 
 
 ##### Gradient

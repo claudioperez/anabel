@@ -37,3 +37,18 @@ class PlaneStrainMat(Material2D):
 
 class PlaneStressMat(Material2D):
     pass
+
+class GMP:
+    def __init__(self,fy,Eh,E,r):
+        
+        def sig(eps):
+            xi = eps/(fy/E)
+            b = Eh/E
+            return fy*(xi*b+(1-b)*xi/(1+abs(xi)**r)**(1/r))
+
+        def Et(eps):
+            xi = eps/(fy/E)
+            b = Eh/E
+            return E*(b+(1-b)/(1+abs(xi)**r)**(1+1/r))
+        
+        return sig, Et

@@ -9,6 +9,12 @@
 
 $Q_i \delta = \dfrac{2M_p\delta n_{bays}}{(h_i+h_{i+1})/2}$
 
+### Steel
+
+AISC 358: $M_{p r}=C_{p r} R_{y} F_{y} Z_{e}$
+
+$C_{p r}=\frac{F_{y}+F_{u}}{2 F_{y}} \leq 1.2$
+
 ## Shear Walls
 
 -----------

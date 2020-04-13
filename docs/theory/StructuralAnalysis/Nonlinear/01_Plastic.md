@@ -14,7 +14,6 @@ $\dot{V}_{h p}^{+}-\dot{V}_{h p}^{-}=\mathbf{A}_{f} \dot{U}_{f}$
 
 $\lambda=\frac{\dot{V}_{h p}^{T} Q_{p l}}{\dot{U}_{f}^{T} P_{r e f}}=\frac{\mathbf{A}_{m p}^{T} Q_{p l}}{\mathbf{A}_{c p}^{T} P_{r e f}}$
 
-
 ## Lower Bound
 
 ## 4 Advanced

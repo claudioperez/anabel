@@ -1,7 +1,7 @@
 import ema.elements
 # from ema.matvecs import P_vector
 import numpy as np
-
+from datetime import datetime
 FEDEASmap = {
     "2D beam":"Lin2dFrm",
     "2D truss": "LinTruss",
@@ -72,12 +72,12 @@ def FEDEAS(Domain):
         print('ElemData{{{}}}.A = {};'.format(i+1, elem.A))
         print('ElemData{{{}}}.E = {};'.format(i+1, elem.E))
         print('ElemData{{{}}}.Np = {};'.format(i+1, elem.Qpl[0,0]))
+        if hasattr(elem,'I'): print('\nElemData{{{}}}.I = {};'.format(i+1, elem.I))
 
-        if type(elem) is not ema.elements.Truss:
-            print('\nElemData{{{}}}.I = {};'.format(i+1, elem.I))
-            print('ElemData{{{}}}.Mp = {};'.format(i+1, elem.Qpl[1,0]))
+        if elem.nv > 1:
             rel = [1 if rel else 0 for rel in elem.rel.values()]
             print("ElemData{{{}}}.Release = [{};{};{}];".format(i+1, rel[0], rel[1], rel[2]))
+            print('ElemData{{{}}}.Mp = {};'.format(i+1, elem.Qpl[1,0]))
 
 
     # Element Loads
@@ -98,13 +98,20 @@ def FEDEAS(Domain):
     print('Loading.Pref = Pf;')
 
 
-class FEDEAS_Export:
-    def __init__(self,model):
+class FEDEAS_func:
+    def __init__(self,model,filename=None,simple=True):
+        if filename is None: filename = 'ReturnModel.m'
+        self.time_stamp = datetime.now().strftime("%Y%m%d-%H%M%S")
         self.model = model 
+        self.filename = filename
+        self.simple= simple
 
     def string(self):
         Domain = self.model
         script = ''
+        script += 'function [Model,ElemData,Loading] = {}()'.format(self.filename)
+
+
         script += '\n' + 'CleanStart'
 
         # Node Definitions
@@ -139,7 +146,10 @@ class FEDEAS_Export:
 
 
         script += '\n' + "\n% Create model"
-        script += '\n' + "Model = Create_SimpleModel (XYZ,CON,BOUN,ElemName);"
+        if self.simple:
+            script += '\n' + "Model = Create_SimpleModel (XYZ,CON,BOUN,ElemName);"
+        else:
+            script += '\n' + "Model = Create_Model (XYZ,CON,BOUN,ElemName);"
 
         # Element properties
         script += '\n' + "\n% Element properties"
@@ -148,12 +158,19 @@ class FEDEAS_Export:
     
         for i, elem in enumerate(Domain.elems): 
             script += '\n' + "\n% Element: {}".format(elem.tag)
-            script += '\n' + 'ElemData{{{}}}.A = {};'.format(i+1, elem.A)
-            script += '\n' + 'ElemData{{{}}}.E = {};'.format(i+1, elem.E)
-            script += '\n' + 'ElemData{{{}}}.Np = {};'.format(i+1, elem.Qpl[0,0])
+            try: script += '\n' + 'ElemData{{{}}}.A = {};'.format(i+1, float(elem.A.numpy()))
+            except: script += '\n' + 'ElemData{{{}}}.A = {};'.format(i+1, float(elem.A))
 
-            if type(elem) is not ema.elements.Truss:
-                script += '\n' + '\nElemData{{{}}}.I = {};'.format(i+1, elem.I)
+            try: script += '\n' + 'ElemData{{{}}}.E = {};'.format(i+1, float(elem.E.numpy()))
+            except: script += '\n' + 'ElemData{{{}}}.E = {};'.format(i+1, float(elem.E))
+
+            script += '\n' + 'ElemData{{{}}}.Np = {};'.format(i+1, elem.Qpl[0,0])
+            
+            if hasattr(elem,'I'): 
+                try: script += '\n' + '\nElemData{{{}}}.I = {};'.format(i+1, float(elem.I.numpy()))
+                except: script += '\nElemData{{{}}}.I = {};'.format(i+1, elem.I)
+
+            if elem.nv > 1:
                 script += '\n' + 'ElemData{{{}}}.Mp = {};'.format(i+1, elem.Qpl[1,0])
                 rel = [1 if rel else 0 for rel in elem.rel.values()]
                 script += '\n' + "ElemData{{{}}}.Release = [{};{};{}];".format(i+1, rel[0], rel[1], rel[2])
@@ -177,5 +194,7 @@ class FEDEAS_Export:
         script += '\n' + 'Loading.Pref = Pf;'
         return script 
 
-    def write(self,filename,model):
-        f = open(filename,"w+")
+    def write(self):
+        f = open(self.filename,"w+")
+        f.write(self.string())
+        f.close()

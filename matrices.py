@@ -18,7 +18,7 @@ import pandas as pd
 import scipy.linalg
 import matplotlib.pyplot as plt
 # import sympy as sp
-import tensorflow as tf
+# import tensorflow as tf
 
 # from ema.utilities import Structural_Matrix, Structural_Vector, transfer_vars
 
@@ -1619,14 +1619,7 @@ def P_vector(model, vector=None):
     row_data = [str(dof) for dof in range(1, model.nt+1)]
     return nForce_vector(P, model, row_data)
 
-def P_tensor(model):
-    P = tf.concat([node.p_tensor() for node in model.nodes],0)
-    dofs = tf.concat(model.DOF,0) - 1
-    dofs = tf.where(tf.math.less(dofs,model.nf+1))
-    dofs = tf.squeeze(dofs)
-    print(dofs)
-    P = tf.gather(P,dofs)
-    return P
+
 
 # def P0_vector(model):
 #     """Returns a _ object"""   

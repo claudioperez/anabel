@@ -1,27 +1,5 @@
-# Structural Analysis
+# Linear Structural Analysis
 
-```eval_rst
-.. toctree::
-   :maxdepth: 3
-   :hidden:
-   :caption: Contents:
-
-   Linear.md
-   self
-```
-
-Basic linear structural analysis.
-
-## [Notation]()
-
-$\mathbf{A}$    & $\texttt{}$ & Structure kinematic matrix \\
-$\mathbf{A}_f$  & $\texttt{A}$ & columns 1 - nf \\
-$\mathbf{A}_d$  & $\texttt{A[nf+1:nr]}$ & nf + 1: nt \\
-$\mathbf{}$ $\texttt{}$ & 
-$\mathbf{B}$    & $\texttt{}$ & Structure static matrix \\
-$\mathbf{B}_d$  $ $\texttt{B}$ & \texttt{B[1:nq]}\\
-$\mathbf{B}_f$  $ $\texttt{B}$ & \texttt{B[1:nq]}\\
-$\mathbf{B}_i$  $ $\texttt{B}$ & \texttt{B[1:nq]}\\
 
 ## [1 Static Relations]()
 

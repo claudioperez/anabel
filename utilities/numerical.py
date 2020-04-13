@@ -3,6 +3,53 @@ import numpy as np
 from scipy.integrate import solve_ivp
 
 
+
+class NewtonRaphson:
+    def __new__(cls, Model, U0 = None, tol=1.0e-3, loss=None, verbose=False,disp_dof=0):
+        nf = Model.nf
+        nt = Model.nt
+        if U0 is None: U0 = np.zeros(nt)
+        
+        # create pure function Pr = Pr_U( U ) from function Pr = Pr_vector(U, Model)
+        Pr_U = partial(emx.Pr_vector, Model )
+
+        # use 'forward mode' algorithmic differentiation 
+        # to obtain jacobian of Pr_U(U), Kt(U)
+        Jac = jax.jacfwd(Pr_U)
+        Kt = lambda Ui: np.squeeze(Jac(Ui))[:nf,:nf]
+    
+        @jax.jit
+        def _dPu_(U, Pf):
+            Pr = Pr_U(U)[:nf]
+            Pu = Pf - Pr
+            Kf = Kt(U)
+            DUf = np.squeeze(np.linalg.solve(Kf,Pu))
+
+            # reshaping
+            DU = np.pad(DUf, (0, Model.nr), 'constant') 
+
+            # update displacement
+            Unew = U + DU
+            return Unew, Pu
+        
+        
+        def solve(Pf, verbose=False, maxiter=100):
+            r = tol+1
+            count = 1
+            U = U0
+            while jax.lax.gt(r , tol ):
+                U, Pu = _dPu_(U,Pf)
+                
+                r = np.linalg.norm(Pu)
+
+                if jax.lax.gt(count , maxiter): break
+                if verbose: print('{}: {:.3f} {:.3f}'.format(count, r, U[disp_dof,...]))
+                count+=1
+            return U
+            
+        return solve
+
+
 def ElcentroRHA(zeta, omega):
     g=386.4
     ground_motion = np.genfromtxt('ElcentroNS.csv', delimiter=',')[:750,:]
@@ -107,9 +154,6 @@ def Newmark(p, Dt, T, u0, v0, k, Tn, zeta=0):
 
     return u, v, a
 
-
-
-
 def Herrmann_Peterson(E, tau, epsilon, tot_time, N):
     dt = tot_time/N  
     time = np.zeros((N,1))
@@ -130,3 +174,115 @@ def Herrmann_Peterson(E, tau, epsilon, tot_time, N):
     return time, sigma
 
 
+class iHLRF:
+    def __init__(self, f, gradf, u0, loss=None, tol1=1.0e-4, tol2=1.0e-4, maxiter=20, maxiter_step=20):
+        self.u0 = u0
+        self.f = f 
+        self.gradf = gradf
+        self.tol1 = tol1
+        self.tol2 = tol2
+        self.maxiter = maxiter
+        self.maxiter_step = maxiter_step
+        self.loss = loss
+        if loss is None: 
+            self.loss = np.linalg.norm
+
+        # self.init()
+
+    def init(self,verbose=False):
+        if verbose:
+            print('\niHL-RF Algorithm (Zhang and Der Kiureghian 1995)***************',
+                  '\nInitialize iHL-RF: \n',
+                  'u0: ', np.around(self.u0.T,4), '\n')
+
+        self.G0 = self.f(self.u0) # scale parameter
+        if verbose: print('G0: ',np.around(self.G0,4),'\n')
+
+        self.ui = self.u0[None,:].T
+
+        self.Gi = self.f(self.ui[:,0].T)
+        if verbose: print('Gi: ', np.around(self.Gi,4), '\n',)
+
+        self.GradGi = self.gradf(self.ui[:,0].T)
+        if verbose: print('GradGi: ', np.around(self.GradGi,4), '\n',)
+
+        self.alphai = -(self.GradGi / np.linalg.norm(self.GradGi))[None,:]
+        self.count = 0
+        self.spec1 = abs(self.Gi/self.G0)
+        self.spec2 = self.loss(self.ui - (self.alphai@self.ui)*self.alphai.T )
+
+        if verbose:
+            print(
+                # '\niHL-RF Algorithm (Zhang and Der Kiureghian 1995)***************',
+                #   '\nInitialize iHL-RF: \n',
+                #   'u0: ', np.around(self.u0.T,4), '\n',
+                #   'G0: ',np.around(self.G0,4),'\n'
+                #   'ui: ', np.around(self.ui.T,4), '\n',
+                #   'Gi: ', np.around(self.Gi,4), '\n',
+                #   'GradGi: ', np.around(self.GradGi,4),'\n',
+                  'alphai: ', np.around(self.alphai,4),'\n',
+                  'spec1: ' , np.around(self.spec1,4),'\n',
+                  'spec2: ' , np.around(self.spec2,4),'\n',)
+    
+    def incr(self,basic=False, verbose=False):
+        if basic == True:
+            self.ui1 = self.ui + self.lamda * self.di
+            return self.ui1 
+
+        self.ci = self.loss(self.ui) / np.linalg.norm(self.GradGi) + 10.0
+        self.mi = 0.5*self.loss(self.ui)**2 + self.ci*abs(self.Gi)
+        self.mi1 = 0.5*self.loss(self.ui1)**2 + self.ci*abs(self.Gi1)
+
+        self.count_step = 0
+        while (self.mi1 >= self.mi) and (self.count_step <= self.maxiter_step):
+            self.lamda = self.lamda/2
+            self.ui1 = self.ui + self.lamda * self.di
+            self.Gi1 = self.f(self.ui1[:,0].T)
+            self.mi1 = 0.5*np.linalg.norm(self.ui1)**2 + self.ci*abs(self.Gi1)
+            self.count_step += 1
+
+        return self.ui1
+    
+    def dirn(self):
+        self.di = (self.Gi/np.linalg.norm(self.GradGi) + self.alphai@self.ui)*self.alphai.T - self.ui
+        return self.di
+
+    def step(self,verbose=False,basic=False):
+        # self.di = (self.Gi/np.linalg.norm(self.GradGi) + self.alphai@self.ui)*self.alphai.T - self.ui
+        di = self.dirn()
+        self.lamda = 1.0
+        self.ui1 = self.ui + self.lamda * di
+        self.Gi1 = self.f(self.ui1[:,0].T)
+
+        ui1 = self.incr(basic)
+
+        self.ui = ui1  
+        self.Gi = self.f(self.ui[:,0].T)
+        self.GradGi = self.gradf(self.ui[:,0].T)
+        self.alphai = -(self.GradGi / np.linalg.norm(self.GradGi))[None,:]
+
+        self.spec1 = abs(self.Gi/self.G0)
+        self.spec2 = self.loss(self.ui - (self.alphai@self.ui)*self.alphai.T)
+        self.count += 1
+
+
+        if verbose: print('\niHL-RF step: {}'.format(self.count))
+
+        if verbose:
+            print('ui: ', '\n', np.around(self.ui,4), '\n',
+                  'Gi: ',       np.around(self.Gi,4), '\n',
+                  'GradGi: ', np.around(self.GradGi,4),'\n',
+                  'alphai: ', np.around(self.alphai,4),'\n',
+                  'spec1: ' , np.around(self.spec1,4),'\n',
+                  'spec2: ' , np.around(self.spec2,4),'\n',)
+        return self.ui
+    
+    def run(self,verbose=False, steps=None):
+        self.init(verbose=verbose)
+        if steps is not None: self.maxiter = steps
+        while not(self.spec1 < self.tol1 and self.spec2 < self.tol2):
+            self.step(verbose=verbose)
+
+            if (self.count > self.maxiter): break
+
+        return self.ui
