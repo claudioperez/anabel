@@ -1,6 +1,6 @@
 # 6 - MDOF Analysis
 
-## 1. Linear Static - ELF (ASCE 7)
+## 1. Linear Static - ELF (ASCE 7 - 12.8)
 
 - minimum $C_s$ value is important for long-period structures near faults.
 - $k$: Approximates higher-mode effects.
@@ -25,4 +25,3 @@
 2. plot $V/M^*_n$ vs $D_1=\dfrac{u_{roof}}{\Gamma \Phi_{roof, n}}$
 3. $\omega = \sqrt{\dfrac{V_{yn}}{M^*_{n}D_{yn}}}$
 
-## 

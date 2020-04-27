@@ -4,7 +4,7 @@ import numpy as np
 from datetime import datetime
 FEDEASmap = {
     "2D beam":"Lin2dFrm",
-    "2D truss": "LinTruss",
+    "2D truss": "LETruss",
 }
 
 def ModelData(self):
@@ -165,6 +165,9 @@ class FEDEAS_func:
             except: script += '\n' + 'ElemData{{{}}}.E = {};'.format(i+1, float(elem.E))
 
             script += '\n' + 'ElemData{{{}}}.Np = {};'.format(i+1, elem.Qpl[0,0])
+
+            
+            script += '\n' + "ElemData{{{}}}.Geom = 'GL';".format(i+1, elem.Qpl[0,0])
             
             if hasattr(elem,'I'): 
                 try: script += '\n' + '\nElemData{{{}}}.I = {};'.format(i+1, float(elem.I.numpy()))

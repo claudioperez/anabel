@@ -106,24 +106,4 @@ $$\mathrm{V}_{\mathrm{S} 30}=\frac{\sum \mathrm{d}_{i}}{\sum \frac{\mathrm{d}_{i
 
 $V_{s30} \downarrow = \text{softer soil}, T_{mean} \uparrow, PGA \downarrow (?????)$
 
-## Recap 
-
-1. No, because the richter scale saturates around $M_L ~ 7.0$
-2. Moment magnitude, $M_w$
-3. $\times 31.6$
-4. Sig. dur is less subjective
-5. No. PGA lacks PGD, duration, freq. content, etc.
-6. Key fault parameters
-   - slip rate
-   - Characheristic magnitue, based on $M_o$ (i.e what is the fault capable of)
-   - Fault type
-7. table
-
-|  | Intensity | Sig. Duration | Freq Content |
-|---------------------|:--------------:|:---------------:|:--------------:|
-| Fwd Directivity | $\uparrow$ | $\downarrow$ | $\downarrow$ |
-| $V_{s30}\downarrow$ | - | $\uparrow$ | $\uparrow$ |
-| $M \uparrow$ | $\uparrow$ | $\uparrow$ | $\uparrow$ |
-| Near Fault | $\uparrow$ | $\downarrow$ | $\uparrow$ |
-| Distance $\uparrow$ | $\downarrow$ | $\uparrow$ | $\uparrow$ |
 

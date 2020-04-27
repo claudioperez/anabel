@@ -99,9 +99,26 @@
 
 ## ASCE 7
 
-1. **Linear Static (ELF):** Structures where first mode is expected to control
+- **Risk Category/Importance:** I - IV
+- **Seismic Design Category:** $f: I_e,S_{DS},S_{D1} \mapsto A - D$
+  - Imposes limitations on framing system selection
 
-- long period movements do not attenuate as quickly.
+1. **Linear Static (ELF):** 
+   - Structures where first mode is expected to control.
+   - Some irregularities, but NOT Torsional/ soft story.
+   - < 2 Stories
+   - $h<160$ft
+2. **Linear Dynamic (RHA/RSA)**
+3. **Nonlinear Dynamic**
+   - s
 
-## Recap (3-12-2020 28:00:00)
+  Note: Nonlinear static only included in ASCE 41
+
+### Quantify a Torsional Iregularity 
+
+- apply $F_x$ at $\pm 5\%$
+- measure $\delta_A,\delta_B$ at far ends.
+- $\delta_{avg}=\frac{\delta_{A}+\delta_{B}}{2} < 1.2$
+
+
 
