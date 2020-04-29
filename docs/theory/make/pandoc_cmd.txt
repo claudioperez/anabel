@@ -5,3 +5,4 @@ gci -r -i *.md |foreach{$tex=$_.directoryname+"\"+$_.basename+".tex";pandoc -f m
 
 ## Make .tex files without a preamble from every .md file in current directory:
 gci -r -i *.md |foreach{$tex=$_.directoryname+"\"+$_.basename+".tex";pandoc -f markdown+smart $_.name -o $tex}
+

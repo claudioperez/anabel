@@ -1,5 +1,4 @@
 import numpy as np 
-# from numba import njit, jit
 from scipy.integrate import solve_ivp
 try: import jax
 except: pass
@@ -49,7 +48,6 @@ class NewtonRaphson:
             return U
             
         return solve
-
 
 def ElcentroRHA(zeta, omega):
     g=386.4
