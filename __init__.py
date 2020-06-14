@@ -19,7 +19,7 @@ from ema.objects import *
 from ema.matrices import *
 
 from ema.graphics import *
-# from ema.solvers import *
+from ema.solvers import *
 
 import ema.utilities
 from ema.tests import *
