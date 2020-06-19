@@ -72,21 +72,23 @@ def plot_U(model, U_vect, ax, scale=None, color=None, chords=False):
         
     # plot deformed curve
     if model.ndf > 2:
-        V = A.c0@U.f
-        n_curve=20
+        V = A.c0@U.f # Element deformation vector
+        n_curve=20   # number of plotting points along element
+
         for elem in model.elems:
             delta = np.array([[0.,0.],[0.,0.]])
             if hasattr(elem, "Elastic_curve"):
                 X = np.array([[elem.nodes[0].x, elem.nodes[0].y], 
-                            [elem.nodes[1].x, elem.nodes[1].y]])
+                              [elem.nodes[1].x, elem.nodes[1].y]])
                 v_tags = [elem.tag+'_2', elem.tag+'_3']
                 v = [V.get(v_tags[0]),V.get(v_tags[1])]
                 xl = np.linspace(0, elem.L, n_curve)
                 xl, yl = elem.Elastic_curve(xl, v, scale=scale, global_coord=True)
                 
-                for j, node in enumerate(elem.nodes):
+
+                for j, node in enumerate(elem.nodes): # Node displacements
                     for i,dof in enumerate(node.dofs[0:2]):
-                        if not node.rxns[i]: 
+                        if not node.rxns[i]: # if there is no reaction at dof `i`...
                             try:
                                 delta[j,i] = U[U.row_data.index(str(dof))]
                             except:

@@ -3,7 +3,7 @@ import scipy.linalg
 import pandas as pd
 
 import ema.matrices as em
-import tensorflow as tf
+# import tensorflow as tf
 
 class LinearGraph:
     """Solve elements in a Model object for free DOF displacements
