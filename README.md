@@ -1,5 +1,5 @@
 <div align="center">
-<img src="https://raw.githubusercontent.com/claudioperez/anabel/master/images/emtec-3.jpg" alt="logo"></img>
+<img src="https://raw.githubusercontent.com/claudioperez/anabel/master/images/Asset-1-8" alt="logo"></img>
 </div>
 
 # anabel
