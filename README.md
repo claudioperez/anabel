@@ -1,18 +1,16 @@
-<div align="center">
-<img src="images/emtec-4.png" alt="logo"></img><h1>anabel</h1>
-</div>
+<!-- <div align="center"> -->
+<h1><img src="images/emtec-4.png" alt="logo" width=100></img>anabel</h1>
+<!-- </div> -->
 
-# ![](images/emtec-4.png) anabel
 
 [![Travis-CI Build Status](https://api.travis-ci.org/claudioperez/anabel.svg?branch=master)](https://travis-ci.org/claudioperez/anabel)
 [![Commits since latest release](https://img.shields.io/github/commits-since/claudioperez/anabel/v0.0.0.svg)](https://github.com/claudioperez/anabel/compare/v0.0.0...master)
 
 Anonymous finite elements with analytic derivatives.
 
-- [! anabel](#img-srcimagesemtec-4png-alt-anabel)
-  - [Installation](#installation)
-  - [Documentation](#documentation)
-  - [Development](#development)
+- [Installation](#installation)
+- [Documentation](#documentation)
+- [Development](#development)
 
 ## Installation
 
