@@ -1,0 +1,38 @@
+
+
+alea:
+  src-alea:
+    core:
+      title: Orchestration
+      description: A collection of functions for composing graphs of finite elements.
+    models:
+      title: Element Library
+      properties:
+        ExplicitMemory:
+          domain: mesh[*]
+        ImplicitMemory:
+          domain: mesh[*]
+        EulerBernoulli2d:
+          domain: line[6 >> 6]
+        EulerBernoulliFB:
+          domain: line[fiber]
+    structs:
+      title: Data Structures
+    numeric:
+      title: Numerical Utilities
+
+Element:
+  properties:
+    domain:
+      line:
+        description: one dimensional interpolation
+      fiber:
+        description: partitioned with respect to a coordinate axes
+      quad:
+        description: maps to a quadrilateral parent
+      triangle:
+        description: maps to a triangular parent
+      mesh:
+        description: ~
+
+    

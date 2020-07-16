@@ -1,0 +1,103 @@
+# units kN & mm
+
+
+#
+## build the model
+el: #$
+  model:
+    el: # framework
+      truss: {'jit': true}
+    x0:
+      n1: [     0.,    0.]
+      n2: [  4000.,    0.]
+      n3: [  8000.,    0.]
+      n4: [ 12000.,    0.]
+      n5: [  4000., 4000.]
+      n6: [  8000., 4000.]
+
+    bn:
+      n1: [1, 1]
+      n4: [0, 1]
+
+    mesh: 
+      e1: [truss,  [n1, n2]]
+      e2: [truss,  [n2, n3]]
+      e3: [truss,  [n3, n4]]
+      e4: [truss,  [n1, n5]]
+      e5: [truss,  [n5, n6]]
+      e6: [truss,  [n4, n6]]
+      e7: [truss,  [n2, n5]]
+      e8: [truss,  [n3, n6]]
+      e9: [truss,  [n3, n5]]
+
+    debug: true
+    jit: true
+
+## set parameters
+rvars:
+  - &Ao
+    name: Ao
+    dist: lognorm 
+    loc: 250.
+    scale: 15.
+
+  - &Au
+    name: Au
+    dist: norm 
+    loc: 500.
+    scale: 25.
+
+  - name: A1
+    << : *Ao
+  - name: A2
+    << : *Ao
+  - name: A3
+    << : *Ao
+  - name: A4
+    << : *Au
+  - name: A5
+    << : *Au
+  - name: A6
+    << : *Au
+  - name: A7
+    << : *Ao
+  - name: A8
+    << : *Ao
+  - name: A9
+    << : *Ao
+
+  - name:       E
+    dist: lognorm
+    loc:     205.
+    scale:    15.
+  
+  - name:       P
+    dist:    norm
+    loc:      25.
+    scale:     3.
+
+varmap:
+  model:
+    params:
+      e1: {"A" : A1, "E": E}
+      e2: {"A" : A2, "E": E}
+      e3: {"A" : A3, "E": E}
+      e4: {"A" : A4, "E": E}
+      e5: {"A" : A5, "E": E}
+      e6: {"A" : A6, "E": E}
+      e7: {"A" : A7, "E": E}
+      e8: {"A" : A8, "E": E}
+      e9: {"A" : A9, "E": E}
+
+params:
+  model:
+    params:
+      e1: {"A" : 250., "E": 205.}
+      e2: {"A" : 250., "E": 205.}
+      e3: {"A" : 250., "E": 205.}
+      e4: {"A" : 500., "E": 205.}
+      e5: {"A" : 500., "E": 205.}
+      e6: {"A" : 500., "E": 205.}
+      e7: {"A" : 250., "E": 205.}
+      e8: {"A" : 250., "E": 205.}
+      e9: {"A" : 250., "E": 205.}

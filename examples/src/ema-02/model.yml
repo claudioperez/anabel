@@ -1,0 +1,68 @@
+# units kN & mm
+
+## build the model
+ElemSpace: #$
+  model:
+    ElemSpace: # framework
+      truss: {'jit': true}
+    XYZ:
+      n1: [     0.,    0.]
+      n2: [  4000.,    0.]
+      n3: [  8000.,    0.]
+      n4: [ 12000.,    0.]
+      n5: [  4000., 4000.]
+      n6: [  8000., 4000.]
+    BOUN:
+      n1: [1, 1]
+      n4: [0, 1]
+    CON: 
+      e1: [truss,  [n1, n2]]
+      e2: [truss,  [n2, n3]]
+      e3: [truss,  [n3, n4]]
+      e4: [truss,  [n1, n5]]
+      e5: [truss,  [n5, n6]]
+      e6: [truss,  [n4, n6]]
+      e7: [truss,  [n2, n5]]
+      e8: [truss,  [n3, n6]]
+      e9: [truss,  [n3, n5]]
+
+    debug: true
+    jit: true
+
+λ: # SolStrat:
+  dlam: 1
+  Con_flag: 0
+  λ: #IncrStrat
+    Dlam0: ~
+    λ: # IterStrat
+      StifUpdt: true 
+      Type: ''
+      LFCtrl: false 
+      maxiter: 20
+      tol: 1.e-3
+      λ: # Norm
+        - Loading
+        - ElemData
+
+# Solver = 
+# x = λF.λI.[λN.λE.f]
+
+    
+
+
+
+
+
+
+params:
+  model:
+    params:
+      e1: {"A" : 250., "E": 205.}
+      e2: {"A" : 250., "E": 205.}
+      e3: {"A" : 250., "E": 205.}
+      e4: {"A" : 500., "E": 205.}
+      e5: {"A" : 500., "E": 205.}
+      e6: {"A" : 500., "E": 205.}
+      e7: {"A" : 250., "E": 205.}
+      e8: {"A" : 250., "E": 205.}
+      e9: {"A" : 250., "E": 205.}

@@ -1,0 +1,83 @@
+{
+    "Applications": {
+        "UQ": {
+            "Application": "Dakota-UQ",
+            "ApplicationData": {
+            }
+        }
+    },
+    "EDP": [
+        {
+            "name": "Node_3_Disp_2"
+        },
+        {
+            "name": "Node_2_Disp_2"
+        }
+    ],
+    "UQ_Method": {
+        "samplingMethodData": {
+            "method": "LHS",
+            "samples": 200,
+            "seed": 949
+        },
+        "uqEngine": "Dakota",
+        "uqType": "Forward Propagation"
+    },
+    "fem": {
+        "dir": "{Current_Dir}/.",
+        "inputFile": "{Current_Dir}/runclient.py",
+        "mainInput": "runclient.py",
+        "mainPostprocessScript": "",
+        "numInputs": 1,
+        "parametersFile": "params.py",
+        "parametersScript": "{Current_Dir}/params.py",
+        "postprocessScript": "",
+        "program": "OpenSeesPy"
+    },
+    "localAppDir": "C:\\Users\\claud\\Documents\\quoFEM",
+    "python": "C:\\Users\\claud\\Anaconda3\\python",
+    "randomVariables": [
+        {
+            "distribution": "Weibull",
+            "name": "E",
+            "refCount": 1,
+            "scaleparam": 210,
+            "shapeparam": 20,
+            "value": "RV.E",
+            "variableClass": "Uncertain"
+        },
+        {
+            "alphas": 2,
+            "betas": 2,
+            "distribution": "Beta",
+            "lowerbound": 20,
+            "name": "P",
+            "refCount": 1,
+            "upperbound": 30,
+            "value": "RV.P",
+            "variableClass": "Uncertain"
+        },
+        {
+            "distribution": "Lognormal",
+            "mean": 250,
+            "name": "Ao",
+            "refCount": 1,
+            "stdDev": 50,
+            "value": "RV.Ao",
+            "variableClass": "Uncertain"
+        },
+        {
+            "distribution": "Normal",
+            "mean": 500,
+            "name": "Au",
+            "refCount": 1,
+            "stdDev": 100,
+            "value": "RV.Au",
+            "variableClass": "Uncertain"
+        }
+    ],
+    "remoteAppDir": "/home1/00477/tg457427/SimCenterBackendApplications/May-2020",
+    "uqResults": {
+    },
+    "workingDir": "C:/Workdir/quoFEM"
+}
