@@ -22,12 +22,12 @@ from ema.graphics import *
 from ema.solvers import *
 
 import ema.utilities
+import ema.matlib
 from ema.tests import *
 # from ema.tensorelements import *
 
 settings = {
     "DATAFRAME_LATEX": True,
-
 }
 
 
