@@ -1,4 +1,4 @@
-<h1><img src="images/emtec-4.png" alt="logo" width=100></img>anabel</h1>
+<h1><img src="static/img/emtec-4.png" alt="logo" width=100></img>anabel</h1>
 
 [![Travis-CI Build Status](https://api.travis-ci.org/claudioperez/anabel.svg?branch=master)](https://travis-ci.org/claudioperez/anabel)
 [![Commits since latest release](https://img.shields.io/github/commits-since/claudioperez/anabel/v0.0.0.svg)](https://github.com/claudioperez/anabel/compare/v0.0.0...master)

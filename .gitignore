@@ -1,6 +1,8 @@
 *.py[cod]
 __pycache__
 
+doc_build/
+
 AUTHORS.md
 # Packaging
 .cookiecutterrc
