@@ -1,14 +1,24 @@
-# Contributing
+---
+title: Contributing
+...
 
 Contributions are welcome, and they are greatly appreciated.
+**Contents:**
+
+- [Bug reports](#bug-reports)
+- [Documentation improvements](#documentation-improvements)
+- [Feature requests and feedback](#feature-requests-and-feedback)
+- [Development](#development)
+  - [Pull Request Guidelines](#pull-request-guidelines)
+  - [Tips](#tips)
 
 ## Bug reports
 
 When `reporting a bug <https://github.com/claudioperez/anabel/issues>`_ please include:
 
-    * Your operating system name and version.
-    * Any details about your local setup that might be helpful in troubleshooting.
-    * Detailed steps to reproduce the bug.
+- Your operating system name and version.
+- Any details about your local setup that might be helpful in troubleshooting.
+- Detailed steps to reproduce the bug.
 
 ## Documentation improvements
 
@@ -22,9 +32,9 @@ The best way to send feedback is to file an issue at https://github.com/claudiop
 
 If you are proposing a feature:
 
-* Explain in detail how it would work.
-* Keep the scope as narrow as possible, to make it easier to implement.
-* Remember that this is a volunteer-driven project, and that code contributions are welcome :)
+- Explain in detail how it would work.
+- Keep the scope as narrow as possible, to make it easier to implement.
+- Remember that this is a volunteer-driven project, and that code contributions are welcome :)
 
 ## Development
 
@@ -33,27 +43,27 @@ To set up `anabel` for local development:
 1. Fork [`anabel`](https://github.com/claudioperez/anabel)
 2. Clone your fork locally:
 
-    ```
-    git clone git@github.com:claudioperez/anabel.git
-    ```
+```bash
+git clone git@github.com:claudioperez/anabel.git
+```
 
-3. Create a branch for local development:
+1. Create a branch for local development:
 
-    git checkout -b name-of-your-bugfix-or-feature
+        git checkout -b name-of-your-bugfix-or-feature
 
    Now you can make your changes locally.
 
-4. When you're done making changes run all the checks and docs builder with [tox](https://tox.readthedocs.io/en/latest/install.html) one command:
+2. When you're done making changes run all the checks and docs builder with [tox](https://tox.readthedocs.io/en/latest/install.html) one command:
 
     tox
 
-5. Commit your changes and push your branch to GitHub:
+3. Commit your changes and push your branch to GitHub:
 
     git add .
     git commit -m "Your detailed description of your changes."
     git push origin name-of-your-bugfix-or-feature
 
-6. Submit a pull request through the GitHub website.
+4. Submit a pull request through the GitHub website.
 
 ### Pull Request Guidelines
 
@@ -67,9 +77,7 @@ For merging, you should:
 4. Add yourself to `AUTHORS.rst`.
 
 .. [1] If you don't have all the necessary Python versions available locally you can rely on Travis - it will
-       `run the tests <https://travis-ci.org/claudioperez/anabel/pull_requests>`_ for each change you add in the pull request.
-
-       It will be slower though ...
+       [run the tests](https://travis-ci.org/claudioperez/anabel/pull_requests) for each change you add in the pull request.
 
 ### Tips
 

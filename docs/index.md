@@ -5,7 +5,8 @@
 
 Anonymous finite elements with analytic derivatives.
 
-**Table of contents**
+**Contents:**
+
 - [Installation](#installation)
 - [Documentation](#documentation)
 - [Development](#development)
