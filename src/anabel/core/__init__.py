@@ -2,6 +2,7 @@
 A collection of functions for composing graphs of finite elements.
 """
 
+import inspect
 from collections import namedtuple, deque
 from collections import MutableMapping 
 
@@ -40,6 +41,8 @@ def merge(d1, d2):
     d3.update(d2)
     return d3
 
+
+
 def dict_depth(d):
     queue = deque([(id(d), d, 1)])
     memo = set()
@@ -53,12 +56,12 @@ def dict_depth(d):
 
 Element = namedtuple('Element', 'f, Df, params')
 
-def state_wrapper(element):
-    return Element(
-        lambda **kwds: (element.f(**kwds), None),
-        element.Df ,
-        element.state
-    )
+# def state_wrapper(element):
+#     return Element(
+#         lambda **kwds: (element.f(**kwds), None),
+#         element.Df ,
+#         element.state
+#     )
 
 # Model = {
 #     'basic-linear': _linear_wire

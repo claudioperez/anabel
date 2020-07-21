@@ -115,25 +115,25 @@ def init_solve_basic(init,incr,iterate,verbose=False):
 
 def _init_init_basic(f, gradf, verbose=False,nr=None,**kwargs):
 
-    def init(x0, a={}, ff=None):
+    def init_init(x0, a={}, ff=None):
         if verbose: print('Initializing iterative solve.')
-        state = {}
+        _state = {}
         x = x0
 
         f0 = f(x0, **a)[:nr]
-        state['fi'] = f0
+        _state['fi'] = f0
         if verbose: print('\nf0: ',np.around(f0,3))
 
         if ff is None: ff = np.zeros(f0.shape)
         elif callable(ff): ff = ff(x0)[:nr]
         if verbose: print('\nff: ',np.around(ff,3))
 
-        state.setdefault('df',  ff-f0)
-        state.setdefault('ff',     ff)
-        state.setdefault('nr',     nr)
-        return x, a, state
+        _state.setdefault('df',  ff-f0)
+        _state.setdefault('ff',     ff)
+        _state.setdefault('nr',     nr)
+        return x, a, _state
     
-    return init
+    return init_init
 
 def iterate_init(f, gradf, hessf=None, nr=None, maxiter=20,
                  tol=1e-3,loss=None,verbose=False,jit=True,**kwargs):

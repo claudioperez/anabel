@@ -1,0 +1,38 @@
+#########################################################################
+# Model definition
+ElemSpace:
+  model:
+    ElemSpace:
+      g1:
+        bind:
+          jit  :   true
+          A    :    5.0
+          E    : 1000.0
+          q0   :  100.0
+          state: $1
+#           [ [ 0 ] , [ 1, ~ ] ] # list of slices
+        remap: 
+          state: [1,~]
+      
+      g2:
+      - A :   10.0
+        E : 1000.0
+        jit: true
+        $maps: [ [ 0 ] , [1, ~ ] ]
+    x0: 
+      n1:  [  0.0,   0.0 ]
+      n2:  [  8.0,   0.0 ]
+      n3:  [  8.0,  -2.0 ]
+      n4:  [  8.0,   2.0 ]
+    
+    # Graph Configuration 
+    mesh:
+      a : [g1, [n1, n2]]
+      b : [g2, [n1, n4]]
+      c : [g2, [n1, n3]]
+    bn:
+      n2: [ 1, 1 ]
+      n3: [ 1, 1 ]
+      n4: [ 1, 1 ]
+    debug: true
+    jit: true
