@@ -76,7 +76,8 @@ else:
 
 from .core import *
 from anabel import models
-import io
+import anabel.io
+import anabel.autodiff
 # from anabel import numeric
 # from emx.graphics import *
 # from .fem import *

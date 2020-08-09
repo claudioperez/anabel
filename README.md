@@ -1,15 +1,15 @@
 ---
 title: Anabel
-description: Anonymous finite elements with automatic derivatives.
+description: Finite element neural networks.
 ...
 
-<h1><img src="img/emtec-4.png" alt="" width=100></img>Anabel</h1>
+<h1><img src="img/main.svg" alt="" width=100></img>Anabel</h1>
+
+Finite element neural networks.
 
 [![Build Status][travis-image]][travis-link]
 [![PyPI Version][pypi-v-image]][pypi-v-link]
 [![Commits since latest release][gh-image]][gh-link]
-
-Anonymous finite elements with automatic derivatives.
 
 **Table of contents**
 

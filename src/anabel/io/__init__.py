@@ -6,7 +6,7 @@ compiler = COMPILER
 
 
 try:
-    from ruamel_yaml import YAML
+    from ruamel.yaml import YAML
 except ImportError:
     yaml = None
 else: 
@@ -19,7 +19,7 @@ def _yaml_load(filepath):
 
 def load(filepath):
     """Load from a serialized data file"""
-    _, file_ext = os.path.splitext('/path/to/somefile.ext')
+    _, file_ext = os.path.splitext(filepath)
     
     if file_ext in ['.yml', '.yaml']: 
         return _yaml_load(filepath)
