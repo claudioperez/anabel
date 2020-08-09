@@ -4,7 +4,7 @@
 el: #$
   model:
     el: # framework
-      truss: {'jit': true}
+      truss: {'jit': false}
     x0:
       n1: [     0.,    0.]
       n2: [  4000.,    0.]
@@ -29,4 +29,4 @@ el: #$
       e9: [truss,  [n3, n5]]
 
     debug: true
-    jit: true
+    jit: false 
