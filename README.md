@@ -13,22 +13,12 @@ Finite element neural networks.
 
 **Table of contents**
 
-- [Anonymous Elements](#anonymous-elements)
 - [Composition, Combinators & Categories](#composition-combinators--categories)
 - [Roadmap and Goals](#roadmap-and-goals)
   - [Non-goals](#non-goals)
 - [Installation](#installation)
 
 Anabel is a *functional* library for constructing complex finite element models that leverage abstractions from the field of deep learning.
-
-## Anonymous Elements
-
-Finite element programs constructed with Anabel are more than modular; they're *anonymous*.
-
-```python
-def truss(xyz,E,A):
-    return [[]]
-```
 
 Explore Anabel's reference element library, [**Elle**](elle), to see more examples.
 
@@ -45,7 +35,7 @@ x = anabel.fixed_point(model.f, model.x0)
 
 ## Roadmap and Goals
 
-This project began as a series of isolated studies into how machine learning abstractions might be useful in finite element analysis problems. Several of these studies proved very successful, current development should focus on providing a concise set of tools that will allow researchers to reproduce and build upon the most promising of these.
+This project began as a series of isolated studies into how machine learning abstractions might be useful in finite element analysis problems. Several of these studies proved very successful, and short-term developments are expected to focus on providing a concise set of tools that will allow researchers to reproduce and build upon the most promising of these.
 
 The following is a list of these studies and the tools which were developed for them. Items with a check mark have been successfully ported to the Anabel library.
 
