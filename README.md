@@ -7,6 +7,8 @@ description: Finite element neural networks.
 
 Finite element neural networks.
 
+------------------
+
 [![Build Status][travis-image]][travis-link]
 [![PyPI Version][pypi-v-image]][pypi-v-link]
 [![Commits since latest release][gh-image]][gh-link]

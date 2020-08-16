@@ -69,7 +69,7 @@ setup(
     description='Anonymous finite elements with analytic derivatives.',
     long_description='%s\n%s' % (
         re.compile('^.. start-badges.*^.. end-badges', re.M | re.S).sub('', read('README.md')),
-        re.sub(':[a-z]+:`~?(.*?)`', r'``\1``', read('CHANGELOG.rst'))
+        re.sub(':[a-z]+:`~?(.*?)`', r'``\1``', read('CHANGELOG.md'))
     ),
     long_description_content_type= 'text/markdown',
     author='Claudio M. Perez',
