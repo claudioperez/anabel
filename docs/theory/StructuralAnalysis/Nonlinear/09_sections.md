@@ -1,6 +1,0 @@
-# Section Analysis
-
-## Rectangle
-
-### Stiffness
-
