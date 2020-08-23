@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Editor
+.vscode/
+
 # C extensions
 *.so
 
@@ -121,4 +124,5 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+*.pyc
 *.pyc
