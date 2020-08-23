@@ -36,6 +36,23 @@ x0 = anabel.init_domain(f)
 x = anabel.fixed_point(f, x0)
 ```
 
+## Modules
+
+### numeric
+
+General numerical methods for:
+    
+    - quadrature
+    - optimization
+
+### autodiff
+
+### roots
+
+### ops
+
+### core
+
 ## Roadmap and Goals
 
 This project is a unification of a series of isolated studies into how machine learning abstractions might be useful in finite element analysis problems. Several of these studies proved very successful, and short-term developments are expected to focus on providing a concise set of tools that will allow the reproduction and extended development of the most promising of these studies.
