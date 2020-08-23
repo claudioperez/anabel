@@ -4,7 +4,9 @@ A collection of functions for composing graphs of finite elements.
 
 import inspect
 from collections import namedtuple, deque
-from collections import MutableMapping 
+from collections import MutableMapping
+from .struct import struct
+
 
 # from anabel.models import _linear_wire, model
 
@@ -88,3 +90,5 @@ def step (f):
             return improvedApprox
         return f(originalValue, improvedApprox)
     return incr
+
+
