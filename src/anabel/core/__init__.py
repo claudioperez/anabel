@@ -7,6 +7,9 @@ from collections import namedtuple, deque
 from collections import MutableMapping
 from .struct import struct
 
+from jax import jit
+
+
 
 # from anabel.models import _linear_wire, model
 

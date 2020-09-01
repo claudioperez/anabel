@@ -9,10 +9,11 @@ def potential_grad(func):
     pass
 
 
-def stiffness_matrix(f, nf, mode='fwd'):
+def stiffness_matrix(f, nf, mode='fwd',jit=False):
     F = lambda x, **params: f(x,**params)
     if mode == 'fwd':
-        f_new = lambda x, **params: jnp.squeeze(jax.jacfwd(f)(x,**params))[:nf,:nf]
-        return jax.jit(f_new)
+        Df = lambda x, **params: jnp.squeeze(jax.jacfwd(f)(x,**params))[:nf,:nf]
+        if jit: Df = jax.jit(Df)
+        return Df
 
 

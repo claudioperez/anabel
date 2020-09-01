@@ -1,4 +1,8 @@
+import warnings
+from collections import defaultdict
+from functools import partial
 
+import anabel.ops as anp
 
 def path_solve(f, gradf, ff=None, nr=None, verbose=False, nosteps=1,
                 soptions={}, itoptions={},svoptions={},inoptions={}):
@@ -13,7 +17,7 @@ def path_solve(f, gradf, ff=None, nr=None, verbose=False, nosteps=1,
 
     ## Stepper
     step = lambda state0, **opts:  [state0]
-    
+
     step = _init_incr_path(nosteps,verbose=verbose)
 
 
@@ -34,28 +38,30 @@ def _init_init_path(f, gradf, verbose=False,nr=None,**kwargs):
         f0, a = f(x0, *a)
         f0 = f0[:nr]
         state['fi'] = f0
-        if verbose: print('\nf0: ',np.around(f0,3))
+        if verbose: print('\nf0: ',anp.around(f0,3))
 
-        if ff is None: ff = np.zeros(f0.shape)
+        if ff is None: ff = anp.zeros(f0.shape)
         elif callable(ff): ff = ff(x0)[:nr]
-        if verbose: print('\nff: ',np.around(ff,3))
+        if verbose: print('\nff: ',anp.around(ff,3))
 
         state.setdefault('df',  ff-f0)
         state.setdefault('ff',     ff)
         state.setdefault('nr',     nr)
 
         return x, a, state
-    
+
     return init_init
 
 def _init_iter_path(f, gradf, hessf=None, nr=None, maxiter=20,
                     tol=1e-3,loss=None,verbose=False,jit=True,**kwargs):
-    
+
     if loss is None:
-        loss = np.linalg.norm
-    
+        loss = anp.linalg.norm
+
     def update(x, a, state):
-        if verbose: print('x: ', x)
+        if verbose: 
+            print('x: ', x)
+            print('a: ', a)
         df = state['df']
         if verbose: print('df: ',df.T)
 
@@ -63,10 +69,10 @@ def _init_iter_path(f, gradf, hessf=None, nr=None, maxiter=20,
         gradfi = gradfi[:nr,:nr]
         if verbose: print('gradf: \n',gradfi)
 
-        dx = np.linalg.solve(gradfi, df)
+        dx = anp.linalg.solve(gradfi, df)
 
         if nr is not None:
-            dx = np.pad(dx, (0,-nr), 'constant')
+            dx = anp.pad(dx, (0,-nr), 'constant')
 
         if verbose: print('dx: ',dx.T)
         x = x + dx
@@ -81,14 +87,14 @@ def _init_iter_path(f, gradf, hessf=None, nr=None, maxiter=20,
     #         update = jax.jit(update)
     #     except:
     #         pass
-    
+
     def iterate(x0, a, state):
         x = x0
         for itr in range(maxiter):
             if verbose: print('iteration: ',itr)
             state['df'] = state['ff'] - state['fi']
 
-            if loss(state['df']) <= tol: 
+            if loss(state['df']) <= tol:
                 return x, a, state
 
             x, a, state = update(x, a, state)
@@ -98,7 +104,7 @@ def _init_iter_path(f, gradf, hessf=None, nr=None, maxiter=20,
         # raise RuntimeError(msg)
         warnings.warn(msg)
         return x, a, state
-        
+
     return iterate
 
 def _init_incr_path(_,**kwds):
@@ -124,7 +130,7 @@ def _init_solv_path(init,incr,iterate,verbose=False):
 
         for i,state in enumerate(incr(state0,nostep)):
 
-            if verbose: 
+            if verbose:
                 print( 'step: ', i + 1)
                 # print( 'ff : ', state['ff'])
                 # print( 'df : ', state['df'])

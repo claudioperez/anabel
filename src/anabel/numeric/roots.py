@@ -62,7 +62,7 @@ def diff_solve(f, gradf, hessf=None, ff=None, nr=None,verbose=False,
     #     for step,state in enumerate(stepper(state0)):
 
     #         if verbose: print( 'step: ', step + 1)
-            
+
     #         x, _ , _ = iterate(x, a, state)
 
     #     return x
@@ -93,8 +93,6 @@ def path_solve(f, gradf, ff=None, nr=None, verbose=False, nosteps=1,
     solve = _init_solv_path(init,step,iterate,verbose=verbose)
 
     return solve
-
-
 
 def init_solve_basic(init,incr,iterate,verbose=False):
 

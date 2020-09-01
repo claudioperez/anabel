@@ -28,6 +28,6 @@ from .core import *
 import anabel.io
 import anabel.autodiff
 import anabel.numeric
-import anabel.roots 
+import anabel.solvers
 
 # import anabel.ops

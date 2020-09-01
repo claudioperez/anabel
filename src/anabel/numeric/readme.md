@@ -1,3 +1,0 @@
-# SEMM Numerical Analysis Repository
-
-
