@@ -1,8 +1,6 @@
 
-Changelog
-=========
+# Changelog
 
-0.0.0 (2020-07-13)
-------------------
+## 0.0.0 (2020-07-13)
 
-* First release on PyPI.
+- First release on PyPI.

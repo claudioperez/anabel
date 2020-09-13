@@ -234,4 +234,3 @@ def get_default_args(func):
         if v.default is not inspect.Parameter.empty
     }
 
-def get_initial_state()

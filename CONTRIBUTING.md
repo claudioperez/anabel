@@ -14,7 +14,7 @@ Contributions are welcome, and they are greatly appreciated.
 
 ## Bug reports
 
-When `reporting a bug <https://github.com/claudioperez/anabel/issues>`_ please include:
+When [reporting a bug](https://github.com/claudioperez/anabel/issues) please include:
 
 - Your operating system name and version.
 - Any details about your local setup that might be helpful in troubleshooting.
@@ -23,8 +23,7 @@ When `reporting a bug <https://github.com/claudioperez/anabel/issues>`_ please i
 ## Documentation improvements
 
 anabel could always use more documentation, whether as part of the
-official anabel docs, in docstrings, or even on the web in blog posts,
-articles, and such.
+official anabel docs, in docstrings, or even on the web in blog posts, articles, and such.
 
 ## Feature requests and feedback
 
@@ -43,7 +42,7 @@ To set up `anabel` for local development:
 1. Fork [`anabel`](https://github.com/claudioperez/anabel)
 2. Clone your fork locally:
 
-```bash
+```shell
 git clone git@github.com:claudioperez/anabel.git
 ```
 

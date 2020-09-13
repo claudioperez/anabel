@@ -72,14 +72,14 @@ setup(
     long_description_content_type= 'text/markdown',
     author='Claudio M. Perez',
     author_email='claudio_perez@berkeley.edu',
-    url='https://github.com/claudioperez/anabel',
+    url='http://www.claudioperez.xyz/projects/anabel/',
+    #url='https://github.com/claudioperez/anabel',
     packages=find_packages('src'),
     package_dir={'': 'src'},
     py_modules=[splitext(basename(path))[0] for path in glob('src/*.py')],
     include_package_data=True,
     zip_safe=False,
     classifiers=[
-        # complete classifier list: http://pypi.python.org/pypi?%3Aaction=list_classifiers
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
         'Operating System :: Unix',

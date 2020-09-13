@@ -1,6 +1,6 @@
 
 
-def number_dof_basic(mesh, bn, debug=False):
+def number_dof_basic(mesh, bn, verbose=False):
     """Basic dof numbering"""
     ndf = max(len(con) for con in mesh.values())
     nr = sum(sum(boun) for boun in bn.values())
@@ -11,8 +11,11 @@ def number_dof_basic(mesh, bn, debug=False):
 
     df = 1
     temp = {}
-
-    for node in sorted(nodes):
+    try:
+        sorted_nodes = sorted(nodes, key=lambda k: int(k))
+    except:
+        sorted_nodes = sorted(nodes)
+    for node in sorted_nodes:
         DOFs = []
         try:
             for rxn in bn[node]:

@@ -8,11 +8,10 @@ import builtins
 import functools
 import _thread
 
-
 import _collections_abc
 
 
-__all__ = ['struct',
+__all__ = ['interface',
            'field',
            'Field',
            'FrozenInstanceError',
@@ -23,15 +22,15 @@ __all__ = ['struct',
            'fields',
            'asdict',
            'astuple',
-           'new_struct',
+           'new_interface',
            'replace',
-           'is_struct',
+           'is_interface',
            ]
 
 # Conditions for adding methods.  The boxes indicate what action the
-# struct decorator takes.  For all of these tables, when I talk
+# interface decorator takes.  For all of these tables, when I talk
 # about init=, repr=, eq=, order=, unsafe_hash=, or frozen=, I'm
-# referring to the arguments to the @struct decorator.  When
+# referring to the arguments to the @interface decorator.  When
 # checking if a dunder method already exists, I mean check for an
 # entry in the class's __dict__.  I never check to see if an attribute
 # is defined in a base class.
@@ -149,7 +148,7 @@ __all__ = ['struct',
 #
 # Note that a class may already have __hash__=None if it specified an
 # __eq__ method in the class body (not one that was created by
-# @struct).
+# @interface).
 #
 # See _hash_action (below) for a coded version of this table.
 
@@ -159,7 +158,7 @@ class FrozenInstanceError(AttributeError): pass
 
 # A sentinel object for default values to signal that a default
 # factory will be used.  This is given a nice repr() which will appear
-# in the function signature of structes' constructors.
+# in the function signature of interfaces' constructors.
 class _HAS_DEFAULT_FACTORY_CLASS:
     def __repr__(self):
         return '<factory>'
@@ -188,11 +187,11 @@ _FIELD_INITVAR = _FIELD_BASE('_FIELD_INITVAR')
 
 # The name of an attribute on the class where we store the Field
 # objects.  Also used to check if a class is a Data Class.
-_FIELDS = '__struct_fields__'
+_FIELDS = '__interface_fields__'
 
 # The name of an attribute on the class that stores the parameters to
-# @struct.
-_PARAMS = '__struct_params__'
+# @interface.
+_PARAMS = '__interface_params__'
 
 # The name of the function, that if it exists, is called at the end of
 # __init__.
@@ -219,7 +218,7 @@ class InitVar(metaclass=_InitVarMeta):
         else:
             # typing objects, e.g. List[int]
             type_name = repr(self.type)
-        return f'structes.InitVar[{type_name}]'
+        return f'interfaces.InitVar[{type_name}]'
 
 
 # Instances of Field are only ever created from within this module,
@@ -285,19 +284,18 @@ class Field:
     def __set_name__(self, owner, name):
         func = getattr(type(self.default), '__set_name__', None)
         if func:
-            # There is a __set_name__ method on the descriptor, call
-            # it.
+            # There is a __set_name__ method on the descriptor, call it.
             func(self.default, owner, name)
 
 
-class _structParams:
+class _interfaceParams:
     __slots__ = ('init',
                  'repr',
                  'eq',
                  'order',
                  'unsafe_hash',
                  'frozen',
-                 )
+    )
 
     def __init__(self, init, repr, eq, order, unsafe_hash, frozen):
         self.init = init
@@ -308,7 +306,7 @@ class _structParams:
         self.frozen = frozen
 
     def __repr__(self):
-        return ('_structParams('
+        return ('_interfaceParams('
                 f'init={self.init!r},'
                 f'repr={self.repr!r},'
                 f'eq={self.eq!r},'
@@ -323,7 +321,7 @@ class _structParams:
 # function whose type depends on its parameters.
 def field(*, default=MISSING, default_factory=MISSING, init=True, repr=True,
           hash=None, compare=True, metadata=None):
-    """Return an object to identify struct fields.
+    """Return an object to identify interface fields.
     default is the default value of the field.  default_factory is a
     0-argument function called to initialize a field's value.  If init
     is True, the field will be a parameter to the class's __init__()
@@ -331,7 +329,7 @@ def field(*, default=MISSING, default_factory=MISSING, init=True, repr=True,
     object's repr().  If hash is True, the field will be included in
     the object's hash().  If compare is True, the field will be used
     in comparison functions.  metadata, if specified, must be a
-    mapping which is stored but not otherwise examined by struct.
+    mapping which is stored but not otherwise examined by interface.
     It is an error to specify both default and default_factory.
     """
 
@@ -559,6 +557,11 @@ def _iter_fn(self):
 def _keys_fn(self):
     return [key for key in self]
 
+def _items_fn(self):
+    return tuple(v for v in asdict(self).items())
+
+def _values_fn(self):
+    return tuple(v for v in asdict(self).values())
 
 def _frozen_get_del_attr(cls, fields, globals):
     locals = {'cls': cls,
@@ -615,11 +618,11 @@ def _is_classvar(a_type, typing):
                 and a_type.__origin__ is typing.ClassVar))
 
 
-def _is_initvar(a_type, structes):
+def _is_initvar(a_type, interfaces):
     # The module we're checking against is the module we're
-    # currently in (structes.py).
-    return (a_type is structes.InitVar
-            or type(a_type) is structes.InitVar)
+    # currently in (interfaces.py).
+    return (a_type is interfaces.InitVar
+            or type(a_type) is interfaces.InitVar)
 
 
 def _is_type(annotation, cls, a_module, a_type, is_type_predicate):
@@ -645,12 +648,12 @@ def _is_type(annotation, cls, a_module, a_type, is_type_predicate):
 
     # With string annotations, cv0 will be detected as a ClassVar:
     #   CV = ClassVar
-    #   @struct
+    #   @interface
     #   class C0:
     #     cv0: CV
 
     # But in this example cv1 will not be detected as a ClassVar:
-    #   @struct
+    #   @interface
     #   class C1:
     #     CV = ClassVar
     #     cv1: CV
@@ -660,7 +663,7 @@ def _is_type(annotation, cls, a_module, a_type, is_type_predicate):
     # ClassVar.  This is a fairly obscure corner case, and the best
     # way to fix it would be to eval() the string "CV" with the
     # correct global and local namespaces.  However that would involve
-    # a eval() penalty for every single field of every struct
+    # a eval() penalty for every single field of every interface
     # that's defined.  It was judged not worth it.
 
     match = _MODULE_IDENTIFIER_RE.match(annotation)
@@ -669,7 +672,7 @@ def _is_type(annotation, cls, a_module, a_type, is_type_predicate):
         module_name = match.group(1)
         if not module_name:
             # No module name, assume the class's module did
-            # "from structes import InitVar".
+            # "from interfaces import InitVar".
             ns = sys.modules.get(cls.__module__).__dict__
         else:
             # Look up module_name in the class's module.
@@ -732,11 +735,11 @@ def _get_field(cls, a_name, a_type):
     # then it's an InitVar.
     if f._field_type is _FIELD:
         # The module we're checking against is the module we're
-        # currently in (structes.py).
-        structes = sys.modules[__name__]
-        if (_is_initvar(a_type, structes)
+        # currently in (interfaces.py).
+        interfaces = sys.modules[__name__]
+        if (_is_initvar(a_type, interfaces)
             or (isinstance(f.type, str)
-                and _is_type(f.type, cls, structes, structes.InitVar,
+                and _is_type(f.type, cls, interfaces, interfaces.InitVar,
                              _is_initvar))):
             f._field_type = _FIELD_INITVAR
 
@@ -831,12 +834,12 @@ def _process_class(cls, init, repr, eq, order, unsafe_hash, frozen):
     else:
         # Theoretically this can happen if someone writes
         # a custom string to cls.__module__.  In which case
-        # such struct won't be fully introspectable
+        # such interface won't be fully introspectable
         # (w.r.t. typing.get_type_hints) but will still function
         # correctly.
         globals = {}
 
-    setattr(cls, _PARAMS, _structParams(init, repr, eq, order,
+    setattr(cls, _PARAMS, _interfaceParams(init, repr, eq, order,
                                            unsafe_hash, frozen))
 
     # Find our base classes in reverse MRO order, and exclude
@@ -844,13 +847,13 @@ def _process_class(cls, init, repr, eq, order, unsafe_hash, frozen):
     # override earlier field definitions in base classes.  As long as
     # we're iterating over them, see if any are frozen.
     any_frozen_base = False
-    has_struct_bases = False
+    has_interface_bases = False
     for b in cls.__mro__[-1:0:-1]:
         # Only process classes that have been processed by our
         # decorator.  That is, they have a _FIELDS attribute.
         base_fields = getattr(b, _FIELDS, None)
         if base_fields:
-            has_struct_bases = True
+            has_interface_bases = True
             for f in base_fields.values():
                 fields[f.name] = f
             if getattr(b, _PARAMS).frozen:
@@ -899,20 +902,20 @@ def _process_class(cls, init, repr, eq, order, unsafe_hash, frozen):
         if isinstance(value, Field) and not name in cls_annotations:
             raise TypeError(f'{name!r} is a field but has no type annotation')
 
-    # Check rules that apply if we are derived from any structes.
-    if has_struct_bases:
+    # Check rules that apply if we are derived from any interfaces.
+    if has_interface_bases:
         # Raise an exception if any of our bases are frozen, but we're not.
         if any_frozen_base and not frozen:
-            raise TypeError('cannot inherit non-frozen struct from a '
+            raise TypeError('cannot inherit non-frozen interface from a '
                             'frozen one')
 
         # Raise an exception if we're frozen, but none of our bases are.
         if not any_frozen_base and frozen:
-            raise TypeError('cannot inherit frozen struct from a '
+            raise TypeError('cannot inherit frozen interface from a '
                             'non-frozen one')
 
     # Remember all of the fields on our class (including bases).  This
-    # also marks this class as being a struct.
+    # also marks this class as being a interface.
     setattr(cls, _FIELDS, fields)
 
     # Was this class defined with an explicit __hash__?  Note that if
@@ -943,7 +946,7 @@ def _process_class(cls, init, repr, eq, order, unsafe_hash, frozen):
                                     # The name to use for the "self"
                                     # param in __init__.  Use "self"
                                     # if possible.
-                                    '__struct_self__' if 'self' in fields
+                                    '__interface_self__' if 'self' in fields
                                             else 'self',
                                     globals,
                           ))
@@ -986,6 +989,8 @@ def _process_class(cls, init, repr, eq, order, unsafe_hash, frozen):
 
     _set_new_attribute(cls,'__iter__',_iter_fn)
     _set_new_attribute(cls,'keys',_keys_fn)
+    _set_new_attribute(cls,'items',_items_fn)
+    _set_new_attribute(cls,'values',_values_fn)
     _set_new_attribute(cls,'__getitem__',lambda *args: getattr(*args))
 
     if frozen:
@@ -1012,7 +1017,7 @@ def _process_class(cls, init, repr, eq, order, unsafe_hash, frozen):
     return cls
 
 
-def struct(cls=None, /, *, init=True, repr=True, eq=True, order=False,
+def interface(cls=None, /, *, init=True, repr=True, eq=True, order=False,
               unsafe_hash=False, frozen=False):
     """Returns the same class as was passed in, with dunder methods
     added based on the fields defined in the class.
@@ -1027,18 +1032,18 @@ def struct(cls=None, /, *, init=True, repr=True, eq=True, order=False,
     def wrap(cls):
         return _process_class(cls, init, repr, eq, order, unsafe_hash, frozen)
 
-    # See if we're being called as @struct or @struct().
+    # See if we're being called as @interface or @interface().
     if cls is None:
         # We're called with parens.
         return wrap
 
-    # We're called as @struct without parens.
+    # We're called as @interface without parens.
     return wrap(cls)
 
 
 def fields(class_or_instance):
-    """Return a tuple describing the fields of this struct.
-    Accepts a struct or an instance of one. Tuple elements are of
+    """Return a tuple describing the fields of this interface.
+    Accepts a interface or an instance of one. Tuple elements are of
     type Field.
     """
 
@@ -1046,30 +1051,30 @@ def fields(class_or_instance):
     try:
         fields = getattr(class_or_instance, _FIELDS)
     except AttributeError:
-        raise TypeError('must be called with a struct type or instance')
+        raise TypeError('must be called with a interface type or instance')
 
     # Exclude pseudo-fields.  Note that fields is sorted by insertion
     # order, so the order of the tuple is as the fields were defined.
     return tuple(f for f in fields.values() if f._field_type is _FIELD)
 
 
-def _is_struct_instance(obj):
-    """Returns True if obj is an instance of a struct."""
+def _is_interface_instance(obj):
+    """Returns True if obj is an instance of a interface."""
     return hasattr(type(obj), _FIELDS)
 
 
-def is_struct(obj):
-    """Returns True if obj is a struct or an instance of a
-    struct."""
+def is_interface(obj):
+    """Returns True if obj is a interface or an instance of a
+    interface."""
     cls = obj if isinstance(obj, type) else type(obj)
     return hasattr(cls, _FIELDS)
 
 
 def asdict(obj, *, dict_factory=dict):
-    """Return the fields of a struct instance as a new dictionary mapping
+    """Return the fields of a interface instance as a new dictionary mapping
     field names to field values.
     Example usage:
-      @struct
+      @interface
       class C:
           x: int
           y: int
@@ -1077,16 +1082,16 @@ def asdict(obj, *, dict_factory=dict):
       assert asdict(c) == {'x': 1, 'y': 2}
     If given, 'dict_factory' will be used instead of built-in dict.
     The function applies recursively to field values that are
-    struct instances. This will also look into built-in containers:
+    interface instances. This will also look into built-in containers:
     tuples, lists, and dicts.
     """
-    if not _is_struct_instance(obj):
-        raise TypeError("asdict() should be called on struct instances")
+    if not _is_interface_instance(obj):
+        raise TypeError("asdict() should be called on interface instances")
     return _asdict_inner(obj, dict_factory)
 
 
 def _asdict_inner(obj, dict_factory):
-    if _is_struct_instance(obj):
+    if _is_interface_instance(obj):
         result = []
         for f in fields(obj):
             value = _asdict_inner(getattr(obj, f.name), dict_factory)
@@ -1110,7 +1115,7 @@ def _asdict_inner(obj, dict_factory):
         #   information here when we produce a json list instead of a
         #   dict.  Note that if we returned dicts here instead of
         #   namedtuples, we could no longer call asdict() on a data
-        #   structure where a namedtuple was used as a dict key.
+        #   interfaceure where a namedtuple was used as a dict key.
 
         return type(obj)(*[_asdict_inner(v, dict_factory) for v in obj])
     elif isinstance(obj, (list, tuple)):
@@ -1127,9 +1132,9 @@ def _asdict_inner(obj, dict_factory):
 
 
 def astuple(obj, *, tuple_factory=tuple):
-    """Return the fields of a struct instance as a new tuple of field values.
+    """Return the fields of a interface instance as a new tuple of field values.
     Example usage::
-      @struct
+      @interface
       class C:
           x: int
           y: int
@@ -1137,17 +1142,17 @@ def astuple(obj, *, tuple_factory=tuple):
     assert astuple(c) == (1, 2)
     If given, 'tuple_factory' will be used instead of built-in tuple.
     The function applies recursively to field values that are
-    struct instances. This will also look into built-in containers:
+    interface instances. This will also look into built-in containers:
     tuples, lists, and dicts.
     """
 
-    if not _is_struct_instance(obj):
-        raise TypeError("astuple() should be called on struct instances")
+    if not _is_interface_instance(obj):
+        raise TypeError("astuple() should be called on interface instances")
     return _astuple_inner(obj, tuple_factory)
 
 
 def _astuple_inner(obj, tuple_factory):
-    if _is_struct_instance(obj):
+    if _is_interface_instance(obj):
         result = []
         for f in fields(obj):
             value = _astuple_inner(getattr(obj, f.name), tuple_factory)
@@ -1173,24 +1178,24 @@ def _astuple_inner(obj, tuple_factory):
         return copy.deepcopy(obj)
 
 
-def new_struct(cls_name, fields, *, bases=(), namespace=None, init=True,
+def new_interface(cls_name, fields, *, bases=(), namespace=None, init=True,
                    repr=True, eq=True, order=False, unsafe_hash=False,
                    frozen=False):
-    """Return a new dynamically created struct.
-    The struct name will be 'cls_name'.  'fields' is an iterable
+    """Return a new dynamically created interface.
+    The interface name will be 'cls_name'.  'fields' is an iterable
     of either (name), (name, type) or (name, type, Field) objects. If type is
     omitted, use the string 'typing.Any'.  Field objects are created by
     the equivalent of calling 'field(name, type [, Field-info])'.
-      C = new_struct('C', ['x', ('y', int), ('z', int, field(init=False))], bases=(Base,))
+      C = new_interface('C', ['x', ('y', int), ('z', int, field(init=False))], bases=(Base,))
     is equivalent to:
-      @struct
+      @interface
       class C(Base):
           x: 'typing.Any'
           y: int
           z: int = field(init=False)
     For the bases and namespace parameters, see the builtin type() function.
     The parameters init, repr, eq, order, unsafe_hash, and frozen are passed to
-    struct().
+    interface().
     """
 
     if namespace is None:
@@ -1227,16 +1232,16 @@ def new_struct(cls_name, fields, *, bases=(), namespace=None, init=True,
 
     namespace['__annotations__'] = anns
     # We use `types.new_class()` instead of simply `type()` to allow dynamic creation
-    # of generic structses.
+    # of generic interfaceses.
     cls = types.new_class(cls_name, bases, {}, lambda ns: ns.update(namespace))
-    return struct(cls, init=init, repr=repr, eq=eq, order=order,
+    return interface(cls, init=init, repr=repr, eq=eq, order=order,
                      unsafe_hash=unsafe_hash, frozen=frozen)
 
 
 def replace(*args, **changes):
     """Return a new object replacing specified fields with new values.
     This is especially useful for frozen classes.  Example usage:
-      @struct(frozen=True)
+      @interface(frozen=True)
       class C:
           x: int
           y: int
@@ -1259,8 +1264,8 @@ def replace(*args, **changes):
     # We're going to mutate 'changes', but that's okay because it's a
     # new dict, even if called with 'replace(obj, **my_changes)'.
 
-    if not _is_struct_instance(obj):
-        raise TypeError("replace() should be called on struct instances")
+    if not _is_interface_instance(obj):
+        raise TypeError("replace() should be called on interface instances")
 
     # It's an error to have init=False fields in 'changes'.
     # If a field is not in 'changes', read its value from the provided obj.
