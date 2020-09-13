@@ -61,8 +61,6 @@ class optional_build_ext(build_ext):
         print('    ' + repr(e))
         print('*' * 80)
 
-
-
 setup(
     name='anabel',
     version='0.0.0',
