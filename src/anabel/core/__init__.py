@@ -10,12 +10,11 @@ from .struct import struct
 from jax import jit
 
 
-
 # from anabel.models import _linear_wire, model
 
-
-def compose(elements, tree, key=None, _built=False, node='ElemSpace'):
+def compose(elements, tree, key=None, _built=False, compose_node='ElemSpace'):
     """Apply function composition over a computational graph."""
+    node = compose_node
     if key is None: 
         key = list(tree[node].keys())[0]
         tree = list(tree[node].values())[0]
