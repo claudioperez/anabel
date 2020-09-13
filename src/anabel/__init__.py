@@ -24,10 +24,11 @@ else:
 
 
 from .core import *
-# from anabel import models
+from anabel import fem
 import anabel.io
 import anabel.autodiff
 import anabel.numeric
 import anabel.solvers
+import anabel.graphic
 
 # import anabel.ops
