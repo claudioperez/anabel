@@ -11,21 +11,22 @@ import _thread
 import _collections_abc
 
 
-__all__ = ['interface',
-           'field',
-           'Field',
-           'FrozenInstanceError',
-           'InitVar',
-           'MISSING',
+__all__ = [
+    'interface',
+    'field',
+    'Field',
+    'FrozenInstanceError',
+    'InitVar',
+    'MISSING',
 
-           # Helper functions.
-           'fields',
-           'asdict',
-           'astuple',
-           'new_interface',
-           'replace',
-           'is_interface',
-           ]
+    # Helper functions.
+    'fields',
+    'asdict',
+    'astuple',
+    'new_interface',
+    'replace',
+    'is_interface',
+]
 
 # Conditions for adding methods.  The boxes indicate what action the
 # interface decorator takes.  For all of these tables, when I talk
@@ -232,17 +233,18 @@ class InitVar(metaclass=_InitVarMeta):
 # When cls._FIELDS is filled in with a list of Field objects, the name
 # and type fields will have been populated.
 class Field:
-    __slots__ = ('name',
-                 'type',
-                 'default',
-                 'default_factory',
-                 'repr',
-                 'hash',
-                 'init',
-                 'compare',
-                 'metadata',
-                 '_field_type',  # Private: not to be used by user code.
-                 )
+    __slots__ = (
+        'name',
+        'type',
+        'default',
+        'default_factory',
+        'repr',
+        'hash',
+        'init',
+        'compare',
+        'metadata',
+        '_field_type',  # Private: not to be used by user code.
+    )
 
     def __init__(self, default, default_factory, init, repr, hash, compare,
                  metadata):
@@ -289,12 +291,13 @@ class Field:
 
 
 class _interfaceParams:
-    __slots__ = ('init',
-                 'repr',
-                 'eq',
-                 'order',
-                 'unsafe_hash',
-                 'frozen',
+    __slots__ = (
+        'init',
+        'repr',
+        'eq',
+        'order',
+        'unsafe_hash',
+        'frozen',
     )
 
     def __init__(self, init, repr, eq, order, unsafe_hash, frozen):
@@ -335,8 +338,7 @@ def field(*, default=MISSING, default_factory=MISSING, init=True, repr=True,
 
     if default is not MISSING and default_factory is not MISSING:
         raise ValueError('cannot specify both default and default_factory')
-    return Field(default, default_factory, init, repr, hash, compare,
-                 metadata)
+    return Field(default, default_factory, init, repr, hash, compare, metadata)
 
 
 def _tuple_str(obj_name, fields):
@@ -349,7 +351,6 @@ def _tuple_str(obj_name, fields):
         return '()'
     # Note the trailing comma, needed if this turns out to be a 1-tuple.
     return f'({",".join([f"{obj_name}.{f.name}" for f in fields])},)'
-
 
 # This function's logic is copied from "recursive_repr" function in
 # reprlib module to avoid dependency.
@@ -1092,7 +1093,7 @@ def asdict(obj, *, dict_factory=dict):
 
 def _asdict_inner(obj, dict_factory):
     if _is_interface_instance(obj):
-        result = []
+        result = list()
         for f in fields(obj):
             value = _asdict_inner(getattr(obj, f.name), dict_factory)
             result.append((f.name, value))
@@ -1168,8 +1169,7 @@ def _astuple_inner(obj, tuple_factory):
         return type(obj)(*[_astuple_inner(v, tuple_factory) for v in obj])
     elif isinstance(obj, (list, tuple)):
         # Assume we can create an object of this type by passing in a
-        # generator (which is not true for namedtuples, handled
-        # above).
+        # generator (which is not true for namedtuples, handled above).
         return type(obj)(_astuple_inner(v, tuple_factory) for v in obj)
     elif isinstance(obj, dict):
         return type(obj)((_astuple_inner(k, tuple_factory), _astuple_inner(v, tuple_factory))

@@ -105,7 +105,6 @@ setup(
         # eg: 'aspectlib==1.1.1', 'six>=1.7',
     ],
     extras_require=extras_require,
-
     entry_points={
         'console_scripts': [
             'anabel = anabel.cli:main',
