@@ -1,11 +1,11 @@
+# Stiffness Method - Beam
+
 ```python
 import ema as em
 import matplotlib.pyplot as plt
 import numpy as np
 %config InlineBackend.figure_format = 'svg' # used to make plots look nicer
 ```
-
-# Problem 3
 
 
 ```python

@@ -1,3 +1,5 @@
+# Force Method - Truss
+
 ```python
 import ema as em
 import matplotlib.pyplot as plt
@@ -5,8 +7,6 @@ import numpy as np
 import sympy as sp
 %config InlineBackend.figure_format = 'svg'
 ```
-
-# Problem 1
 
 
 ```python

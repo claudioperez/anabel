@@ -80,7 +80,7 @@ em.plot_structure(dm, ax)
 ```
 
 
-![svg](output_5_0.svg)
+![svg](img/output_5_0.svg)
 
 
 ## Part 1 : Nodal Loading
@@ -171,7 +171,7 @@ Ux
 
 
 
-![svg](output_10_2.svg)
+![svg](img/output_10_2.svg)
 
 
 
@@ -205,7 +205,6 @@ UP
 
 
 
-
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -231,7 +230,6 @@ UP
 ```python
 A.f@UP
 ```
-
 
 
 

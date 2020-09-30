@@ -1,11 +1,11 @@
+# Problem 3
+
 ```python
 import ema as em
 import matplotlib.pyplot as plt
 import numpy as np
 %config InlineBackend.figure_format = 'svg'
 ```
-
-# Problem 3
 
 
 ```python
@@ -68,7 +68,7 @@ em.plot_structure(mdl, ax)
 
 
 
-![svg](output_5_1.svg)
+![svg](img/output_5_1.svg)
 
 
 
@@ -352,7 +352,7 @@ em.plot_U(mdl, Uf, ax, scale=100, chords=False)
 ```
 
 
-![svg](output_18_0.svg)
+![svg](img/output_18_0.svg)
 
 
 
@@ -373,7 +373,7 @@ plt.plot(y[0], y[1])
 
 
 
-![svg](output_19_1.svg)
+![svg](img/output_19_1.svg)
 
 
 
