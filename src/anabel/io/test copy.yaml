@@ -1,0 +1,19 @@
+#include <header.h>
+#define
+
+Vars:
+- {( A:=bytes(2.0) )}
+
+
+Model:
+  - x: [0.0,   {L},]
+    p: [-20.     ,,]
+
+  - x: [0.1, {L*2},]
+
+  - el:
+      f:
+        E: {E}
+        A: {A}
+
+
