@@ -23,7 +23,7 @@ from ema.solvers import *
 
 import ema.utilities
 import ema.matlib
-from ema.tests import *
+# from ema.tests import *
 # from ema.tensorelements import *
 
 settings = {
