@@ -30,6 +30,65 @@ chord_style = [{'color':'black', 'linewidth':1, 'linestyle':':', 'zorder':2}]
 
 axis_style = {'color':'grey', 'linewidth':1, 'linestyle':'--'}
 
+def plot_moments(state:object, ax=None, scale:float=None, color:str=None, chords:bool=False):
+    """Only works for 2D"""
+    if ax is None: fig, ax = plt.subplots()
+    else: fig = None
+    if scale is None: scale = 10 # factor to scale up displacements
+    if color is None: color='red'
+
+    plot_structure(state, ax)
+    ax.spines['right'].set_color('none')
+    ax.spines['top'].set_color('none')
+    ax.set_aspect('equal')
+
+    if state.ndf > 2:
+        n_curve=2   # number of plotting points along element
+
+        for elem in state.elems:
+            if len(elem.q) > 1:
+                delta = np.array([[0.,0.],[0.,0.]])
+                
+                X = np.array([[elem.nodes[0].x, elem.nodes[0].y],
+                            [elem.nodes[1].x, elem.nodes[1].y]])
+                xl = np.linspace(0, elem.L, n_curve)
+                print()
+                xy = np.concatenate(([xl], [[-scale*elem.q["2"],scale*elem.q["3"]]]))
+                xl, yl = elem.Rz_matrix()[:2,:2]@xy+[[elem.nodes[0].x]*n_curve,[elem.nodes[0].y]*n_curve]
+
+                x0 = np.linspace(delta[0,0]*scale, delta[1,0]*scale, n_curve)
+                y0 = np.linspace(delta[0,1]*scale, delta[1,1]*scale, n_curve)
+                x = xl + x0
+                y = yl + y0
+                ax.plot(x, y, zorder = 1, color=color)
+                # if abs(elem.cs) > 0.5:
+                ax.fill_between(
+                    [elem.nodes[0].x, elem.nodes[1].x],
+                    [elem.nodes[0].y, elem.nodes[1].y],
+                    y, color="r", alpha=0.2, interpolate=True)
+                # else:
+                #     plt.fill_between(
+                #         [elem.nodes[0].x, elem.nodes[1].x],
+                #         [elem.nodes[0].y, elem.nodes[1].y],
+                #         y, color="r", alpha=0.2)
+
+    # Plot undeformed chords
+    n = 3 
+    for elem in state.elems:
+        x = np.linspace(elem.nodes[0].x, elem.nodes[1].x, n)
+        y = np.linspace(elem.nodes[0].y, elem.nodes[1].y, n)
+        ax.plot(x, y, **elem_style[0])
+
+    f = 0.5
+    for hinge in state.hinges:
+        if hinge.node == hinge.elem.nodes[0]:
+            x = hinge.node.x + f*hinge.elem.cs
+            y = hinge.node.y + f*hinge.elem.sn
+        else:
+            x = hinge.node.x - f*hinge.elem.cs
+            y = hinge.node.y - f*hinge.elem.sn
+        ax.scatter(x, y, **hinge_style[0])
+    return fig, ax
 
 def plot_U(model, U_vect, ax, scale=None, color=None, chords=False):
     """Only works for 2D"""
@@ -200,7 +259,7 @@ def plot_structure(Model, ax=None, label=False):
     ax.set_aspect('equal')
 
     ###< Plot Elements
-    f = 0.5 # parameter controling element label distance from element
+    f = 0.7 # parameter controling element label distance from element
     for elem in Model.elems:
         x = np.linspace(elem.nodes[0].x0, elem.nodes[1].x0, n)
         y = np.linspace(elem.nodes[0].y0, elem.nodes[1].y0, n)
@@ -210,7 +269,7 @@ def plot_structure(Model, ax=None, label=False):
             # label element tag
             xl = x[1] - elem.sn*f
             yl = y[1] - elem.cs*f
-            ax.annotate(elem.tag, xy=(xl, yl))
+            ax.annotate("${}$".format(elem.tag), xy=(xl, yl))
 
     f = 0.4
     if Model.ndf == 3:
