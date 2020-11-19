@@ -156,7 +156,7 @@ class FEDEAS_func:
 
         script += '\n' + "\n ElemData = cell(Model.ne,1);"
     
-        for i, elem in enumerate(Domain.elems): 
+        for i, elem in enumerate(Domain.elems):
             script += '\n' + "\n% Element: {}".format(elem.tag)
             try: script += '\n' + 'ElemData{{{}}}.A = {};'.format(i+1, float(elem.A.numpy()))
             except: script += '\n' + 'ElemData{{{}}}.A = {};'.format(i+1, float(elem.A))
@@ -181,7 +181,7 @@ class FEDEAS_func:
 
         # Element Loads
         script += '\n' + "\n%% Element loads"
-        for i, elem in enumerate(Domain.elems): 
+        for i, elem in enumerate(Domain.elems):
             if type(elem) is ema.elements.Beam:
                 script += '\n' + "\n% Element: {}".format(elem.tag)
                 script += '\n' + 'ElemData{{{}}}.w = [{}; {}];'.format(i+1, elem.w['x'], elem.w['y'])
@@ -195,7 +195,7 @@ class FEDEAS_func:
                 if p[i] != 0.:
                     script += '\n' + 'Pf({}) = {};'.format(dof, p[i])
         script += '\n' + 'Loading.Pref = Pf;'
-        return script 
+        return script
 
     def write(self):
         f = open(self.filename,"w+")
