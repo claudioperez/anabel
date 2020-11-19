@@ -36,7 +36,7 @@ def plot_moments(state:object, ax=None, scale:float=None, color:str=None, chords
     else: fig = None
     if scale is None: scale = 10 # factor to scale up displacements
     if color is None: color='red'
-
+    line_objects = []
     plot_structure(state, ax)
     ax.spines['right'].set_color('none')
     ax.spines['top'].set_color('none')
@@ -48,7 +48,7 @@ def plot_moments(state:object, ax=None, scale:float=None, color:str=None, chords
         for elem in state.elems:
             if len(elem.q) > 1:
                 delta = np.array([[0.,0.],[0.,0.]])
-                
+
                 X = np.array([[elem.nodes[0].x, elem.nodes[0].y],
                             [elem.nodes[1].x, elem.nodes[1].y]])
                 xl = np.linspace(0, elem.L, n_curve)
@@ -60,7 +60,7 @@ def plot_moments(state:object, ax=None, scale:float=None, color:str=None, chords
                 y0 = np.linspace(delta[0,1]*scale, delta[1,1]*scale, n_curve)
                 x = xl + x0
                 y = yl + y0
-                ax.plot(x, y, zorder = 1, color=color)
+                line_objects.extend(ax.plot(x, y, zorder = 1, color=color))
                 # if abs(elem.cs) > 0.5:
                 ax.fill_between(
                     [elem.nodes[0].x, elem.nodes[1].x],
@@ -88,7 +88,7 @@ def plot_moments(state:object, ax=None, scale:float=None, color:str=None, chords
             x = hinge.node.x - f*hinge.elem.cs
             y = hinge.node.y - f*hinge.elem.sn
         ax.scatter(x, y, **hinge_style[0])
-    return fig, ax
+    return line_objects
 
 def plot_U(model, U_vect, ax, scale=None, color=None, chords=False):
     """Only works for 2D"""
