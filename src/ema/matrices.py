@@ -397,10 +397,12 @@ class Static_matrix (Structural_Matrix):
     
     Parameters
     ---------------
+
     model: ema.Model object
     
     Partitions
     =========================================================================================
+ 
     - B.f  : nf x ntq
 
     - B.c  : nf x nq
@@ -412,10 +414,10 @@ class Static_matrix (Structural_Matrix):
     - B.x  : nx x nq
 
     where:
+
     - ni: number of primary (non-redundant) forces.
     - nq: number of total, continuous forces.
     - nx: number of redundant forces.
-
 
     """
 
@@ -535,7 +537,6 @@ class Static_matrix (Structural_Matrix):
         transfer_vars(self, newB)
         newB.column_data = self.column_data[idx_x]
         return newB
-
 
     @property
     def barxi(self):
@@ -774,6 +775,7 @@ class Kinematic_matrix (Structural_Matrix):
     
     Returns
     ---------
+
     Kinematic matrix
 
     """
@@ -830,7 +832,6 @@ class Kinematic_matrix (Structural_Matrix):
         else:
             vect = Structural_Matrix.__matmul__(self, Vector)
 
-        
         return vect
 
 
