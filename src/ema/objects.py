@@ -235,8 +235,8 @@ class Model:
             node.y = delta[1] + node.yi
         pass
 
-    def fix(self, node, dirn): # for dirn enter string (e.g. "x", 'y', 'rz')
-        if type(dirn) is list:
+    def fix(self, node, dirn=["x","y","rz"]): # for dirn enter string (e.g. "x", 'y', 'rz')
+        if isinstance(dirn,list):
             rxns = []
             for df in dirn:
                 newRxn = Rxn(node, df)
@@ -249,7 +249,7 @@ class Model:
             self.rxns.append(newRxn)
             node.rxns[self.ddof[dirn]] = 1
             return newRxn
-    
+
     def boun(self, node, ones):
         for i, dof in enumerate(self.ddof):
             if ones[i]:
@@ -317,7 +317,7 @@ class Model:
         return elements
 
 
-    def beam(self, tag: str, iNode, jNode, mat=None, sec=None, Qpl=None):
+    def beam(self, tag: str, iNode, jNode, mat=None, sec=None, Qpl=None,**kwds):
         """Add a 2D linear Euler-Bernouli beam object to model
         
         Parameters
@@ -336,16 +336,25 @@ class Model:
         """
 
         if mat is None:
-            mat = self.materials['default']
+            E = kwds["E"] if "E" in kwds else self.materials["default"].E
+        else:
+            E = mat.E
+
         if sec is None:
-            sec = self.xsecs['default']
-        newElem = Beam(tag, iNode, jNode, mat.E, sec.A, sec.I)
+            A = kwds["A"] if "A" in kwds else self.xsecs["default"].A
+            I = kwds["I"] if "I" in kwds else self.xsecs["default"].I
+        else:
+            A = sec.A
+            I = sec.I
+
+
+        newElem = Beam(tag, iNode, jNode, E, A, I)
         self.elems.append(newElem)
         self.delems.update({newElem.tag:newElem})
         # self.connect([iNode, jNode], "Beam") # considering deprecation
         iNode.elems.append(newElem)
         jNode.elems.append(newElem)
-        
+
         if Qpl is not None:
             newElem.Qpl = np.zeros((3,2))
             newElem.Np = [Qpl[0], Qpl[0]]
@@ -643,11 +652,11 @@ class rModel(Model):
                                     rxn_ixs.append( (i,dirn) )
                         elif all([abs(elem.sn) != 1.0 for elem in node.elems]):
                             if not(DOFs[i][dirn]):
-                                DOFs[i][dirn] = current_dof 
+                                DOFs[i][dirn] = current_dof
                                 current_dof += 1
             else:
                 if not(DOFs[i][dirn]):
-                    DOFs[i][dirn] = current_rxn 
+                    DOFs[i][dirn] = current_rxn
                     current_rxn += 1
                     rxn_ixs.append( (i,dirn) )
             
