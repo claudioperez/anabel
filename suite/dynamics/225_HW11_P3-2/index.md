@@ -5,12 +5,12 @@ title: Time History Analysis - MDF Frame
 # Time History Analysis: MDF Frame
 
 ```python
-import ema as em
+import emme as em
 import matplotlib.pyplot as plt
 import numpy as np
 %config InlineBackend.figure_format = 'svg' # used to make plots look nicer
 from ema_examples.dynamics import P09_07
-from ema.utilities.ipyutils import disp_sbs
+from emme.utilities.ipyutils import disp_sbs
 ```
 
 ```python
@@ -95,7 +95,7 @@ disp_sbs(m.df, k.df)
 </table>
 
 
-The function `ema.analysis.ModalAnalysis` wraps a scipy routine for solving the eigenvalue problem.
+The function `emme.analysis.ModalAnalysis` wraps a scipy routine for solving the eigenvalue problem.
 
 
 ```python

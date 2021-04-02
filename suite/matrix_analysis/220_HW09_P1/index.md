@@ -1,7 +1,7 @@
 # Force Method - Truss
 
 ```python
-import ema as em
+import emme as em
 import matplotlib.pyplot as plt
 import numpy as np
 import sympy as sp
@@ -445,7 +445,7 @@ Vhp = B.barx.T @ Ve
 Vhp
 ```
 
-    C:\Users\claud\Anaconda3\lib\site-packages\IPython\core\formatters.py:371: FormatterWarning: text/html formatter returned invalid type <class 'ema.utilities.Structural_Vector'> (expected <class 'str'>) for object: Structural_Vector([-0.1402])
+    C:\Users\claud\Anaconda3\lib\site-packages\IPython\core\formatters.py:371: FormatterWarning: text/html formatter returned invalid type <class 'emme.utilities.Structural_Vector'> (expected <class 'str'>) for object: Structural_Vector([-0.1402])
       FormatterWarning
     
 
@@ -524,7 +524,7 @@ Qx = -Vhp/Vhx
 Qx
 ```
 
-    C:\Users\claud\Anaconda3\lib\site-packages\IPython\core\formatters.py:371: FormatterWarning: text/html formatter returned invalid type <class 'ema.utilities.Structural_Vector'> (expected <class 'str'>) for object: Structural_Vector([[39.51521984]])
+    C:\Users\claud\Anaconda3\lib\site-packages\IPython\core\formatters.py:371: FormatterWarning: text/html formatter returned invalid type <class 'emme.utilities.Structural_Vector'> (expected <class 'str'>) for object: Structural_Vector([[39.51521984]])
       FormatterWarning
     
 
@@ -648,7 +648,7 @@ Vhp = B.barx.T@V0
 Vhp
 ```
 
-    C:\Users\claud\Anaconda3\lib\site-packages\IPython\core\formatters.py:371: FormatterWarning: text/html formatter returned invalid type <class 'ema.utilities.Structural_Vector'> (expected <class 'str'>) for object: Structural_Vector([0.])
+    C:\Users\claud\Anaconda3\lib\site-packages\IPython\core\formatters.py:371: FormatterWarning: text/html formatter returned invalid type <class 'emme.utilities.Structural_Vector'> (expected <class 'str'>) for object: Structural_Vector([0.])
       FormatterWarning
     
 
@@ -667,7 +667,7 @@ Qx = -Vhp/Vhx
 Qx
 ```
 
-    C:\Users\claud\Anaconda3\lib\site-packages\IPython\core\formatters.py:371: FormatterWarning: text/html formatter returned invalid type <class 'ema.utilities.Structural_Vector'> (expected <class 'str'>) for object: Structural_Vector([[-0.]])
+    C:\Users\claud\Anaconda3\lib\site-packages\IPython\core\formatters.py:371: FormatterWarning: text/html formatter returned invalid type <class 'emme.utilities.Structural_Vector'> (expected <class 'str'>) for object: Structural_Vector([[-0.]])
       FormatterWarning
     
 

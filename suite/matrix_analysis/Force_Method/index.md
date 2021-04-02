@@ -5,7 +5,7 @@ title: The Force Method
 # The Force Method
 
 ```python
-import ema as em
+import emme as em
 import matplotlib.pyplot as plt
 import numpy as np
 import sympy as sp
@@ -182,7 +182,7 @@ A.f@Ux + V0
     super
     
 
-    C:\Users\claud\Anaconda3\lib\site-packages\IPython\core\formatters.py:371: FormatterWarning: text/html formatter returned invalid type <class 'ema.matvecs.Deformation_vector'> (expected <class 'str'>) for object: Deformation_vector([0.00128 , 0.003548, 0.0005  ])
+    C:\Users\claud\Anaconda3\lib\site-packages\IPython\core\formatters.py:371: FormatterWarning: text/html formatter returned invalid type <class 'emme.matvecs.Deformation_vector'> (expected <class 'str'>) for object: Deformation_vector([0.00128 , 0.003548, 0.0005  ])
       FormatterWarning
     
 

@@ -7,7 +7,7 @@ description: This problem uses the kernel of the kinematic matrix to explore mec
 
 
 ```python
-import ema as em
+import emme as em
 import matplotlib.pyplot as plt
 import numpy as np
 %config InlineBackend.figure_format = 'svg' # used to make plots look nicerbb

@@ -9,12 +9,12 @@ title: Problem 2
 
 ```python
 # Remove
-import ema as em
+import emme as em
 import matplotlib.pyplot as plt
 import numpy as np
 %config InlineBackend.figure_format = 'svg' # used to make plots look nicer
 from ema_examples.dynamics import E09_06
-from ema.utilities.ipyutils import disp_sbs 
+from emme.utilities.ipyutils import disp_sbs 
 from scipy.linalg import eig
 ```
 
