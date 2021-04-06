@@ -186,10 +186,6 @@ class Model(Assembler):
         origin = tuple(anp.zeros(p.shape) if hasattr(p,"shape") else 0.0 for p in self.params)
 
         # Evaluate once with zeros to JIT-compile
-        try:
-            main(*origin)
-        except:
-            pass
         return main
         #return collect_params
 
