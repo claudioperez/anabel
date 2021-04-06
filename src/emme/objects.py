@@ -141,7 +141,7 @@ class Model(Assembler):
             params = get_unspecified_parameters(el,recurse=True)
             ls = ",".join(
                 f"'{p.name}': {p.default.name}"
-                for p in params.values() 
+                for p in params.values()
                 if isinstance(p,inspect.Parameter) and p.default
                 )
             if "params" in params and params["params"]:
@@ -152,7 +152,7 @@ class Model(Assembler):
                     return  ",".join((ls, subparams))
                 else:
                     return subparams
-                    
+
             else:
                 return ls
         exec(
@@ -163,7 +163,7 @@ class Model(Assembler):
          local_scope
         )
         collect_params = local_scope["collect_params"]
-        
+
         #-------------------
         #local_scope = locals()
         exec(
@@ -171,18 +171,25 @@ class Model(Assembler):
          "  return anp.array([\n"
         f"""    {','.join("["+p.name+"]" if isinstance(p,inspect.Parameter) else f'[{p}]' for node in self.nodes for dof,fixity,p in zip(node.dofs,node.rxns,node.p.values()) if not fixity ) }\n"""
          "  ])",
-         dict(anp=anp),local_scope, 
+         dict(anp=anp),local_scope,
         )
         collect_loads = local_scope["collect_loads"]
 
         #-------------------
         exec(
-            f"def main({','.join(p for p in self.params)}): \n"
+            f"def displ({','.join(p for p in self.params)}): \n"
           f"""   params = collect_params({','.join(p for p in self.params)})\n"""
             f"   return f(collect_loads({','.join(p for p in parameterized_loads.values() if isinstance(p,str) )}), f.origin[1], f.origin[2], params)[1]",
             local_scope
         )
-        main = local_scope["main"]
+        main = local_scope["displ"]
+        origin = tuple(anp.zeros(p.shape) if hasattr(p,"shape") else 0.0 for p in self.params)
+
+        # Evaluate once with zeros to JIT-compile
+        try:
+            main(*origin)
+        except:
+            pass
         return main
         #return collect_params
 
@@ -206,10 +213,10 @@ class Model(Assembler):
 
         #local_scope = locals()
 
-
+        jacx = anon.diff.jacx(f)
         model_map = f.closure["model_map"]
         param_map = f.closure["param_map"]
-        main = solver(f,**solver_opts)
+        main = solver(f,jacx=jacx,**solver_opts)
         # def main(p, u, state=state, params={}):
         #     return g()
 
@@ -234,7 +241,7 @@ class Model(Assembler):
          "  return {\n"
         f"""    {f",".join(f"'{el.tag}': anp.array([{','.join(_unpack_coords(node.xyz) for node in el.nodes) }])" for el in self.delems.values() ) }\n"""
          "  }",
-         dict(anp=anp),local_scope, 
+         dict(anp=anp),local_scope,
         )
         collect_coords = local_scope["collect_coords"]
         #-------------------------
@@ -250,7 +257,6 @@ class Model(Assembler):
 
         if self.DOF is None:
             self.numDOF()
-
 
         if elem is not None:
             """When an `elem` argument is passed, use it for all
@@ -304,6 +310,40 @@ class Model(Assembler):
                 for tag,el in model_map.items()] ,axis=0)
             return u, (Be @ F), state
 
+        eljac_map = {tag: anon.diff.jacx(el) for tag,el in model_map.items()}
+        DOF_el_jac = {
+            dof_i : {
+                dof_j: [
+                    (tag, i, j)
+                    for tag,el in self.delems.items()
+                        for j, _dof_j in enumerate(el.dofs) if _dof_j == dof_j
+                            for i, _dof_i in enumerate(el.dofs) if _dof_i == dof_i
+               ]
+               for dof_j in range(1,nf+1)
+            }
+            for dof_i in range(1,nf+1)
+        }
+        def jacx(u,p,state,xyz=None,params=param_arg):
+            coords = collect_coords(xyz)
+            U = anp.concatenate([u,anp.zeros((nr,1))],axis=0)
+            el_jacs = {
+                tag: jac(
+                    anp.take(U, anp.array(el_DOF[tag], dtype='int32')-1)[:,None],
+                    None,
+                    xyz = coords[tag],
+                    state = state[...][tag],
+                    **params[tag]
+                ).squeeze()
+                for tag,jac in eljac_map.items()
+            }
+
+            return anp.array([
+                [
+                    sum([el_jacs[tag][i,j]
+                        for tag, i, j  in DOF_el_jac[dof_i][dof_j]
+                    ]) for dof_j in range(1,nf+1)
+                ] for dof_i in range(1,nf+1)
+            ])
         return locals()
 
 
@@ -441,26 +481,23 @@ class Model(Assembler):
     def load(self,obj,*args,pattern=None,**kwds):
         """
         Apply a load to a model object
-        
+
         Claudio Perez 2021-04-01
         """
+        if isinstance(obj,str):
+            obj = self.dnodes[obj]
         if isinstance(obj,Node):
-            print(obj)
-        elif isinstance(obj,str):
-            return self.load_node(self.dnodes[obj],*args,**kwds)
+            return self.load_node(obj,*args,**kwds)
 
     def load_node(self,node,load,**kwds):
         """
-
         Claudio Perez 2021-04-01
         """
         if _is_sequence(load):
             pass
         else:
             assert "dof" in kwds
-        
             node.p[kwds["dof"]] = load
-
         pass
 
     def state(self, method="Linear"):
@@ -833,7 +870,7 @@ class Model(Assembler):
         """
         nature:
         """
-        
+
         newq = IntForce(elem, nature, nature)
         elem.red[nature] = True
         self.redundants.append(newq)
