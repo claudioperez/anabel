@@ -1449,18 +1449,20 @@ class nDisplacement_vector(Structural_Vector):
         return newU
 
 def U_vector(model, vector=None):
-    """Returns a Displacement_vector object"""   
+    """Returns a Displacement_vector object"""
     U = np.zeros(model.nt)
     row_data = [str(dof) for dof in range(1,model.nt+1)]
     U = nDisplacement_vector(U, model, row_data)
-    
+
     if vector is not None:
         if len(vector)==len(U):
             U[:,0] = vector[:]
-        else:
+        elif isinstance(vector,Structural_Vector):
             for key in vector.row_data:
                 if key in U.row_data:
                     U.set_item(key, vector.rows([key]))
+        else:
+            U[:len(vector)] = vector.flatten()
     return U
 
 

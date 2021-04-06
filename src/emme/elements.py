@@ -543,7 +543,7 @@ class Beam(Element):
     Qpl = np.zeros((2,nq))
 
     def __init__(self, tag, iNode, jNode, E=None, A=None, I=None, properties=None, **kwds):
-        print(kwds)
+        #print(kwds)
         super().__init__(self.ndf, self.ndm, self.force_dict, [iNode,jNode], **kwds)
         if isinstance(properties,dict):
             E, A, I = properties['E'], properties['A'], properties['I']

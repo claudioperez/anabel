@@ -78,7 +78,7 @@ def plot_moments(state:object, ax=None, scale:float=None, color:str=None, chords
                 #         y, color="r", alpha=0.2)
 
     # Plot undeformed chords
-    n = 3 
+    n = 3
     for elem in state.elems:
         x = np.linspace(elem.nodes[0].x, elem.nodes[1].x, n)
         y = np.linspace(elem.nodes[0].y, elem.nodes[1].y, n)
@@ -95,31 +95,43 @@ def plot_moments(state:object, ax=None, scale:float=None, color:str=None, chords
         ax.scatter(x, y, **hinge_style[0])
     return line_objects
 
-def plot_U(model, U_vect, ax, scale=None, color=None, chords=False):
+def plot_displ(model, displ, ax=None, fig=None,scale=None, color=None, chords=False, **kwds):
+    """
+    Claudio Perez 2021-04-02
+    """
+    if ax is None:
+        fig, ax = plt.subplots()
+
+    return plot_U(model, displ, ax=ax,fig=fig,scale=scale,color=color,chords=chords,**kwds)
+
+
+def plot_U(model, U_vect, ax, fig=None, plot_struct=True,scale=1.0, color=None, chords=False):
     """Only works for 2D"""
-    
+
     if scale is None: scale = 10 # factor to scale up displacements
-    if color is None: 
+    if color is None:
         color='red'
     A = mv.Kinematic_matrix(model)
     # print(A.f)
     U = U_vector(model, vector=U_vect)
-    plot_structure(model, ax)
+    #print(U)
+    if plot_struct:
+        plot_structure(model, ax)
     for node in model.nodes:
         delta = [0.,0.]
         for i,dof in enumerate(node.dofs[0:2]):
-            if not node.rxns[i]: 
+            if not node.rxns[i]:
                 try: delta[i] = U[U.row_data.index(str(dof))]
                 except: pass
         x = node.x
         y = node.y
         plt.plot( x, y, **node_style[0])
         plt.plot( x+delta[0]*scale, y+delta[1]*scale, color=color, **node_style[1])
-        
+
     ###< Plot Chords
     # if chords:
     for elem in model.elems:
-        X = np.array([[elem.nodes[0].x, elem.nodes[0].y], 
+        X = np.array([[elem.nodes[0].x, elem.nodes[0].y],
                     [elem.nodes[1].x, elem.nodes[1].y]])
         delta = np.array([[0.,0.],[0.,0.]])
 
@@ -180,11 +192,13 @@ def plot_U(model, U_vect, ax, scale=None, color=None, chords=False):
             x = hinge.node.x - f*hinge.elem.cs
             y = hinge.node.y - f*hinge.elem.sn
         plt.scatter(x, y, **hinge_style[0])
+    return fig, ax
+
 
 def plot_modes(model, shapes, ax, scale=None, color=None, label=None):
     """Only works for 2D"""
     if scale is None: scale = 5 # factor to scale up displacements
-    if color is None: 
+    if color is None:
         color='red'
     A = mv.Kinematic_matrix(model)
     U = mv.Displacement_vector(A, shapes)
