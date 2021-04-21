@@ -5,14 +5,12 @@ from functools import partial
 from abc import abstractmethod
 
 import numpy as np
-# import sympy as sp
 from numpy.polynomial import Polynomial
 from scipy.integrate import quad
 import scipy.integrate
 # import tensorflow as tf
 
 import anon
-# from emme.utilities import Structural_Matrix, Structural_Vector
 from emme.matrices import Structural_Matrix, Structural_Vector
 try:
     import anon.atom as anp
@@ -52,10 +50,16 @@ class BasicLink():
         self.nen = len(nodes)
 
     @property
+    def loc(self)->anp.ndarray:
+        return anp.array([node.xyz for node in self.nodes])
+
+    @property
     def dofs(self):
         eid = np.array([],dtype=int)
         for node in self.nodes:
             eid = np.append(eid, node.dofs[0:self.ndf])
+        #untested alternative:
+        #return np.array([node.dofs[0:self.ndf] for node in self.nodes])
         return eid
 
     @property
@@ -117,7 +121,6 @@ class BasicLink():
     def Rx_matrix(self):
         """Rotation about x
 
-        https://en.wikipedia.org/wiki/Rotation_matrix
         """
         cs = self.cs
         sn = self.sn
@@ -197,10 +200,11 @@ class Element(BasicLink):
         created 2021-03-31
         """
         if self.elem is None:
+            # create a default linear element
             ke = anp.array(self.ke_matrix())
-            def f(x,y,state,params,**kwds):
-                return ke@x
-            stiff = lambda x,y,state,params,**kwds: ke
+            def f(x,y=None,state={},params={},**kwds):
+                return None,ke@x,state
+            stiff = lambda x,y,state={},params={},**kwds: ke
             return anon.dual.wrap(f,dim=(self.ndf,1),jacx=stiff)
 
         else:
@@ -976,7 +980,7 @@ class Beam3d(Element):
         # self.q = {'1':0, '2':0, '3': 0}     # basic element force
         # self.v = {'1':0, '2':0, '3': 0}
 
-        self.w = {'x':0, 'y':0, 'z': 0}             #':  "uniform element loads in x and y",
+        self.w = {'x':0, 'y':0, 'z': 0}       #':  "uniform element loads in x and y",
 
          
     def __repr__(self):
@@ -1146,4 +1150,3 @@ class PlaneQuad:
 
         return k
 
-##>*****************************************************************************

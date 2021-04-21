@@ -141,13 +141,13 @@ class Model(Assembler):
             params = get_unspecified_parameters(el,recurse=True)
             ls = ",".join(
                 f"'{p.name}': {p.default.name}"
-                for p in params.values()
-                if isinstance(p,inspect.Parameter) and p.default
+                    for p in params.values()
+                        if isinstance(p,inspect.Parameter) and p.default
                 )
             if "params" in params and params["params"]:
                 subparams = "'params': {" + ",".join(
                         f"'{k}': {v.default.name}" for k,v in params["params"].items() if v.default
-                        ) + "}"
+                ) + "}"
                 if ls:
                     return  ",".join((ls, subparams))
                 else:
@@ -156,11 +156,11 @@ class Model(Assembler):
             else:
                 return ls
         exec(
-        f"def collect_params({','.join(p for p in self.params )}):\n"
-         "  return {'params': {\n"
-        f"""    {cnl.join(f'"{tag}": {{ {_unpack(el)} }}' for tag,el in model_map.items()) }\n"""
-         "  }}",
-         local_scope
+            f"def collect_params({','.join(p for p in self.params )}):\n"
+             "  return {'params': {\n"
+            f"""    {cnl.join(f'"{tag}": {{ {_unpack(el)} }}' for tag,el in model_map.items()) }\n"""
+             "  }}",
+             local_scope
         )
         collect_params = local_scope["collect_params"]
 
@@ -197,10 +197,15 @@ class Model(Assembler):
         if solver is None:
             import elle.numeric
             solver = elle.numeric.inverse.inv_no1
-        f = self.compose_force(_jit=jit_force,**kwds,_expose_closure=True)
+        if not solver_opts:
+            solver_opts = {
+                    "tol": 1e-10,
+                    "maxiter": 10
+            }
+        f = self.assemble_force(_jit=jit_force,**kwds,_expose_closure=True)
         model_map = f.closure["model_map"]
-
-        state = {...: f.origin[2]}
+        state = {...:f.origin[2]}
+        #state = f.origin[2]
         nf = self.nf
         #shape = self.nf
         #shape = (self.nf,self.nf)
@@ -218,8 +223,8 @@ class Model(Assembler):
 
         return locals()
 
-    @anon.dual.generator(dim="shape")
-    def compose_force(self, elem=None,**kwds)->Callable:
+    @anon.dual.generator(dim="shape",main="force")
+    def assemble_force(self, elem=None,**kwds)->Callable:
         """A simple force composer for skeletal truss structures."""
         ndf = self.ndf
         nr = self.nr
@@ -240,16 +245,6 @@ class Model(Assembler):
          dict(anp=anp),local_scope,
         )
         collect_coords = local_scope["collect_coords"]
-        #-------------------------
-        #exec(
-        #f"def collect_displ({','.join(p for p in parameterized_loads.values() if isinstance(p,str) )}):\n"
-        # "  return anp.array([\n"
-        #f"""    {','.join("["+u.name+"]" if isinstance(u,inspect.Parameter) else f'[0.0]' for node in self.nodes for dof,fixity,p in zip(node.dofs,node.rxns,node.p.values()) if not fixity ) }\n"""
-        # "  ])",
-        # dict(anp=anp),local_scope, 
-        #)
-        #collect_displ = local_scope["collect_displ"]
-
 
         if self.DOF is None:
             self.numDOF()
@@ -273,13 +268,9 @@ class Model(Assembler):
 
         params = self.params
 
-        #params.update({
-        #    p.name: p for el in param_map.values() for p in el.values()
-        #})
 
         DOF = {node_tag: dofs for node_tag, dofs in zip(self.dnodes.keys(),self.DOF)}
 
-        #el_sign = {  tag: 1.0**(n[1][0] > n[1][1]) for tag, n in mesh.items() }
         el_DOF  = { elem.tag: elem.dofs for elem in self.delems.values() }
 
         Be = anp.concatenate([
@@ -291,19 +282,28 @@ class Model(Assembler):
                 tag: m.origin[2] for tag, m, in model_map.items()
             }
         }
+        _p0 = anp.zeros((nf,1))
         xyz = eval(f"""{{ { ','.join(f'"{tag}": [{",".join(str(x) for x in node.xyz)}]' for tag, node in self.dnodes.items() )} }}""")
-        def main(u,p,state, xyz=None, params=param_arg):
+        def force(u,p=_p0,state=state, xyz=None, params=param_arg):
+            #print(params)
             U = anp.concatenate([u,anp.zeros((nr,1))],axis=0)
             coords = collect_coords(xyz)
-            F = anp.concatenate([
+            responses = [
                 el(
                     anp.take(U, anp.array(el_DOF[tag], dtype='int32')-1)[:,None],
                     None,
                     xyz = coords[tag],
                     state = state[...][tag],
                     **params[tag]
-                )[1]
-                for tag,el in model_map.items()] ,axis=0)
+                )
+                for tag,el in model_map.items()
+            ]
+            F = anp.concatenate([r[1] for r in responses],axis=0)
+            state = {
+                ...: {
+                    tag: r[2] for tag,r in zip(model_map.keys(),responses)
+                }
+            }
             return u, (Be @ F), state
 
         eljac_map = {tag: anon.diff.jacx(el) for tag,el in model_map.items()}
@@ -332,15 +332,17 @@ class Model(Assembler):
                 ).squeeze()
                 for tag,jac in eljac_map.items()
             }
-
-            return anp.array([
+            jac = anp.array([
                 [
                     sum([el_jacs[tag][i,j]
                         for tag, i, j  in DOF_el_jac[dof_i][dof_j]
                     ]) for dof_j in range(1,nf+1)
                 ] for dof_i in range(1,nf+1)
             ])
+            return jac
         return locals()
+
+    compose_force = assemble_force
 
 
     @property
@@ -473,6 +475,9 @@ class Model(Assembler):
         self.nodes.append(newNode)
         self.dnodes.update({newNode.tag : newNode})
         return newNode
+
+    def displ(self,val):
+        pass
 
     def load(self,obj,*args,pattern=None,**kwds):
         """
@@ -661,7 +666,7 @@ class Model(Assembler):
 
 
     def beam(self, tag: str, iNode, jNode, mat=None, sec=None, Qpl=None,**kwds):
-        """Add a beam object to model
+        """Create and add a beam object to model
 
         Parameters
         ----------
@@ -679,13 +684,13 @@ class Model(Assembler):
         """
 
         if mat is None:
-            E = kwds["E"] if "E" in kwds else self.materials["default"].E
+            E = kwds.pop("E") if "E" in kwds else self.materials["default"].E
         else:
             E = mat.E
 
         if sec is None:
-            A = kwds["A"] if "A" in kwds else self.xsecs["default"].A
-            I = kwds["I"] if "I" in kwds else self.xsecs["default"].I
+            A = kwds.pop("A") if "A" in kwds else self.xsecs["default"].A
+            I = kwds.pop("I") if "I" in kwds else self.xsecs["default"].I
         else:
             A = sec.A
             I = sec.I
@@ -694,7 +699,9 @@ class Model(Assembler):
             iNode = self.dnodes[iNode]
         if isinstance(jNode,str):
             jNode = self.dnodes[jNode]
-
+        
+        if isinstance(I,int): I = float(I)
+        if isinstance(A,int): A = float(A)
         
         newElem = Beam(tag, iNode, jNode, E, A, I, **kwds)
         self.elems.append(newElem)

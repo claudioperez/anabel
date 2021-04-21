@@ -2,7 +2,7 @@
 __version__ = "0.0.0"
 
 
-
+import emme.aisc
 import emme.analysis
 
 from emme.objects import *
