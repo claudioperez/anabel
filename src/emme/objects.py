@@ -626,6 +626,16 @@ class Model(Assembler):
         return newXSect
 
  # Elements
+    def elem(self,elem,nodes,tag):
+        if isinstance(nodes[0],str):
+            nodes = [self.dnodes[node_tag] for node_tag in nodes]
+        element = Element(elem.shape[0][0],self.ndm,nodes=nodes,elem=elem)
+        element.tag = tag
+        self.elems.append(element)
+        self.delems.update({tag:element})
+        return element
+
+
     def add_element(self, element):
         """Add a general element to model
 

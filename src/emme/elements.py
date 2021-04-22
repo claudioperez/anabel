@@ -162,12 +162,14 @@ class BasicLink():
 class Element(BasicLink):
     """Element parent class"""
 
-    def __init__(self,  ndf, ndm, force_dict, nodes, elem=None, resp=None, proto=None):
+    def __init__(self,  ndf, ndm, force_dict=None, nodes=None, elem=None, resp=None, proto=None):
         super().__init__(ndf, ndm, nodes)
         self._resp = resp
         self.elem = elem
         self.history = {}
         self.current = {}
+        if force_dict is None:
+            force_dict = {str(i+1): 0 for i in range(ndf)}
 
         nq = len(force_dict)
         self.rel = {str(i): False for i in range(1, nq+1)}
@@ -271,7 +273,7 @@ class PolyRod(Element):
 
     def ke_matrix(self):
         return self.k_matrix()
-    
+
     def pw_vector(self):
         L = self.L
         pw = self.w['1']
