@@ -57,7 +57,6 @@ setup(
     include_package_data=True,
     zip_safe=False,
     classifiers=[
-        # complete classifier list: http://pypi.python.org/pypi?%3Aaction=list_classifiers
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
         'Operating System :: Unix',
@@ -74,12 +73,12 @@ setup(
         'Issue Tracker': 'https://github.com/claudioperez/emme/issues',
     },
     keywords=[
-        # eg: 'keyword1', 'keyword2', 'keyword3',
     ],
     python_requires='>=3.6',
     install_requires=[
-        # eg: 'aspectlib==1.1.1', 'six>=1.7',
         "numpy",
+        "pandoc",
+        "matplotlib",
         "scipy"
     ],
     extras_require=extras_require,
