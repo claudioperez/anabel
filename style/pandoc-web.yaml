@@ -1,0 +1,24 @@
+
+verbosity: INFO
+from: markdown+raw_html-markdown_in_html_blocks+raw_attribute
+to: 'html'
+bibliography: 
+  - 'docs/elle.bib'
+cite-method: citeproc
+citeproc: true
+metadata:
+  link-citations: true
+csl: style/citestyle-web.csl
+
+filters:
+  - image_center.lua
+
+# method is plain, webtex, gladtex, mathml, mathjax, katex
+# you may specify a url with webtex, mathjax, katex
+html-math-method:
+  method: mathjax
+  url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
+  # none, references, or javascript
+
+email-obfuscation: javascript
+

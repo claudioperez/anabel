@@ -6,7 +6,7 @@ title: Modal Analysis - 1r
 
 
 ```python
-import ema as em
+import emme as em
 import matplotlib.pyplot as plt
 import numpy as np
 %config InlineBackend.figure_format = 'svg'
@@ -223,7 +223,7 @@ phi_n[:,0].T @ M.f @ phi_n[:,0]
     [ 0.40824829 -0.70710678  0.81649658]
     
 
-    C:\Users\claud\Anaconda3\lib\site-packages\IPython\core\formatters.py:371: FormatterWarning: text/html formatter returned invalid type <class 'ema.utilities.Structural_Vector'> (expected <class 'str'>) for object: Structural_Vector(1.)
+    C:\Users\claud\Anaconda3\lib\site-packages\IPython\core\formatters.py:371: FormatterWarning: text/html formatter returned invalid type <class 'emme.utilities.Structural_Vector'> (expected <class 'str'>) for object: Structural_Vector(1.)
       FormatterWarning
     
 

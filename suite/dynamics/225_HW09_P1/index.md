@@ -5,7 +5,7 @@ title: Modal Analysis - Beam
 # Modal Analysis - Beam
 
 ```python
-import ema as em
+import emme as em
 import matplotlib.pyplot as plt
 import numpy as np
 %config InlineBackend.figure_format = 'svg'

@@ -4,7 +4,7 @@
 
 
 ```python
-import ema as em
+import emme as em
 import numpy as np
 # import sympy as sp
 import matplotlib.pyplot as plt
