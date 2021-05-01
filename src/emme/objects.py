@@ -11,6 +11,7 @@ import copy
 import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
 
+from anon import diff
 from anon.dual import get_unspecified_parameters
 from emme.elements import *
 try:
@@ -53,8 +54,6 @@ class Assembler:
         self.dnodes: dict = {}
 
 
-
-
 class Model(Assembler):
     def __init__(self, ndm:int, ndf:int):
         """Basic structural model class
@@ -67,10 +66,9 @@ class Model(Assembler):
             number of degrees of freedom (dofs) at each node
 
         """
-        #super().__init__(ndm, ndf)
         self.ndf: int = ndf
         self.ndm: int = ndm
-        self.DOF: list = None
+        #self.DOF: list = None
         self.dtype='float32'
 
         # Define DOF list indexing 
@@ -90,12 +88,22 @@ class Model(Assembler):
         elif ndm == 3 and ndf ==6:
             self.prob_type = '3d-frame'
             self.ddof: dict = { 'x': 0, 'y': 1, 'z':2, 'rx':3, 'ry':4, 'rz':5}
+        
+
+        self.clean()
+    
+    def clean(self,keep=None):
+        if keep is None:
+            keep = []
+
+        self.DOF = None
 
         # model inventory lists
         self.elems: list = []
         self.nodes: list = []
-        self.params: dict = {}
-        """2021-03-31"""
+        if "params" not in keep:
+            self.params: dict = {}
+            """2021-03-31"""
 
         self.rxns:  list = []
         self.hinges: list = []
@@ -113,10 +121,10 @@ class Model(Assembler):
         self.materials: dict = {}
         self.xsecs: dict = {}
         self.dredundants: dict = {}
-
         # Initialize default material/section properties
         self.material('default', 1.0)
         self.xsection('default', 1.0, 1.0)
+
 
 
     def compose(self,resp="d",jit=True,**kwds):
@@ -188,11 +196,76 @@ class Model(Assembler):
         # Evaluate once with zeros to JIT-compile
         return main
         #return collect_params
+    
+    def compose_force(self,jit=True,**kwds):
+        f = self.assemble_force(jit=jit,**kwds,_expose_closure=True)
+        f_jacx = diff.jacx(f)
+        cnl = ',\n'
+        u0 = anp.zeros((self.nf,1))
+        model_map = f.closure["model_map"]
+        param_map = f.closure["param_map"]
+        params = self.params
+        local_scope = locals()
+        #-------------------
+        def _unpack(el):
+            params = get_unspecified_parameters(el,recurse=True)
+            ls = ",".join(
+                f"'{p.name}': {p.default.name}"
+                    for p in params.values()
+                        if isinstance(p,inspect.Parameter) and p.default
+                )
+            if "params" in params and params["params"]:
+                subparams = "'params': {" + ",".join(
+                        f"'{k}': {v.default.name}" for k,v in params["params"].items() if v.default
+                ) + "}"
+                if ls:
+                    return  ",".join((ls, subparams))
+                else:
+                    return subparams
+
+            else:
+                return ls
+        exec(
+            f"def collect_params({','.join(p for p in self.params )}):\n"
+             "  return {'params': {\n"
+            f"""    {cnl.join(f'"{tag}": {{ {_unpack(el)} }}' for tag,el in model_map.items()) }\n"""
+             "  }}",
+             local_scope
+        )
+        collect_params = local_scope["collect_params"]
+
+        #-------------------
+        #exec(
+        #    f"def collect_loads({','.join(p for p in parameterized_loads.values() if isinstance(p,str) )}):\n"
+        #     "  return anp.array([\n"
+        #    f"""    {','.join("["+p.name+"]" if isinstance(p,inspect.Parameter) else f'[{p}]' for node in self.nodes for dof,fixity,p in zip(node.dofs,node.rxns,node.p.values()) if not fixity ) }\n"""
+        #     "  ])",
+        # dict(anp=anp),local_scope,
+        #)
+        #collect_loads = local_scope["collect_loads"]
+
+        #-------------------
+        exec(
+            f"def force({','.join(p for p in self.params)}): \n"
+          f"""   params = collect_params({','.join(p for p in self.params)})\n"""
+            f"   return f(f.origin[0], f.origin[1], f.origin[2], None, params['params'])[1]\n"
+
+            f"def jacx({','.join(p for p in self.params)}): \n"
+          f"""   params = collect_params({','.join(p for p in self.params)})\n"""
+            f"   return f_jacx(f.origin[0], f.origin[1], f.origin[2], None, params['params'])",
+            local_scope
+        )
+        main = local_scope["force"]
+        main.jacx = local_scope["jacx"]
+        main.collect_params = collect_params
+        main.origin = tuple(anp.zeros(p.shape) if hasattr(p,"shape") else 0.0 for p in self.params)
+        return main
+    
 
     @anon.dual.generator(dim="shape")
     def compose_displ(self, solver=None, solver_opts={}, elem=None, jit_force=True, **kwds):
         """
-        Dynamically creates functions `collect_loads` and `collect_coord`.
+        dynamically creates functions `collect_loads` and `collect_coord`.
         """
         if solver is None:
             import elle.numeric
@@ -207,14 +280,13 @@ class Model(Assembler):
         state = {...:f.origin[2]}
         #state = f.origin[2]
         nf = self.nf
-        #shape = self.nf
-        #shape = (self.nf,self.nf)
         shape = ((nf,1),(nf,1))
         u0 = anp.zeros((self.nf,1))
 
         #local_scope = locals()
 
-        jacx = anon.diff.jacx(f)
+        jacx = diff.jacx(f)
+        #jacx = f.jacx
         model_map = f.closure["model_map"]
         param_map = f.closure["param_map"]
         main = solver(f,jacx=jacx,**solver_opts)
@@ -268,7 +340,6 @@ class Model(Assembler):
 
         params = self.params
 
-
         DOF = {node_tag: dofs for node_tag, dofs in zip(self.dnodes.keys(),self.DOF)}
 
         el_DOF  = { elem.tag: elem.dofs for elem in self.delems.values() }
@@ -285,7 +356,6 @@ class Model(Assembler):
         _p0 = anp.zeros((nf,1))
         xyz = eval(f"""{{ { ','.join(f'"{tag}": [{",".join(str(x) for x in node.xyz)}]' for tag, node in self.dnodes.items() )} }}""")
         def force(u,p=_p0,state=state, xyz=None, params=param_arg):
-            #print(params)
             U = anp.concatenate([u,anp.zeros((nr,1))],axis=0)
             coords = collect_coords(xyz)
             responses = [
@@ -306,7 +376,7 @@ class Model(Assembler):
             }
             return u, (Be @ F), state
 
-        eljac_map = {tag: anon.diff.jacx(el) for tag,el in model_map.items()}
+        eljac_map = {tag: diff.jacx(el) for tag,el in model_map.items()}
         DOF_el_jac = {
             dof_i : {
                 dof_j: [
@@ -319,6 +389,7 @@ class Model(Assembler):
             }
             for dof_i in range(1,nf+1)
         }
+
         def jacx(u,p,state,xyz=None,params=param_arg):
             coords = collect_coords(xyz)
             U = anp.concatenate([u,anp.zeros((nr,1))],axis=0)
@@ -330,7 +401,7 @@ class Model(Assembler):
                     state = state[...][tag],
                     **params[tag]
                 ).squeeze()
-                for tag,jac in eljac_map.items()
+              for tag,jac in eljac_map.items()
             }
             jac = anp.array([
                 [
@@ -341,8 +412,6 @@ class Model(Assembler):
             ])
             return jac
         return locals()
-
-    compose_force = assemble_force
 
 
     @property
@@ -1012,9 +1081,12 @@ class rModel(Model):
 
         return DOFs
          
-    
+    def _dof_num_2(self):
+        
+        pass
+
     def numDOF(self):
-        crxns = self.ndf*len(self.nodes) - len(self.rxns)+1
+        crxns = self.ndf*self.nn - len(self.rxns)+1
         df = 1
         temp = []
         for node in self.nodes:
@@ -1193,7 +1265,7 @@ class Node():
         """Nodal DOF array"""
         # if self.model.DOF == None: self.model.numDOF()
         idx = self.model.nodes.index(self)
-        return np.array(self.model.DOF[idx],dtype=int)
+        return np.asarray(self.model.DOF[idx],dtype=int)
 
 
 class Rxn():
