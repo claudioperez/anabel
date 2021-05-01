@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    <link rel="canonical" href="https://claudioperez.github.io/anabel/gallery/dynamics/225_HW11_P2/">
+    <link rel="shortcut icon" href="../../../img/favicon.ico">
+    <title>Problem 2 - anabel</title>
+    <!-- <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> -->
+    <link href="../../../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    
+    <link href="../../../_static/css/extra.css" rel="stylesheet">
+    
+
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+
+
+  </head>
+  <body class="Site" >
+    <div class="navbar fixed-top mb-4 navbar-expand-lg navbar-light bg-light">
+      <div class="container">
+        <a class="navbar-brand" href="../../.."><code style="font-weight: normal;">anabel</code></a>
+        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div id="navbar-collapse" class="navbar-collapse collapse">
+          <!-- Main navigation -->
+          <ul class="nav navbar-nav ml-auto">
+            <li class="navitem">
+                <a href="../../../api/" class="nav-link">API</a>
+            </li>
+            <li class="navitem">
+                <a href="../../" class="nav-link">Gallery</a>
+            </li>
+          </ul>
+                    <!-- <ul class="nav navbar-nav ml-auto"> -->
+            <li class="nav-item">
+                <a href="#" class="nav-link" data-toggle="modal" data-target="#elstir_search_modal">
+                    <i class="fa fa-search"></i> Search
+                </a>
+            </li>
+                    
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <main class="Site-content">
+        <!-- <div id="particles-js" style="background-size: cover; background-repeat: no-repeat; background-position: 50% 50%;"></div> -->
+        <div class="row"> <!-- style="z-index: 9999;"-->
+  
+          <div class="col-md-3"><div class="navbar-light navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card ">
+        <ul class="nav flex-column">
+        
+            
+            <li class="nav-item " data-level="1">
+              <a href="/anabel/gallery/dynamics/" class="">Dynamics</a>
+              <!-- <a href="/anabel/gallery/dynamics/" class="nav-link ">Dynamics</a> -->
+              
+              <ul class="nav flex-column">
+              <div class="dropdown-divider"></div>
+                    
+            <li class="nav-item " data-level="2">
+              <a href="/anabel/gallery/dynamics/225_HW09_P1/" class="">Modal Analysis - Beam</a>
+              <!-- <a href="/anabel/gallery/dynamics/225_HW09_P1/" class="nav-link ">Modal Analysis - Beam</a> -->
+              
+              <ul class="nav flex-column">
+              
+              </ul>
+              
+            </li>
+                    
+                    
+            <li class="nav-item active" data-level="2">
+              <a href="/anabel/gallery/dynamics/225_HW11_P2/" class="active">Problem 2</a>
+              <!-- <a href="/anabel/gallery/dynamics/225_HW11_P2/" class="nav-link active">Problem 2</a> -->
+              
+              <ul class="nav flex-column">
+              
+              </ul>
+              
+            </li>
+                    
+                    
+            <li class="nav-item " data-level="2">
+              <a href="/anabel/gallery/dynamics/225_HW09_P2v2/" class="">Modal Analysis - 1r</a>
+              <!-- <a href="/anabel/gallery/dynamics/225_HW09_P2v2/" class="nav-link ">Modal Analysis - 1r</a> -->
+              
+              <ul class="nav flex-column">
+              
+              </ul>
+              
+            </li>
+                    
+                    
+            <li class="nav-item " data-level="2">
+              <a href="/anabel/gallery/dynamics/225_HW11_P3-2/" class="">Time History Analysis - MDF Frame</a>
+              <!-- <a href="/anabel/gallery/dynamics/225_HW11_P3-2/" class="nav-link ">Time History Analysis - MDF Frame</a> -->
+              
+              <ul class="nav flex-column">
+              
+              </ul>
+              
+            </li>
+                    
+              </ul>
+              
+            </li>
+        
+        </ul>
+    </div>
+</div></div>
+  
+  
+          <article class="col-md-9 p-3">
+          
+
+<h1 id="problem-2">Problem 2</h1>
+<p>(see Ex 9.6)</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ema <span class="im">as</span> em</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>config InlineBackend.figure_format <span class="op">=</span> <span class="st">&#39;svg&#39;</span> <span class="co"># used to make plots look nicer</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ema_examples.dynamics <span class="im">import</span> E09_06</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ema.utilities.ipyutils <span class="im">import</span> disp_sbs </span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.linalg <span class="im">import</span> eig</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>L <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>mass <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>EI <span class="op">=</span> <span class="dv">1</span><span class="op">/</span><span class="dv">12</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>mdl <span class="op">=</span> E09_06(L<span class="op">=</span>L, m <span class="op">=</span> mass, EI <span class="op">=</span> EI)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>em.plot_structure(mdl, ax)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>mdl.DOF</span></code></pre></div>
+<pre><code>[[7, 8, 9], [1, 2, 3], [4, 5, 6]]</code></pre>
+<figure>
+<img src="img/output_2_1.svg" style="margin:auto; display: block; max-width: 75%" alt="svg" /><figcaption aria-hidden="true">svg</figcaption>
+</figure>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>m, K <span class="op">=</span> em.Mass_matrix(mdl), em.K_matrix(mdl)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>m[<span class="dv">0</span>,<span class="dv">0</span>] <span class="op">=</span> <span class="fl">3.</span><span class="op">*</span>mass</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>m[<span class="dv">1</span>,<span class="dv">1</span>] <span class="op">=</span> <span class="fl">1.</span><span class="op">*</span>mass</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>m[<span class="dv">2</span>:,<span class="dv">2</span>:] <span class="op">=</span> <span class="dv">0</span><span class="op">*</span>mass</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>disp_sbs(m.f.df, K.f.df)</span></code></pre></div>
+<table style = "display:inline" border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>$u_{{1}}$</th>
+      <th>$u_{{2}}$</th>
+      <th>$u_{{3}}$</th>
+      <th>$u_{{4}}$</th>
+      <th>$u_{{5}}$</th>
+      <th>$u_{{6}}$</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>$u_{{1}}$</th>
+      <td>3.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>$u_{{2}}$</th>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>$u_{{3}}$</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>$u_{{4}}$</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>$u_{{5}}$</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>$u_{{6}}$</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table style = "display:inline">
+<table style = "display:inline" border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>$1$</th>
+      <th>$2$</th>
+      <th>$3$</th>
+      <th>$4$</th>
+      <th>$5$</th>
+      <th>$6$</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>$P_{1}$</th>
+      <td>8334.333333</td>
+      <td>0.000000</td>
+      <td>0.500000</td>
+      <td>-8333.333333</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>$P_{2}$</th>
+      <td>0.000000</td>
+      <td>8334.333333</td>
+      <td>0.500000</td>
+      <td>0.000000</td>
+      <td>-1.0</td>
+      <td>0.500000</td>
+    </tr>
+    <tr>
+      <th>$P_{3}$</th>
+      <td>0.500000</td>
+      <td>0.500000</td>
+      <td>0.666667</td>
+      <td>0.000000</td>
+      <td>-0.5</td>
+      <td>0.166667</td>
+    </tr>
+    <tr>
+      <th>$P_{4}$</th>
+      <td>-8333.333333</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>8333.333333</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>$P_{5}$</th>
+      <td>0.000000</td>
+      <td>-1.000000</td>
+      <td>-0.500000</td>
+      <td>0.000000</td>
+      <td>1.0</td>
+      <td>-0.500000</td>
+    </tr>
+    <tr>
+      <th>$P_{6}$</th>
+      <td>0.000000</td>
+      <td>0.500000</td>
+      <td>0.166667</td>
+      <td>0.000000</td>
+      <td>-0.5</td>
+      <td>0.333333</td>
+    </tr>
+  </tbody>
+</table style = "display:inline">
+<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># k, m = em.analysis.StaticCondensation(k.f, m.f, idxs=[3,4])</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>k <span class="op">=</span> em.analysis.kStaticCondensation(K.f, idxs<span class="op">=</span>[<span class="dv">3</span>,<span class="dv">4</span>])</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># disp_sbs(k.df)</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>k</span></code></pre></div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>$4$</th>
+      <th>$5$</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>$4$</th>
+      <td>0.571384</td>
+      <td>0.214267</td>
+    </tr>
+    <tr>
+      <th>$5$</th>
+      <td>0.214267</td>
+      <td>0.142849</td>
+    </tr>
+  </tbody>
+</table>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> m[<span class="dv">0</span>:<span class="dv">2</span>,<span class="dv">0</span>:<span class="dv">2</span>]</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>freq2, Phi <span class="op">=</span> eig(m, k)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>Phi<span class="op">/</span><span class="fl">0.57293852</span></span></code></pre></div>
+<pre><code>array([[-1.        , -0.75123369],
+       [-1.4305171 ,  1.57544505]])</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>M <span class="op">=</span> Phi.T<span class="op">@</span>m<span class="op">@</span>Phi</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>K <span class="op">=</span> Phi.T<span class="op">@</span>k<span class="op">@</span>Phi</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>M</span></code></pre></div>
+<pre><code>Structural_Vector([[ 1.65651710e+00, -1.11022302e-16],
+                   [ 0.00000000e+00,  1.37050677e+00]])</code></pre>
+<h2 id="a-modal-expansion-of-earthquake-forces">a) Modal expansion of earthquake forces</h2>
+<p><span class="math display">\[\mathrm{p}_{\mathrm{eff}}(t)=-\mathrm{m} \iota \ddot{u}_{g}(t)\]</span></p>
+<p><span class="math display">\[\mathbf{m} \iota=\sum_{n=1}^{N} \mathbf{s}_{n}=\sum_{n=1}^{N} \Gamma_{n} \mathbf{m} \phi_{n}\]</span></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>I <span class="op">=</span> N <span class="op">=</span> <span class="dv">2</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>iota <span class="op">=</span> np.array([<span class="dv">0</span>, <span class="dv">1</span>])</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>Ln <span class="op">=</span> np.array([<span class="bu">sum</span>(Phi.T[n,i]<span class="op">*</span><span class="bu">sum</span>(m[i,j]<span class="op">*</span>iota[j] <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(I)) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(I)) <span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(N)])</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>Ln <span class="op">=</span> Phi.T<span class="op">@</span>m<span class="op">@</span>iota</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>Ln</span></code></pre></div>
+<pre><code>Structural_Vector([-0.81959835,  0.90263316])</code></pre>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>gamma <span class="op">=</span> np.array([Ln[n]<span class="op">/</span>M[n,n] <span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(N)])</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>gamma</span></code></pre></div>
+<pre><code>array([-0.49477204,  0.65861269])</code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>sn <span class="op">=</span> [gamma[n]<span class="op">*</span>(m<span class="op">@</span>Phi[:,n]) <span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(N)]</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>sn</span></code></pre></div>
+<pre><code>[Structural_Vector([0.85042189, 0.40551435]),
+ Structural_Vector([-0.85042189,  0.59448565])]</code></pre>
+
+    
+          </article>
+  
+        </div>
+      </main>
+    </div>
+    <footer class="footer mb-3 mt-2">
+    <hr class="mt-0 mb-2">
+    
+        <section class="ft-legal container">
+          <div class="row">
+            <div class="col-md-3 mr-auto">
+              <p class="my-0 font-size-base">&copy 2021 <a href="http://claudioperez.xyz/">Claudio Perez</a></p>
+            </div>
+            <div class="col-md-3 ml-auto">
+              <a href="https://github.com/claudioperez" target="_blank" rel="noopener" title="github.com" class="md-footer-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path></svg>
+              </a>
+              <a href="https://linkedin.com/in/claudiomperez/" target="_blank" rel="noopener" title="linkedin.com" class="md-footer-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"></path></svg>
+              </a>
+              <a href="/Perez_Claudio_Resume.pdf" class="md-footer-icon">
+                <img src="/img/cv.svg" class="md-footer-icon">
+              </a>
+            </div>
+          </div>
+        </section>
+    </footer>
+    <script>
+        var base_url = "../../..",
+            shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+    </script>
+    <script src="../../../js/base.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" defer></script>
+    <script src="../../../search/main.js" defer></script>
+    
+  </body>
+</html>
