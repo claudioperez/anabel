@@ -8,7 +8,7 @@ Object oriented framework for matrix structural analysis in Python.
 [![PyPI Version][pypi-v-image]][pypi-v-link]
 [![Commits since latest release][gh-image]][gh-link]
 [![Code Style: Black][black-shield]]()
-[![Documentation](https://img.shields.io/badge/documentation-blue)](https://claudioperez.xyz/pkgs/anabel/)
+[![Documentation](https://img.shields.io/badge/documentation-blue)](https://claudioperez.github.io/anabel/)
 
 
 ## Installation

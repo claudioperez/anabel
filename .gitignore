@@ -2,6 +2,7 @@
 # Documentation
 docs/api/
 doc/
+out/
 ci/
 src/emme/data
 src/emme/seismic

@@ -1,19 +1,19 @@
 __version__ = "0.0.0"
 
 
-import emme.aisc
-import emme.analysis
+import anabel.aisc
+import anabel.analysis
 
-from emme.objects import *
-from emme.matrices import *
+from anabel.assemblers import *
+from anabel.matrices import *
 
-from emme.graphics import *
-from emme.solvers import *
+from anabel.graphics import *
+from anabel.solvers import *
 
-import emme.utilities
-import emme.matlib
+import anabel.utilities
+import anabel.matlib
 
-__all__ = emme.objects.__all__ + ["elements", "objects"]
+__all__ = anabel.objects.__all__ + ["elements", "objects"]
 
 settings = {
     "DATAFRAME_LATEX": True,
