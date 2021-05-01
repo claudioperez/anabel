@@ -8,7 +8,7 @@ full_width: true
 <header>
 <div class="hero position-relative overflow-hidden p-3 text-center text-dark">
     <div class="col-md-5 p-lg-1 mx-auto my-5">
-        <p><img src="img/emtec-4.png" alt="" width=100></img><h2 class="featurette-heading">anabel</h2></p>
+        <p><img src="img/emtec-4.png" alt="" width=100><h2 class="featurette-heading"></img>anabel</h2></p>
         <p class="lead ">
     anabel is a modular framework for teaching and research on the simulation of nonlinear structural response under static and dynamic loads, with a reference implementation in <a href="https://www.mathworks.com/products/matlab.html">Matlab©</a>.
     </p>
