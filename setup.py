@@ -40,8 +40,8 @@ extras_require["backends"] = sorted(
 
 
 setup(
-    name="emme",
-    version=get_version("./src/emme"),
+    name="anabel",
+    version=get_version("./src/anabel"),
     description="Object oriented finite element analysis.",
     long_description="%s\n%s"
     % (
@@ -53,7 +53,7 @@ setup(
     long_description_content_type="text/markdown",
     author="Claudio M. Perez",
     author_email="claudio_perez@berkeley.edu",
-    url="https://github.com/claudioperez/emme",
+    url="https://github.com/claudioperez/anabel",
     packages=find_packages("src"),
     package_dir={"": "src"},
     py_modules=[splitext(basename(path))[0] for path in glob("src/*.py")],
@@ -72,8 +72,8 @@ setup(
         "Programming Language :: Python :: 3.8",
     ],
     project_urls={
-        "Changelog": "https://github.com/claudioperez/emme/blob/master/CHANGELOG.md",
-        "Issue Tracker": "https://github.com/claudioperez/emme/issues",
+        "Changelog": "https://github.com/claudioperez/anabel/blob/master/CHANGELOG.md",
+        "Issue Tracker": "https://github.com/claudioperez/anabel/issues",
     },
     keywords=[],
     python_requires=">=3.6",

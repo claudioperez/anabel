@@ -4,6 +4,11 @@ from emme.elements import Truss
 import emme.matrices as mv
 from emme.matrices import U_vector
 
+__all__ = [
+    "plot_displ",
+    "plot_skeletal",
+    "plot_moments"
+]
 
 node_style = [
     {"color": "black", "marker": "s", "markersize": 3, "zorder": 2},
@@ -72,7 +77,7 @@ def plot_moments(
     if color is None:
         color = "red"
     line_objects = []
-    plot_structure(state, ax)
+    plot_skeletal(state, ax)
     ax.spines["right"].set_color("none")
     ax.spines["top"].set_color("none")
     ax.set_aspect("equal")
@@ -167,7 +172,7 @@ def plot_U(
     U = U_vector(model, vector=U_vect)
     # print(U)
     if plot_struct:
-        plot_structure(model, ax)
+        plot_skeletal(model, ax)
     for node in model.nodes:
         delta = [0.0, 0.0]
         for i, dof in enumerate(node.dofs[0:2]):
@@ -264,7 +269,7 @@ def plot_modes(model, shapes, ax, scale=None, color=None, label=None):
     U = mv.Displacement_vector(A, shapes)
     X = []
     Y = []
-    # plot_structure(model, ax)
+    # plot_skeletal(model, ax)
     for node in model.nodes:
         delta = [0.0, 0.0]
         for i, dof in enumerate(node.dofs[0:2]):
@@ -334,7 +339,7 @@ def plot_modes(model, shapes, ax, scale=None, color=None, label=None):
             plt.plot(x, y, zorder=1, color=color)
 
 
-def plot_structure(Model, ax=None, label=False):
+def plot_skeletal(Model, ax=None, label=False):
     if ax is None:
         _, ax = plt.subplots()
     n = 3
@@ -461,8 +466,9 @@ def plot_beam(Model, ax=None, label=False):
             if label:
                 ax.annotate(tag, xy=(node.x, y_off), zorder=3, color="blue")
 
+plot_structure = plot_skeletal
 
-def plot_structure3d(Model, ax):
+def plot_skeletal3d(Model, ax):
     n = 3
 
     ax.spines["right"].set_color("none")
