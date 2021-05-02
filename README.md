@@ -49,8 +49,8 @@ $ elstir build
 
 
 ### Documentation
-- `elstir.yml`
-- `style/` Directory holding style/template/theme files for documentation.
+- [`elstir.yml`]
+- [`style/`] Directory holding style/template/theme files for documentation.
 - `docs/api/` Automatically generated API documentation files.
 
 ### Source
@@ -65,6 +65,8 @@ $ elstir build
 
 
 
+[`elstir.yml`]: ./elstir.yml
+[`style/`]: ./style/
 [`setup.py`]: ./setup.py
 [`.appveyor.yml`]: ./.appveyor.yml
 
