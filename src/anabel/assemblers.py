@@ -12,7 +12,8 @@ import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
 
 from anon import diff
-from anon.dual import get_unspecified_parameters
+
+from anabel.templates import get_unspecified_parameters, template
 from emme.elements import *
 try:
     import anon.atom as anp
@@ -262,7 +263,7 @@ class Model(Assembler):
         return main
     
 
-    @anon.dual.generator(dim="shape")
+    @template(dim="shape")
     def compose_displ(self, solver=None, solver_opts={}, elem=None, jit_force=True, **kwds):
         """
         dynamically creates functions `collect_loads` and `collect_coord`.
@@ -295,7 +296,7 @@ class Model(Assembler):
 
         return locals()
 
-    @anon.dual.generator(dim="shape",main="force")
+    @template(dim="shape",main="force")
     def assemble_force(self, elem=None,**kwds)->Callable:
         """A simple force composer for skeletal truss structures."""
         ndf = self.ndf

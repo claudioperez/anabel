@@ -24,13 +24,13 @@ import anon.diff
 import anon.atom as anp
 # import anabel.ops as anp
 # import elle.iterate
-from .core import interface
+from anon.core import interface
 
 class Dual:
     pass
 
 
-def generator(
+def template(
     dim:      Union[int,Tuple[Tuple[int,int]]]=None,
     statevar: str   = "state",
     main:     str   = "main",
@@ -312,4 +312,6 @@ def get_unspecified_parameters(func,recurse=False):
             }
         })
     return params
+
+generator = template
 

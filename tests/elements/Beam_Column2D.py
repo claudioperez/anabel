@@ -1,4 +1,4 @@
-import ema as em
+import anabel as em
 
 E = 1000
 At = 30
@@ -18,7 +18,8 @@ mdl.node('2',  8.0, 0.0)
 mdl.node('3',  8.0, 6.0)
 mdl.node('4', 16.0, 6.0)
 
-mdl.beam_column2D('a', n['1'], n['2'])
+#mdl.beam_column2D('a', n['1'], n['2'])
+mdl.beam('a', n['1'], n['2'])
 mdl.beam('b', n['2'], n['3'])
 mdl.beam('c', n['3'], n['4'])
 mdl.truss('d', n['2'], n['4'], xsec=truss_section)
@@ -33,9 +34,11 @@ mdl.DOF = [[5, 6, 7], [5, 1, 2], [3, 1, 4], [3, 8, 9]]
 
 e['c'].w['y'] = -5
 Uf = em.analysis.SolveDispl(mdl)
-Uf
+#Uf = mdl.compose()()
 
 true_Uf = [-0.00855762, -0.00064547, -0.00104513,  0.00037486]
 
 for true, test in zip(true_Uf, Uf):
     assert abs(true-test) < 1e-8
+
+

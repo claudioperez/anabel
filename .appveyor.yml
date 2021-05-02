@@ -8,6 +8,7 @@ image: Ubuntu
 
   #init:
   #  - export PATH="$HOME/venv$PYTHON_VERSION/bin:$PATH"
+  #
     #- python -m pip install --upgrade pip
 
 install:
