@@ -1,7 +1,7 @@
 
 <h1><img src="docs/img/emtec-4.png" alt="" width=100></img>anabel</h1>
 
-Object oriented framework for matrix structural analysis in Python.
+An end to end differentiable finite element framework.
 
 -------------------------------------
 
