@@ -77,8 +77,8 @@ $ elstir build
 [pypi-v-image]: https://img.shields.io/pypi/v/anabel.svg
 [pypi-v-link]: https://pypi.org/project/anabel/
 
-[gh-link]: https://github.com/claudioperez/anabel/compare/0.0.0...master
-[gh-image]: https://img.shields.io/github/commits-since/claudioperez/anabel/0.0.0?style=social
+[gh-link]: https://github.com/claudioperez/anabel/compare/0.0.1...master
+[gh-image]: https://img.shields.io/github/commits-since/claudioperez/anabel/0.0.1?style=social
 
 [build-img]: https://ci.appveyor.com/api/projects/status/github/claudioperez/anabel?branch=master&svg=true
 
