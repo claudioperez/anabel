@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    
+    <link rel="canonical" href="https://claudioperez.github.io/anabel/api/latest/sections/">
+    <link rel="shortcut icon" href="../../../img/favicon.ico">
+    <title>anabel.sections - anabel</title>
+
+    <!-- <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> -->
+    <link href="../../../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../../../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../../../css/base.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/github.min.css">
+    
+    <link href="../../../_static/css/extra.css" rel="stylesheet">
+    
+
+<!-- <style>:root{--highlight-color:#fe9}.flex{display:flex !important}body{line-height:1.5em}#content{padding:20px}#sidebar{padding:30px;overflow:hidden}#sidebar > *:last-child{margin-bottom:2cm}.http-server-breadcrumbs{font-size:130%;margin:0 0 15px 0}#footer{font-size:.75em;padding:5px 30px;border-top:1px solid #ddd;text-align:right}#footer p{margin:0 0 0 1em;display:inline-block}#footer p:last-child{margin-right:30px}h1,h2,h3,h4,h5{font-weight:300}h1{font-size:2.5em;line-height:1.1em}h2{font-size:1.75em;margin:1em 0 .50em 0}h3{font-size:1.4em;margin:25px 0 10px 0}h4{margin:0;font-size:105%}h1:target,h2:target,h3:target,h4:target,h5:target,h6:target{background:var(--highlight-color);padding:.2em 0}a{color:#058;text-decoration:none;transition:color .3s ease-in-out}/*a:hover{color:#e82}*/.title code{font-weight:bold}h2[id^="header-"]{margin-top:2em}.ident{color:#900}pre code{background:#f8f8f8;font-size:.8em;line-height:1.4em}code{background:#f2f2f1;padding:1px 4px;overflow-wrap:break-word}h1 code{background:transparent}pre{background:#f8f8f8;border:0;border-top:1px solid #ccc;border-bottom:1px solid #ccc;margin:1em 0;padding:1ex}#http-server-module-list{display:flex;flex-flow:column}#http-server-module-list div{display:flex}#http-server-module-list dt{min-width:10%}#http-server-module-list p{margin-top:0}.toc ul,#index{list-style-type:none;margin:0;padding:0}#index code{background:transparent}#index h3{border-bottom:1px solid #ddd}#index ul{padding:0}#index h4{margin-top:.6em;font-weight:bold}@media (min-width:200ex){#index .two-column{column-count:2}}@media (min-width:300ex){#index .two-column{column-count:3}}dl{margin-bottom:2em}dl dl:last-child{margin-bottom:4em}dd{margin:0 0 1em 3em}#header-classes + dl > dd{margin-bottom:3em}dd dd{margin-left:2em}dd p{margin:10px 0}.name{background:#eee;font-weight:bold;font-size:.85em;padding:5px 10px;display:inline-block;min-width:40%}.name:hover{background:#e0e0e0}dt:target .name{background:var(--highlight-color)}.name > span:first-child{white-space:nowrap}.name.class > span:nth-child(2){margin-left:.4em}.inherited{color:#999;border-left:5px solid #eee;padding-left:1em}.inheritance em{font-style:normal;font-weight:bold}.desc h2{font-weight:400;font-size:1.25em}.desc h3{font-size:1em}.desc dt code{background:inherit}.source summary,.git-link-div{color:#666;text-align:right;font-weight:400;font-size:.8em;text-transform:uppercase}.source summary > *{white-space:nowrap;cursor:pointer}.git-link{color:inherit;margin-left:1em}.source pre{max-height:500px;overflow:auto;margin:0}.source pre code{font-size:12px;overflow:visible}.hlist{list-style:none}.hlist li{display:inline}.hlist li:after{content:',\2002'}.hlist li:last-child:after{content:none}.hlist .hlist{display:inline;padding-left:1em}img{max-width:100%}td{padding:0 .5em}.admonition{padding:.1em .5em;margin-bottom:1em}.admonition-title{font-weight:bold}.admonition.note,.admonition.info,.admonition.important{background:#aef}.admonition.todo,.admonition.versionadded,.admonition.tip,.admonition.hint{background:#dfd}.admonition.warning,.admonition.versionchanged,.admonition.deprecated{background:#fd4}.admonition.error,.admonition.danger,.admonition.caution{background:lightpink}</style> -->
+
+<style>:root {
+    --highlight-color: #fe9
+}
+
+.flex {
+    display: flex !important
+}
+
+body {
+    line-height: 1.5em
+}
+
+#content {
+    padding: 20px
+}
+
+/* #sidebar {
+    padding: 30px;
+    overflow: hidden
+}
+
+#sidebar>*:last-child {
+    margin-bottom: 2cm
+}
+
+.http-server-breadcrumbs {
+    font-size: 130%;
+    margin: 0 0 15px 0
+} */
+
+/* #footer {
+    font-size: .75em;
+    padding: 5px 30px;
+    border-top: 1px solid #ddd;
+    text-align: right
+}
+
+#footer p {
+    margin: 0 0 0 1em;
+    display: inline-block
+}
+
+#footer p:last-child {
+    margin-right: 30px
+} */
+
+h1, h2, h3, h4, h5 {
+    font-weight: 300
+}
+
+h1 {
+    font-size: 2.5em;
+    line-height: 1.1em
+}
+
+h2 {
+    font-size: 1.75em;
+    margin: 1em 0 .50em 0
+}
+
+h3 {
+    font-size: 1.4em;
+    margin: 25px 0 10px 0
+}
+
+h4 {
+    margin: 0;
+    font-size: 105%
+}
+
+h1:target, h2:target, h3:target, h4:target, h5:target, h6:target {
+    background: var(--highlight-color);
+    padding: .2em 0
+}
+
+/* a {
+    color: #058;
+    text-decoration: none;
+    transition: color .3s ease-in-out
+} */
+
+/*a:hover{color:#e82}*/
+
+.title code {
+    font-weight: bold
+}
+
+h2[id^="header-"] {
+    margin-top: 2em
+}
+
+.ident {
+    /* color: rgba(7, 59, 126, 0.801); */
+    /* color: rgb(87, 87, 87); */
+    color: #900
+}
+
+pre code {
+    background: #f8f8f8;
+    font-size: .8em;
+    line-height: 1.4em
+}
+
+code {
+    background: #f2f2f1;
+    padding: 1px 4px;
+    overflow-wrap: break-word
+}
+
+h1 code {
+    background: transparent
+}
+
+pre {
+    background: #f8f8f8;
+    border: 0;
+    border-top: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    margin: 1em 0;
+    padding: 1ex
+}
+
+#http-server-module-list {
+    display: flex;
+    flex-flow: column
+}
+
+#http-server-module-list div {
+    display: flex
+}
+
+#http-server-module-list dt {
+    min-width: 10%
+}
+
+#http-server-module-list p {
+    margin-top: 0
+}
+
+.toc ul, #index {
+    list-style-type: none;
+    margin: 0;
+    padding: 0
+}
+
+#index code {
+    background: transparent
+}
+
+#index h3 {
+    border-bottom: 1px solid #ddd
+}
+
+#index ul {
+    padding: 0
+}
+
+#index h4 {
+    margin-top: .6em;
+    font-weight: bold
+}
+
+@media (min-width:200ex) {
+    #index .two-column {
+        column-count: 2
+    }
+}
+
+@media (min-width:300ex) {
+    #index .two-column {
+        column-count: 3
+    }
+}
+
+dl {
+    margin-bottom: 2em
+}
+
+dl dl:last-child {
+    margin-bottom: 4em
+}
+
+dd {
+    margin: 0 0 1em 3em
+}
+
+#header-classes+dl>dd {
+    margin-bottom: 3em
+}
+
+dd dd {
+    margin-left: 2em
+}
+
+dd p {
+    margin: 10px 0
+}
+
+.name {
+    background: #eee;
+    font-weight: bold;
+    font-size: .85em;
+    padding: 5px 10px;
+    display: inline-block;
+    min-width: 40%;
+    /* color: black */
+}
+
+/* .name:hover {
+    background: #e0e0e0
+} */
+
+dt:target .name {
+    background: var(--highlight-color)
+}
+
+.name>span:first-child {
+    white-space: nowrap;
+    /* color: rgba(7, 59, 126, 0.801); */
+}
+
+.name.class>span:nth-child(2) {
+    margin-left: .4em
+}
+
+.inherited {
+    color: #999;
+    border-left: 5px solid #eee;
+    padding-left: 1em
+}
+
+.inheritance em {
+    font-style: normal;
+    font-weight: bold
+}
+
+.desc h2 {
+    font-weight: 400;
+    font-size: 1.25em
+}
+
+.desc h3 {
+    font-size: 1em
+}
+
+.desc dt code {
+    background: inherit
+}
+
+.source summary, .git-link-div {
+    color: #666;
+    text-align: right;
+    font-weight: 400;
+    font-size: .8em;
+    text-transform: uppercase
+}
+
+.source summary>* {
+    white-space: nowrap;
+    cursor: pointer
+}
+
+.git-link {
+    color: inherit;
+    margin-left: 1em
+}
+
+.source pre {
+    max-height: 500px;
+    overflow: auto;
+    margin: 0
+}
+
+.source pre code {
+    font-size: 12px;
+    overflow: visible
+}
+
+.hlist {
+    list-style: none
+}
+
+.hlist li {
+    display: inline
+}
+
+.hlist li:after {
+    content: ',\2002'
+}
+
+.hlist li:last-child:after {
+    content: none
+}
+
+.hlist .hlist {
+    display: inline;
+    padding-left: 1em
+}
+
+img {
+    max-width: 100%
+}
+
+td {
+    padding: 0 .5em
+}
+
+.admonition {
+    padding: .1em .5em;
+    margin-bottom: 1em
+}
+
+.admonition-title {
+    font-weight: bold
+}
+
+.admonition.note, .admonition.info, .admonition.important {
+    background: #aef
+}
+
+.admonition.todo, .admonition.versionadded, .admonition.tip, .admonition.hint {
+    background: #dfd
+}
+
+.admonition.warning, .admonition.versionchanged, .admonition.deprecated {
+    background: #fd4
+}
+
+.admonition.error, .admonition.danger, .admonition.caution {
+    background: lightpink
+}</style>
+
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </head>
+  <body class="Site" >
+    <div class="navbar fixed-top mb-4 navbar-expand-lg navbar-light bg-light">
+      <div class="container">
+        <a class="navbar-brand" href="../../.."><code style="font-weight: normal;">anabel</code></a>
+        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar-collapse">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div id="navbar-collapse" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav ml-auto">
+          <!-- Main navigation -->
+            <li class="navitem">
+                <a href="../" class="nav-link">API</a>
+            </li>
+            <li class="navitem">
+                <a href="../../../gallery/" class="nav-link">Gallery</a>
+            </li>
+                    <!-- <ul class="nav navbar-nav ml-auto"> -->
+            <li>
+            
+	    <a href="https://www.github.com/claudioperez/anabel" class="nav-link"><i class="fa fa-github"></i></a>
+	    
+            </li>
+            <li class="nav-item">
+                <a href="#" class="nav-link" data-toggle="modal" data-target="#elstir_search_modal">
+                    <i class="fa fa-search"></i> Search
+                </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <main class="Site-content">
+        <!-- <div id="particles-js" style="background-size: cover; background-repeat: no-repeat; background-position: 50% 50%;"></div> -->
+	<div class="row" style="z-index: 9999;">
+  
+          <div class="col-md-3"><div class="navbar-light navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card ">
+        <ul class="nav flex-column">
+        
+            
+            <li class="nav-item " data-level="1">
+              <a href="/anabel/api/latest/" class="">API</a>
+              <!-- <a href="/anabel/api/latest/" class="nav-link ">API</a> -->
+              
+              <ul class="nav flex-column">
+              <div class="dropdown-divider"></div>
+                    
+            <li class="nav-item " data-level="2">
+              <a href="/anabel/api/latest/matrices/" class="">anabel.matrices</a>
+              <!-- <a href="/anabel/api/latest/matrices/" class="nav-link ">anabel.matrices</a> -->
+              
+              <ul class="nav flex-column">
+              
+              </ul>
+              
+            </li>
+                    
+                    
+            <li class="nav-item " data-level="2">
+              <a href="/anabel/api/latest/template/" class="">anabel.template</a>
+              <!-- <a href="/anabel/api/latest/template/" class="nav-link ">anabel.template</a> -->
+              
+              <ul class="nav flex-column">
+              
+              </ul>
+              
+            </li>
+                    
+                    
+            <li class="nav-item active" data-level="2">
+              <a href="/anabel/api/latest/sections/" class="active">anabel.sections</a>
+              <!-- <a href="/anabel/api/latest/sections/" class="nav-link active">anabel.sections</a> -->
+              
+              <ul class="nav flex-column">
+              
+              </ul>
+              
+            </li>
+                    
+                    
+            <li class="nav-item " data-level="2">
+              <a href="/anabel/api/latest/assemble/" class="">anabel.assemble</a>
+              <!-- <a href="/anabel/api/latest/assemble/" class="nav-link ">anabel.assemble</a> -->
+              
+              <ul class="nav flex-column">
+              
+              </ul>
+              
+            </li>
+                    
+                    
+            <li class="nav-item " data-level="2">
+              <a href="/anabel/api/latest/elements/" class="">anabel.elements</a>
+              <!-- <a href="/anabel/api/latest/elements/" class="nav-link ">anabel.elements</a> -->
+              
+              <ul class="nav flex-column">
+              
+              </ul>
+              
+            </li>
+                    
+                    
+            <li class="nav-item " data-level="2">
+              <a href="/anabel/api/latest/graphics/" class="">anabel.graphics</a>
+              <!-- <a href="/anabel/api/latest/graphics/" class="nav-link ">anabel.graphics</a> -->
+              
+              <ul class="nav flex-column">
+              
+              </ul>
+              
+            </li>
+                    
+              </ul>
+              
+            </li>
+        
+        </ul>
+    </div>
+</div></div>
+  
+  
+          <article class="page col-md-9 p-3">
+          
+
+<main>
+<header>
+<h1 class="title">Module <code>anabel.sections</code></h1>
+</header>
+<section id="section-intro">
+</section>
+<section>
+</section>
+<section>
+</section>
+<section>
+<h2 class="section-title" id="header-functions">Functions</h2>
+<dl>
+<dt id="anabel.sections.Composite_Section"><code class="sourceCode hljs python name flex">
+<span>def <span class="ident">Composite_Section</span></span>(<span>Y, DY, DZ, quad, y_shift=0.0, mat=None)</span>
+</code></dt>
+<dd>
+<div class="desc">
+</div>
+</dd>
+<dt id="anabel.sections.I_Sect"><code class="sourceCode hljs python name flex">
+<span>def <span class="ident">I_Sect</span></span>(<span>b, d, alpha, beta, quad, yref=0.0, MatData=None)</span>
+</code></dt>
+<dd>
+<div class="desc">
+</div>
+</dd>
+<dt id="anabel.sections.TC_Sect"><code class="sourceCode hljs python name flex">
+<span>def <span class="ident">TC_Sect</span></span>(<span>d, bf, tw, quad, yref=0.0, tf=None, ymf=None, MatData=None, **kwds)</span>
+</code></dt>
+<dd>
+<div class="desc">
+</div>
+</dd>
+<dt id="anabel.sections.T_Sect"><code class="sourceCode hljs python name flex">
+<span>def <span class="ident">T_Sect</span></span>(<span>d, quad, b=None, bf=None, tf=None, tw=None, alpha=None, beta=None, yref=0.0, MatData=None)</span>
+</code></dt>
+<dd>
+<div class="desc">
+</div>
+</dd>
+<dt id="anabel.sections.W_Sect"><code class="sourceCode hljs python name flex">
+<span>def <span class="ident">W_Sect</span></span>(<span>b, d, alpha, beta, quadf, quadw, yref=0.0, MatData=None)</span>
+</code></dt>
+<dd>
+<div class="desc">
+</div>
+</dd>
+<dt id="anabel.sections.ei"><code class="sourceCode hljs python name flex">
+<span>def <span class="ident">ei</span></span>(<span>y, epsa, kappa)</span>
+</code></dt>
+<dd>
+<div class="desc">
+</div>
+</dd>
+<dt id="anabel.sections.epsi"><code class="sourceCode hljs python name flex">
+<span>def <span class="ident">epsi</span></span>(<span>y, epsa, kappa)</span>
+</code></dt>
+<dd>
+<div class="desc">
+</div>
+</dd>
+<dt id="anabel.sections.load_aisc"><code class="sourceCode hljs python name flex">
+<span>def <span class="ident">load_aisc</span></span>(<span>SectionName, props='')</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Load cross section properties from AISC database.</p>
+<p>props: A list of AISC properties, or one of the following: - ‘simple’: <code>A</code>, <code>Ix</code>, <code>Zx</code></p>
+</div>
+</dd>
+<dt id="anabel.sections.section2d"><code class="sourceCode hljs python name flex">
+<span>def <span class="ident">section2d</span></span>(<span>yi, dA, nIP, mat, **kwds)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generate a section response function</p>
+<h2 id="studies">Studies</h2>
+</div>
+</dd>
+</dl>
+</section>
+<section>
+<h2 class="section-title" id="header-classes">Classes</h2>
+<dl>
+<dt id="anabel.sections.Rectangle"><code class="flex name class">
+<span>class <span class="ident">Rectangle</span></span>
+<span>(</span><span>b, d, quad=None, yref=0.0, mat=None, **kwds)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Rectangular cross section</p>
+</div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="anabel.sections.Section" href="#anabel.sections.Section">Section</a></li>
+</ul>
+</dd>
+<dt id="anabel.sections.Section"><code class="flex name class">
+<span>class <span class="ident">Section</span></span>
+</code></dt>
+<dd>
+<div class="desc">
+</div>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="anabel.sections.Rectangle" href="#anabel.sections.Rectangle">Rectangle</a></li>
+<li><a title="anabel.sections.Tee" href="#anabel.sections.Tee">Tee</a></li>
+</ul>
+<h3>Methods</h3>
+<dl>
+<dt id="anabel.sections.Section.assemble"><code class="sourceCode hljs python name flex">
+<span>def <span class="ident">assemble</span></span>(<span>self)</span>
+</code></dt>
+<dd>
+<div class="desc">
+</div>
+</dd>
+</dl>
+</dd>
+<dt id="anabel.sections.Tee"><code class="flex name class">
+<span>class <span class="ident">Tee</span></span>
+<span>(</span><span>d=None, quad=None, b=None, bf=None, tf=None, tw=None, alpha=None, beta=None, yref=0.0, mat=None)</span>
+</code></dt>
+<dd>
+<div class="desc">
+</div>
+<h3>Ancestors</h3>
+<ul class="hlist">
+<li><a title="anabel.sections.Section" href="#anabel.sections.Section">Section</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</main>
+
+    
+          </article>
+  
+        </div>
+      </main>
+    </div>
+    <footer class="footer mb-3 mt-2">
+    <hr class="mt-0 mb-2">
+    
+        <section class="ft-legal container">
+          <div class="row">
+            <div class="col-md-3 mr-auto">
+              <p class="my-0 font-size-base">&copy 2021 <a href="http://claudioperez.xyz/">Claudio Perez</a></p>
+            </div>
+            <div class="col-md-3 ml-auto">
+              <a href="https://github.com/claudioperez" target="_blank" rel="noopener" title="github.com" class="md-footer-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path></svg>
+              </a>
+              <a href="https://linkedin.com/in/claudiomperez/" target="_blank" rel="noopener" title="linkedin.com" class="md-footer-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"></path></svg>
+              </a>
+              <!--<a href="/Perez_Claudio_Resume.pdf" class="md-footer-icon">
+                <img src="/img/cv.svg" class="md-footer-icon">
+	      </a> -->
+	      <a href="/site-info" class="md-footer-icon">&#9432;</a>
+            </div>
+          </div>
+        </section>
+    </footer>
+    <script>
+        var base_url = "../../..",
+            shortcuts = {"help": 191, "next": 78, "previous": 80, "search": 83};
+    </script>
+    <script src="../../../js/base.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML" defer></script>
+    <script src="../../../search/main.js" defer></script>
+    
+  </body>
+</html>

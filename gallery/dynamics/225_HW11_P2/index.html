@@ -17,14 +17,11 @@
     
     <link href="../../../_static/css/extra.css" rel="stylesheet">
     
-
     
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
     <script>hljs.initHighlightingOnLoad();</script>
-
-
   </head>
   <body class="Site" >
     <div class="navbar fixed-top mb-4 navbar-expand-lg navbar-light bg-light">
@@ -35,13 +32,16 @@
         </button>
         <div id="navbar-collapse" class="navbar-collapse collapse">
           <ul class="nav navbar-nav ml-auto">
-          <!-- Main navigation -->
-            <li class="navitem">
-                <a href="../../../api/" class="nav-link">API</a>
-            </li>
-            <li class="navitem">
-                <a href="../../" class="nav-link">Gallery</a>
-            </li>
+      <ul class="nav navbar-nav ml-auto">
+          
+          <li class="navitem">
+              <a href="../../../api/latest/" class="nav-link">API</a>
+          </li>
+          
+          <li class="navitem">
+              <a href="../../" class="nav-link">Gallery</a>
+          </li>
+      </ul>
                     <!-- <ul class="nav navbar-nav ml-auto"> -->
             <li>
             
@@ -60,7 +60,7 @@
     <div class="container">
       <main class="Site-content">
         <!-- <div id="particles-js" style="background-size: cover; background-repeat: no-repeat; background-position: 50% 50%;"></div> -->
-        <div class="row"> <!-- style="z-index: 9999;"-->
+	<div class="row" style="z-index: 9999;">
   
           <div class="col-md-3"><div class="navbar-light navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
     <div class="navbar-header">
@@ -132,7 +132,7 @@
 </div></div>
   
   
-          <article class="col-md-9 p-3">
+          <article class="page col-md-9 p-3">
           
 
 <h1 id="problem-2">Problem 2</h1>
@@ -373,9 +373,10 @@
               <a href="https://linkedin.com/in/claudiomperez/" target="_blank" rel="noopener" title="linkedin.com" class="md-footer-icon">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"></path></svg>
               </a>
-              <a href="/Perez_Claudio_Resume.pdf" class="md-footer-icon">
+              <!--<a href="/Perez_Claudio_Resume.pdf" class="md-footer-icon">
                 <img src="/img/cv.svg" class="md-footer-icon">
-              </a>
+	      </a> -->
+	      <a href="/site-info" class="md-footer-icon">&#9432;</a>
             </div>
           </div>
         </section>
