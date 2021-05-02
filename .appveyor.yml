@@ -8,8 +8,12 @@ environment:
 
 image: Ubuntu
 
-install:
-  - python setup.py
+init:
+  - python3 -m pip install pytest
 
-#test_script:
+install:
+  - python setup.py install
+
+test_script:
+  - pytest
 
