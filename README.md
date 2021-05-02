@@ -1,5 +1,9 @@
-# emme
 
+<h1><img src="img/emtec-4.png" alt="" width=100></img>EMA</h1>
+
+Object oriented framework for matrix structural analysis in Python.
+
+-------------------------------------
 
 [![PyPI Version][pypi-v-image]][pypi-v-link]
 [![Commits since latest release][gh-image]][gh-link]
