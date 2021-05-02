@@ -21,6 +21,21 @@ The following additional dependencies are required to build the documentation:
 - [Pandoc](https://pandoc.org/)
 - Elstir (`pip install elstir`)
 
+## Source Organization
+
+
+### Documentation
+- `elstir.yml`
+- `docs/api/` Automatically generated API documentation files.
+
+### Source
+- `setup.py` Installation/setup; used for pip installation.
+- `src/anabel/` Python source code
+
+### Testing & Continuous Integration
+- `.appveyor.yml` configuration file for [Appveyor](https://www.appveyor.com/)
+- `.coveragerc` configuration file for [CodeCov](https://codecov.io/), used to measure testing coverage.
+- `pytest.ini` configuration file for [PyTest](), used to setup testing.
 
 [black-shield]: https://img.shields.io/badge/code%20style-black-000000.svg
 
