@@ -3,14 +3,17 @@ version: '{branch}-{build}'
 
 environment:
   matrix:
-    - PYTHON_VERSION: 3.6
+    - PYTHON_VERSION: 3.6.8
       MINCONDA: C:\Miniconda3
 
 image: Ubuntu
 
+init:
+  - export PATH="$HOME/venv$PYTHON_VERSION/bin:$PATH"
+  - python -m pip install --upgrade pip
 
 install:
-  - pip3 install -U setuptools
+  - pip install -U setuptools
   - python3 setup.py install
 
 test_script:
