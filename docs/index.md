@@ -2,6 +2,7 @@
 is_homepage: true
 hide_toc: true
 full_width: true
+#template: particles.html
 ---
 
 
@@ -30,12 +31,12 @@ full_width: true
         </div><!-- /.col-lg-4 -->
 
         <div class="col-lg-4">
-        <p><a class="btn btn-outline-secondary" href="Functions/latest" role="button">Function Index</a></p>
+        <p><a class="btn btn-outline-secondary" href="api/latest" role="button">API Documentation</a></p>
         <p class="lead">Peruse a comprehensive list of functions provided by<code>anabel</code>, with detailed explanations of their interfaces.</p>
         </div><!-- /.col-lg-4 -->
 
         <div class="col-lg-4">
-            <p><a class="btn btn-outline-secondary" href="gallery/" role="button">Examples</a></p>
+            <p><a class="btn btn-outline-secondary" href="gallery/" role="button">Gallery</a></p>
         <p class="lead">Walk through some examples of the various analysis procedures that <code>anabel</code> provides.</p>
         </div><!-- /.col-lg-4 -->
     </div><!-- /.row -->

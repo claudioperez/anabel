@@ -26,7 +26,7 @@ api:
 	anabel.template \
 	anabel.sections
 	#rm $(DOCDIR)/$(PACKAGE)/index.html
-	mv $(DOCDIR)/$(PACKAGE)/*.html $(DOCDIR)/api/
+	mv $(DOCDIR)/$(PACKAGE)/*.html $(DOCDIR)/api/latest/
 	for item in $(DOCDIR)/api/*.html; do mv $$item $${item%.html}.md; done
 
 gallery:
