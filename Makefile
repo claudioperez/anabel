@@ -4,11 +4,12 @@ VERSION = $(shell sed -nE 's:__version__ = "([^"]+)":\1:p' ./src/$(PACKAGE)/__in
 # Documentation
 DOCDIR = docs
 STYDIR = style
+TESTDIR = ~/stdy
 
 PDOC = pdoc --template-dir $(STYDIR) -o $(DOCDIR)
 
 test:
-	echo $(VERSION)
+	ln $(TESTDIR)/elle-0020/src/elle-0020.ipynb tests/elle-0020.ipynb
 
 install:
 	pip install -e .
@@ -29,4 +30,5 @@ publish:
 	python setup.py clean --all sdist bdist_wheel
 	twine upload --skip-existing dist/*
 
-.PHONY: docs
+.PHONY: api
+

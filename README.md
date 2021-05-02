@@ -30,3 +30,5 @@ The following additional dependencies are required to build the documentation:
 [gh-link]: https://github.com/claudioperez/anabel/compare/0.0.0...master
 [gh-image]: https://img.shields.io/github/commits-since/claudioperez/anabel/0.0.0?style=social
 
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%claudioperez%2Fanabel.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%claudioperez%2Fanabel?ref=badge_large)
+
