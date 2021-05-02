@@ -55,13 +55,18 @@ $ elstir build
 
 ### Source
 - [`setup.py`] Installation/setup; used for pip installation.
-- [`src/anabel/` Python source code
+- [`src/anabel/`] Python source code
 
 ### Source Control, Testing, Continuous Integration
 - `.gitignore` Configuration for [Git]() source control.
-- `.appveyor.yml` configuration file for [Appveyor](https://www.appveyor.com/)
+- [`.appveyor.yml`] configuration file for [Appveyor](https://www.appveyor.com/)
 - `.coveragerc` configuration file for [CodeCov](https://codecov.io/), used to measure testing coverage.
 - `pytest.ini` configuration file for [PyTest](), used to setup testing.
+
+
+
+[`setup.py`](setup.py)
+[`.appveyor.yml`](.appveyor.yml)
 
 [black-shield]: https://img.shields.io/badge/code%20style-black-000000.svg
 
