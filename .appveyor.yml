@@ -8,12 +8,11 @@ environment:
 
 image: Ubuntu
 
-init:
-  - python3 -m pip install pytest
 
 install:
   - python setup.py install
 
 test_script:
+  - pip install pytest
   - pytest
 
