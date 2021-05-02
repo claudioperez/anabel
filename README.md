@@ -26,13 +26,15 @@ The following additional dependencies are required to build the documentation:
 
 ### Documentation
 - `elstir.yml`
+- `style/` Directory holding style/template/theme files for documentation.
 - `docs/api/` Automatically generated API documentation files.
 
 ### Source
 - `setup.py` Installation/setup; used for pip installation.
 - `src/anabel/` Python source code
 
-### Testing & Continuous Integration
+### Source Control, Testing, Continuous Integration
+- `.gitignore` Configuration for [Git]() source control.
 - `.appveyor.yml` configuration file for [Appveyor](https://www.appveyor.com/)
 - `.coveragerc` configuration file for [CodeCov](https://codecov.io/), used to measure testing coverage.
 - `pytest.ini` configuration file for [PyTest](), used to setup testing.
