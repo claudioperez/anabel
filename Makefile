@@ -12,14 +12,19 @@ test:
 	ln $(TESTDIR)/elle-0020/src/elle-0020.ipynb tests/elle-0020.ipynb
 
 install:
-	pip install -e .
+	python3 setup.py install
+	#pip install -e .
 
 api:
 	$(PDOC) --config show_source_code=False \
 	--config latex_math=True \
-	--html \
-	--force \
-	anabel.assemblers anabel.elements anabel.matrices anabel.graphics
+	--html --force \
+	anabel.assemble \
+	anabel.elements \
+	anabel.matrices \
+	anabel.graphics \
+	anabel.template \
+	anabel.sections
 	#rm $(DOCDIR)/$(PACKAGE)/index.html
 	mv $(DOCDIR)/$(PACKAGE)/*.html $(DOCDIR)/api/
 	for item in $(DOCDIR)/api/*.html; do mv $$item $${item%.html}.md; done
