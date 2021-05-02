@@ -65,8 +65,8 @@ $ elstir build
 
 
 
-[`setup.py`](setup.py)
-[`.appveyor.yml`](.appveyor.yml)
+[`setup.py`]: ./setup.py
+[`.appveyor.yml`]: ./.appveyor.yml
 
 [black-shield]: https://img.shields.io/badge/code%20style-black-000000.svg
 
