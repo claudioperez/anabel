@@ -17,9 +17,8 @@ template: particles.html
 <header>
 <div class="hero position-relative overflow-hidden p-3 text-center text-dark">
     <div class="col-md-5 p-lg-1 mx-auto my-5">
-        <p><img src="img/emtec-4.png" alt="" width=100><h2 class="featurette-heading"></img>anabel</h2></p>
-        <p class="lead ">
-    anabel is a modular framework for teaching and research on the simulation of nonlinear structural response under static and dynamic loads, with a reference implementation in <a href="https://www.mathworks.com/products/matlab.html">Matlab©</a>.
+        <p><img src="img/emtec-4.png" alt="" width=100><h2></img>anabel</h2></p>
+        <p class="lead ">anabel Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
     </p>
     <a class="btn btn-outline-primary btn-lg" href="starting" role="button">Get Started</a>
     </div>
@@ -53,13 +52,24 @@ template: particles.html
 <hr class="featurette-divider">
 
 <article><div class="row featurette home-feature feature">
+    <div class="col-7">
+      <h2 class="featurette-heading">Inelasticity</h2>
+      <p class="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+      <!--<a class="btn btn-outline-secondary" href="Guides/Developing" role="button">Developer's Manual</a>-->
+    </div>
+    <div class="col-4" style="position: relative;">
+      <img style="vertical-align:middle; max-width: 100%; height: auto" src="img/pde-iso.svg" class="img-fluid"/>
+    </div>
+</div></article>
+
+<article><div class="row featurette home-feature feature">
     <div class="col-4" style="position: relative;">
       <img style="vertical-align:middle; max-width: 100%; height: auto" src="img/pde-iso.svg" class="img-fluid"/>
     </div>
     <div class="col-7">
-      <h2 class="featurette-heading">Partial Differentia Equations</h2>
-      <p class="lead"><code>anabel</code> functions interact through a consistent API that allows users to rapidly implement and explore new finite element and material models.</p>
-      <a class="btn btn-outline-secondary" href="Guides/Developing" role="button">Developer's Manual</a>
+      <h2 class="featurette-heading">Partial Differential Equations</h2>
+      <p class="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+      <!--<a class="btn btn-outline-secondary" href="Guides/Developing" role="button">Developer's Manual</a>-->
     </div>
 </div></article>
 
@@ -67,7 +77,7 @@ template: particles.html
   <div class="col-md-7">
     <h2 class="featurette-heading">Reliability</h2>
     <p class="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-    <a class="btn btn-outline-secondary" href="Functions/latest/Utility_Functions/Plotting//Functions/latest/Utility_Functions/Plotting/" role="button">Library </a>
+    <!-- <a class="btn btn-outline-secondary" href="Functions/latest/Utility_Functions/Plotting//Functions/latest/Utility_Functions/Plotting/" role="button">Library </a> -->
     </div>
     <div class="col-4" style="position: relative;">
       <img style="vertical-align:middle; max-width: 100%; height: auto" src="img/reliability.svg" class="img-fluid"/>
