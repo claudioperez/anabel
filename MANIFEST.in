@@ -3,6 +3,7 @@ graft src
 graft ci
 graft tests
 
+include docs/img/emtec-4.png
 
 include CHANGELOG.md
 include README.md
