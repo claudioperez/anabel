@@ -4,7 +4,7 @@ __version__ = "0.0.0"
 import anabel.aisc
 import anabel.analysis
 
-from anabel.assemblers import *
+from anabel.assemble import *
 from anabel.matrices import *
 
 from anabel.graphics import *

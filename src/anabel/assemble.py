@@ -1,19 +1,18 @@
 # Claudio Perez
-# ema
+# anabel
 """Core model building classes.
 """
+import copy
 import inspect
 from inspect import signature
 from functools import partial
 from typing import Callable, List
-import copy
 
 import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
 
 from anon import diff
-
-from anabel.templates import get_unspecified_parameters, template
+from anabel.template import get_unspecified_parameters, template
 from emme.elements import *
 try:
     import anon.atom as anp
