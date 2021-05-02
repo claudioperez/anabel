@@ -42,7 +42,7 @@ The following additional dependencies are required to build the project document
 To build the documentation, run the following command from the project root directory:
 
 ```shell
-elstir build
+$ elstir build
 ```
 
 ## Project Organization
@@ -54,8 +54,8 @@ elstir build
 - `docs/api/` Automatically generated API documentation files.
 
 ### Source
-- `setup.py` Installation/setup; used for pip installation.
-- `src/anabel/` Python source code
+- [`setup.py`] Installation/setup; used for pip installation.
+- [`src/anabel/` Python source code
 
 ### Source Control, Testing, Continuous Integration
 - `.gitignore` Configuration for [Git]() source control.
