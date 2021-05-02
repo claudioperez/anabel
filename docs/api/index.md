@@ -2,7 +2,6 @@
 title: emme API
 summary:
 template: pdoc.html
-full_width: true
 hide_toc: true
 ...
 <main>
