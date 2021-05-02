@@ -10,7 +10,8 @@ image: Ubuntu
 
 
 install:
-  - python setup.py install
+  #- pip install .
+  - python3 setup.py install
 
 test_script:
   - pip install pytest
