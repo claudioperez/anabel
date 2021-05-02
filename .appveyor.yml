@@ -1,16 +1,14 @@
 build: false
+
 version: '{branch}-{build}'
 
-environment:
-  matrix:
-    - PYTHON_VERSION: 3.6.8
-      MINCONDA: C:\Miniconda3
+stack: python 3.6
 
 image: Ubuntu
 
-init:
-  - export PATH="$HOME/venv$PYTHON_VERSION/bin:$PATH"
-  - python -m pip install --upgrade pip
+  #init:
+  #  - export PATH="$HOME/venv$PYTHON_VERSION/bin:$PATH"
+    #- python -m pip install --upgrade pip
 
 install:
   - pip install -U setuptools
