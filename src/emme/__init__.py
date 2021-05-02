@@ -1,4 +1,3 @@
-
 __version__ = "0.0.0"
 
 
@@ -19,5 +18,3 @@ __all__ = emme.objects.__all__ + ["elements", "objects"]
 settings = {
     "DATAFRAME_LATEX": True,
 }
-
-

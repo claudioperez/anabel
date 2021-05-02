@@ -72,8 +72,8 @@ setup(
         "Programming Language :: Python :: 3.8",
     ],
     project_urls={
-        "Changelog": "https://github.com/claudioperez/ema/blob/master/CHANGELOG.rst",
-        "Issue Tracker": "https://github.com/claudioperez/ema/issues",
+        "Changelog": "https://github.com/claudioperez/emme/blob/master/CHANGELOG.md",
+        "Issue Tracker": "https://github.com/claudioperez/emme/issues",
     },
     keywords=[],
     python_requires=">=3.6",

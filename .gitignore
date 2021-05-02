@@ -1,6 +1,10 @@
 
 # Documentation
 docs/api/
+doc/
+ci/
+src/emme/data
+src/emme/seismic
 
 # Editor
 .vscode/
