@@ -1,8 +1,11 @@
 PACKAGE = emme
 VRNPATN = '__version__ = "([^"]+)"'
 VERSION = $(shell sed -nE 's:__version__ = "([^"]+)":\1:p' ./src/$(PACKAGE)/__init__.py)
+# Documentation
+DOCDIR = docs
+STYDIR = style
 
-PDOC = pdoc --template-dir ../elle/templates -o doc/
+PDOC = pdoc --template-dir $(STYDIR) -o $(DOCDIR)
 
 test:
 	echo $(VERSION)
@@ -16,9 +19,9 @@ docs:
 	--html \
 	--force \
 	emme.objects emme.elements emme.matrices
-	#for item in doc/emme/**/*.html; do mv $$item $${item%.html}.md; done
-	for item in doc/emme/*.html; do mv $$item $${item%.html}.md; done
-
+	#rm $(DOCDIR)/$(PACKAGE)/index.html
+	mv $(DOCDIR)/$(PACKAGE)/*.html $(DOCDIR)/api/
+	for item in $(DOCDIR)/api/*.html; do mv $$item $${item%.html}.md; done
 
 
 publish:

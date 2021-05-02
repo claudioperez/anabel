@@ -1,10 +1,10 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
+
+# Documentation
+docs/api/
 
 # Editor
 .vscode/
+*.swp
 
 # C extensions
 *.so
@@ -29,6 +29,11 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
 
 # PyInstaller
 *.manifest
