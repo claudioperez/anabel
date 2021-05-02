@@ -51,7 +51,7 @@ $ elstir build
 ### Documentation
 - [`elstir.yml`]
 - [`style/`] Directory holding style/template/theme files for documentation.
-- `docs/api/` Automatically generated API documentation files.
+- [`docs/api/`] Automatically generated API documentation files.
 
 ### Source
 - [`setup.py`] Installation/setup; used for pip installation.
@@ -64,7 +64,8 @@ $ elstir build
 - `pytest.ini` configuration file for [PyTest](), used to setup testing.
 
 
-
+[`docs/api/`]: ./docs/api/
+[`src/anabel/`]: ./src/anabel/
 [`elstir.yml`]: ./elstir.yml
 [`style/`]: ./style/
 [`setup.py`]: ./setup.py

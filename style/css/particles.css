@@ -3,7 +3,7 @@ del{text-decoration:line-through}
 abbr[title],dfn[title]{border-bottom:1px dotted;cursor:help}
 /* table{border-collapse:collapse;border-spacing:0} */
 
-canvas#particles-js{
+canvas.particles-js-canvas-el{
   display:block;
   position: absolute !important;
   left: 0;

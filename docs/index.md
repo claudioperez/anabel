@@ -2,9 +2,17 @@
 is_homepage: true
 hide_toc: true
 full_width: true
-#template: particles.html
+template: particles.html
 ---
-
+<style>
+.home-feature {
+  justify-content: space-between !important;
+  align-items: center !important; 
+  display: flex !important;
+  margin-top: 3rem !important;
+  margin-bottom: 3rem !important;
+}
+</style>
 
 <header>
 <div class="hero position-relative overflow-hidden p-3 text-center text-dark">
@@ -43,28 +51,28 @@ full_width: true
     </div><!-- /.row-featurette -->
 
 <hr class="featurette-divider">
-<div class="row featurette">
-    <div class="col-md-12">
-    <h2 class="featurette-heading">Rapid Development</h2>
-    <p class="lead"><code>anabel</code> functions interact through a consistent API that allows users to rapidly implement and explore new finite element and material models.</p>
-    <a class="btn btn-outline-secondary" href="Guides/Developing" role="button">Developer's Manual</a>
-    </div>
-    <!-- <div class="col-md-7">
-    <h2 class="featurette-heading">Post-Processing</h2>
-    <p class="lead">Post-processing is accommodated in the program by generating a data object that carries all important material, element and structural information for plotting or printing. Several functions that address basic post-processing tasks are provided. The user can easily enhance and extend the current capabilities.</p>
-    <a class="btn btn-outline-secondary" href="Functions" role="button">Library </a>
-    <a class="btn btn-secondary" href="gallery" role="button">Examples</a>
-    </div> -->
-</div>
-<hr class="featurette-divider">
 
-<div class="row featurette">
-    <div class="col-md-7">
-    <h2 class="featurette-heading">Post-Processing</h2>
-    <p class="lead"><code>anabel</code> provides a powerful post-processing module that is integrated with Matlab's state-of-the art visualization tools. This module is built on top of a simple, unified <a href="schema/post">data model</a> that can be leveraged by users to build insightful illustrations of responses at the model, element, and material level, at any point in a model's lifecycle.</p>
+<article><div class="row featurette home-feature feature">
+    <div class="col-4" style="position: relative;">
+      <img style="vertical-align:middle; max-width: 100%; height: auto" src="img/pde-iso.svg" class="img-fluid"/>
+    </div>
+    <div class="col-7">
+      <h2 class="featurette-heading">Partial Differentia Equations</h2>
+      <p class="lead"><code>anabel</code> functions interact through a consistent API that allows users to rapidly implement and explore new finite element and material models.</p>
+      <a class="btn btn-outline-secondary" href="Guides/Developing" role="button">Developer's Manual</a>
+    </div>
+</div></article>
+
+<div  class="home-feature row featurette">
+  <div class="col-md-7">
+    <h2 class="featurette-heading">Reliability</h2>
+    <p class="lead">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
     <a class="btn btn-outline-secondary" href="Functions/latest/Utility_Functions/Plotting//Functions/latest/Utility_Functions/Plotting/" role="button">Library </a>
     </div>
-</div>
+    <div class="col-4" style="position: relative;">
+      <img style="vertical-align:middle; max-width: 100%; height: auto" src="img/reliability.svg" class="img-fluid"/>
+    </div>
+  </div>
 </div>
 
 <!-- <hr class="featurette-divider">
