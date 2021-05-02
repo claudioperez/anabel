@@ -5,9 +5,10 @@ Object oriented framework for matrix structural analysis in Python.
 
 -------------------------------------
 
+[![Code Style: Black][black-shield]]()
+![Build status][build-img]
 [![PyPI Version][pypi-v-image]][pypi-v-link]
 [![Commits since latest release][gh-image]][gh-link]
-[![Code Style: Black][black-shield]]()
 [![Documentation](https://img.shields.io/badge/documentation-blue)](https://claudioperez.github.io/anabel/)
 
 
@@ -78,6 +79,8 @@ $ elstir build
 
 [gh-link]: https://github.com/claudioperez/anabel/compare/0.0.0...master
 [gh-image]: https://img.shields.io/github/commits-since/claudioperez/anabel/0.0.0?style=social
+
+[build-img]: https://ci.appveyor.com/api/projects/status/github/claudioperez/anabel?branch=master&svg=true
 
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%claudioperez%2Fanabel.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%claudioperez%2Fanabel?ref=badge_large)
 
