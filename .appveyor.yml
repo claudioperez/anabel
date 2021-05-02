@@ -10,7 +10,7 @@ image: Ubuntu
 
 
 install:
-  - pip install -U setuptools
+  - pip3 install -U setuptools
   - python3 setup.py install
 
 test_script:
