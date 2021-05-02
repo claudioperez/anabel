@@ -13,15 +13,39 @@ Object oriented framework for matrix structural analysis in Python.
 
 ## Installation
 
+The *base* Anabel package can be installed from a terminal with the following command:
+
+```bash
+$ pip install anabel
+```
+
+This installation includes basic tools for composing "neural network" -like models along with some convenient IO utilities. However, both automatic differentiation and JIT capabilities require Google's Jaxlib module which is currently in early development and only packaged for Ubuntu systems. On Windows systems this can be easily overcome by downloading the Ubuntu terminal emulator from Microsoft's app store and enabling the Windows Subsystem for Linux (WSL). The following extended command will install Anabel along with all necessary dependencies for automatic differentiation and JIT compilation:
+
+```bash
+$ pip install anabel[jax]
+```
+
+The in-development version can be installed the following command:
+
+```bash
+$ pip install https://github.com/claudioperez/anabel/archive/master.zip
+```
+
 
 ## Documentation
 
-The following additional dependencies are required to build the documentation:
+The following additional dependencies are required to build the project documentation:
 
 - [Pandoc](https://pandoc.org/)
 - Elstir (`pip install elstir`)
 
-## Source Organization
+To build the documentation, run the following command from the project root directory:
+
+```shell
+elstir build
+```
+
+## Project Organization
 
 
 ### Documentation
