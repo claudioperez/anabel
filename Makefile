@@ -20,7 +20,6 @@ api:
 	--config latex_math=True \
 	--html --force \
 	anabel.assemble \
-	anabel.elements \
 	anabel.matrices \
 	anabel.graphics \
 	anabel.template \
@@ -34,6 +33,8 @@ gallery:
 publish:
 	python setup.py clean --all sdist bdist_wheel
 	twine upload --skip-existing dist/*
+	git tag -a $(VERSION) -m 'version $(VERSION)'
+	git push --tags
 
 .PHONY: api
 

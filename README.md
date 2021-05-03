@@ -9,6 +9,7 @@ An end to end differentiable finite element framework.
 ![Build status][build-img]
 [![PyPI Version][pypi-v-image]][pypi-v-link]
 [![Commits since latest release][gh-image]][gh-link]
+[![Github All Releases](https://img.shields.io/tokei/lines/github/claudioperez/anabel?style=plastic)]()
 [![Documentation](https://img.shields.io/badge/documentation-blue)](https://claudioperez.github.io/anabel/)
 
 

@@ -42,18 +42,12 @@ extras_require["backends"] = sorted(
 setup(
     name="anabel",
     version=get_version("./src/anabel"),
-    description="Object oriented finite element analysis.",
-    long_description="%s\n%s"
-    % (
-        re.compile("^.. start-badges.*^.. end-badges", re.M | re.S).sub(
-            "", read("README.md")
-        ),
-        re.sub(":[a-z]+:`~?(.*?)`", r"``\1``", read("CHANGELOG.md")),
-    ),
+    description="An end to end differentiable finite element framework.",
+    long_description=f"{read('README.md')}\n{read('CHANGELOG.md')}",
     long_description_content_type="text/markdown",
     author="Claudio M. Perez",
     author_email="claudio_perez@berkeley.edu",
-    url="https://github.com/claudioperez/anabel",
+    url="https://claudioperez.github.io/anabel",
     packages=find_packages("src"),
     package_dir={"": "src"},
     py_modules=[splitext(basename(path))[0] for path in glob("src/*.py")],

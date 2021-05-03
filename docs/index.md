@@ -17,10 +17,10 @@ template: particles.html
 <header>
 <div class="hero position-relative overflow-hidden p-3 text-center text-dark">
     <div class="col-md-5 p-lg-1 mx-auto my-5">
-        <p><img src="img/emtec-4.png" alt="" width=100><h2></img>anabel</h2></p>
+        <p><img src="img/anabel.svg" alt="" width=200><h2 style="font-size:60px;font-weight:50 !important;"></img>anabel</h2></p>
         <p class="lead ">anabel Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
     </p>
-    <a class="btn btn-outline-primary btn-lg" href="starting" role="button">Get Started</a>
+    <a class="btn btn-outline-primary btn-lg" href="quick-start" role="button">Get Started</a>
     </div>
     <div class="product-device box-shadow d-none d-md-block"></div>
     <div class="product-device product-device-2 box-shadow d-none d-md-block"></div>
