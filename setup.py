@@ -61,7 +61,6 @@ setup(
         "Operating System :: Microsoft :: Windows",
         "Programming Language :: Python",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
     ],
@@ -71,6 +70,8 @@ setup(
     },
     keywords=[],
     python_requires=">=3.6",
-    install_requires=["numpy", "pandoc", "matplotlib", "scipy"],
+    install_requires=[
+        "numpy", "pandoc", "matplotlib", "scipy", "elle.sections"
+    ],
     extras_require=extras_require,
 )
