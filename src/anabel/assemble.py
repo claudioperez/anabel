@@ -279,9 +279,10 @@ class MeshGroup(Assembler):
                 plotter.add_mesh(
                    pv.PolyData(mesh.points), color='red',
                    point_size=5, render_points_as_spheres=True)
-                plotter.show()
                 if savefig:
                     plotter.show(screenshot=savefig)
+                else:
+                    plotter.show()
 
     def norm(self,u,h,quad):
         du = diff.jacx(u)
@@ -327,9 +328,9 @@ class MeshGroup(Assembler):
         if elem is None:
             elem = self.elems[0].compose()
         
-        model_map = {
-            el.tag: elem for el in self.elems
-        }
+        #model_map = {
+        #    el.tag: elem for el in self.elems
+        #}
         param_map = {
             tag: anon.dual.get_unspecified_parameters(elem) for tag,el in enumerate(self.elems)
         }
@@ -341,8 +342,9 @@ class MeshGroup(Assembler):
         self.DOF = DOF = self.dofs
         
         # Create DOF - element mapping
+        if verbose: print("Creating Be_map")
         Be_map = tuple(
-            [(el,i) for el in range(ne) for i, el_dof in enumerate(self.elems[el].dofs) if dof==el_dof]
+            [(el,i) for el in range(ne) for i, el_dof in enumerate(el_DOF[el]) if dof==el_dof]
             for dof in range(nf)
         )
         state = {
@@ -351,6 +353,8 @@ class MeshGroup(Assembler):
         param_arg = {0: {}}
 
         _p0 = anp.zeros((nf,1))
+        
+        if verbose: print("Collecting coordinates.")
         xyz = eval(f"""{{ { ','.join(f'"{tag}": [{",".join(str(x) for x in node.xyz)}]' for tag, node in self.dnodes.items() )} }}""")
         
         def assm(u,p=None,state=None, points=None,weights=None,params=param_arg):
@@ -370,7 +374,7 @@ class MeshGroup(Assembler):
 
 
     @template(dim="shape",main="assm")
-    def assemble_linear(self, elem=None,**kwds)->Callable:
+    def assemble_linear(self, elem=None,verbose=False,**kwds)->Callable:
         """
         elem(None,xyz) -> R^[ndf*nen]
 
@@ -416,11 +420,14 @@ class MeshGroup(Assembler):
         params = self.params
 
         self.DOF = DOF = self.dofs
+        el_DOF  = [ elem.dofs for tag,elem in enumerate(self.elems) ]
 
+        if verbose: print("Constructing element-DOF map.")
         Be_map = tuple(
             [(el,i) for el in range(ne) for i, el_dof in enumerate(self.elems[el].dofs) if dof==el_dof]
             for dof in range(nf)
         )
+        if verbose: print("Element-DOF map complete.")
 
         state = {
             ... : [elem.origin[2] for tag in range(ne)]
@@ -447,18 +454,20 @@ class MeshGroup(Assembler):
             ])
             return None,  F, {}
 
+        if verbose: print("Constructing jacobian map.")
         DOF_el_jac = {
             dof_i : {
                 dof_j: [
                     (tag, i, j)
-                    for tag,el in enumerate(self.elems)
-                        for j, _dof_j in enumerate(el.dofs) if _dof_j == dof_j
-                            for i, _dof_i in enumerate(el.dofs) if _dof_i == dof_i
+                    for tag,el_dofs in enumerate(el_DOF)
+                        for j, _dof_j in enumerate(el_dofs) if _dof_j == dof_j
+                            for i, _dof_i in enumerate(el_dofs) if _dof_i == dof_i
                ]
                for dof_j in range(nf)
             }
             for dof_i in range(nf)
         }
+        if verbose: print("Jacobian map complete.")
         elem_jac = diff.jacx(elem)
         #eljac_map = {tag: diff.jacx(el) for tag,el in model_map.items()}
         def jacx(u,p,state,xyz=xyz,params=param_arg):
@@ -482,13 +491,13 @@ class MeshGroup(Assembler):
             return jac
         return locals()
 
-    def compose(self,elem=None,solver=None):
+    def compose(self,elem=None,verbose=False,solver=None):
         """
         TODO: try using jax.scipy.sparse.linalg.cg
 
         2021-05-07
         """
-        f = self.compose_quad(elem=elem)
+        f = self.compose_quad(elem=elem,verbose=verbose)
         jac = diff.jacx(f)
         if solver is None:
             solver = anp.linalg.solve
@@ -508,9 +517,9 @@ class MeshGroup(Assembler):
         return F
 
 
-    def compose_quad(self,f=None,jit=True,**kwds):
+    def compose_quad(self,f=None,jit=True,verbose=False,**kwds):
         if f is None:
-            f = self.assemble_linear(jit=jit,**kwds,_expose_closure=True)
+            f = self.assemble_linear(jit=jit,**kwds,verbose=verbose,_expose_closure=True)
         f_jacx = diff.jacx(f)
         cnl = ',\n'
         u0 = anp.zeros((self.nf,1))
@@ -620,11 +629,11 @@ class Model(Assembler):
 
 
 
-    def compose(self,resp="d",jit=True,**kwds):
-        return self.compose_param(jit_force=jit,**kwds)
+    def compose(self,resp="d",jit=True,verbose=False,**kwds):
+        return self.compose_param(jit_force=jit,verbose=verbose,**kwds)
 
-    def compose_param(self,jit_force=True,**kwds):
-        f = self.compose_displ(jit_force=jit_force,**kwds,_expose_closure=True)
+    def compose_param(self,jit_force=True,verbose=False,**kwds):
+        f = self.compose_displ(jit_force=jit_force,**kwds,verbose=verbose,_expose_closure=True)
         cnl = ',\n'
         u0 = anp.zeros((self.nf,1))
         model_map = f.closure["model_map"]
