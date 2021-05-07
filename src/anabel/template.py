@@ -1,8 +1,9 @@
 # Claudio Perez
 # University of California, Berkeley
+"""
+# Templating
 
-
-"""Templating.
+Wrappers, decorators and utilities for constructing expression templates.
 """
 # Standard library imports
 import inspect

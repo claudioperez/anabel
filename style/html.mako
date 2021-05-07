@@ -140,9 +140,9 @@
       % endfor
     </nav>
   % endif
-  <h1 class="title">${'Namespace' if module.is_namespace else  \
+  <!-- <h1 class="title">${'Namespace' if module.is_namespace else  \
                       'Package' if module.is_package and not module.supermodule else \
-                      'Module'} <code>${module.name}</code></h1>
+                      'Module'} <code>${module.name}</code></h1> -->
   </header>
 
   <section id="section-intro">
@@ -406,7 +406,7 @@
 </%doc>
 ---
 title: ${module.name}
-summary: ${module.docstring.split("\n")[0]}
+summary: ${module.docstring.split("\n")[2] if len(module.docstring.split("\n")) > 2 else ""}
 template: pdoc.html
 ...
 <main>

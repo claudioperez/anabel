@@ -1,13 +1,18 @@
 # Claudio Perez
 # anabel
-"""Core model building classes.
+"""
+# Assemblers(`2`)
+
+Core model building classes.
 """
 import copy
 import inspect
+import functools
 from inspect import signature
 from functools import partial
 from typing import Callable, List
 
+import meshio
 import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
 
@@ -19,19 +24,71 @@ try:
 except:
     anp = np
 
-__all__ = ["Assembler", "Model", "rModel", "SkeletalModel"]
+__all__ = ["Assembler", "MeshGroup", "Model", "rModel", "SkeletalModel"]
 
 def _is_sequence(obj):
     return hasattr(type(obj), '__iter__')
 
+def _read_m228(filename:str,cell="triangle",ndf=1)->meshio.Mesh:
+    """
+    Read a mesh file that adheres to the following spec:
+
+    ```
+    N = number of nodes, NE = number of elements)
+
+    N  NE      <-- first line
+    x y flag   <-- flag=0: interior, 1 bdry
+    x y flag
+    ...
+    x y flag
+    a b c d e f   <-- quadratic elements have six nodes
+    a b c d e f
+    ...
+    a b c d e f
+
+
+    in the triangle, the numbers a b c d e f correspond to nodes
+
+    c
+    f e
+    a d b
+
+    (This is the FEAP convention).
+
+    meshes arranged so that if an edge is curved, it is edge b e c.
+    (so the interior vertex of the triangle is first in the list)
+
+    Node and element indices start at 1.
+    ```
+    """
+    with open(filename,"r") as f:
+        num_nodes, num_cells = map(int, f.readline().split(" "))
+    nodes = np.loadtxt(filename, skiprows=1, max_rows=num_nodes)
+    connectivity = np.loadtxt(filename, skiprows=1+num_nodes, max_rows=num_cells, dtype=int) - 1
+    cells = [
+        (cell, connectivity)
+    ]
+    points = nodes[:,:2]
+    fixities = np.concatenate([nodes[:,2][:,None]]*ndf,axis=1)
+    return meshio.Mesh(points, cells, point_data={"fixities": fixities})
+
+
+class Boundary:
+    def __init__(self, essential=[], natural=[]):
+        self.essential = essential
+        self.natural = natural
+        pass
 
 class Assembler:
+    """Base class for assembler objects.
+
+    An assembler is typically characterized by collections of
+    nodes, elements and parameters. The purpose of the assembler
+    is to provide a convenient interface for interacting with 
+    and managing these entities.
+    """
     def __init__(self, ndm:int, ndf:int):
-        """Basic assembler class
-
-        An assembler is typically characterized by collections of
-        nodes, elements and parameters.
-
+        """
         Parameters
         -----------
         ndm: int
@@ -43,38 +100,29 @@ class Assembler:
         self.ndf: int = ndf
         self.ndm: int = ndm
         self.DOF: list = None
-        self.dtype='float32'
+        self._numberer  = None
+        self.dtype='float64'
 
         # model inventory lists
         self.elems: list = []
         self.nodes: list = []
 
+        self.bound: list = []
+        self.cells: list = []
+
         # model inventory dictionaries
         self.delems: dict = {}
         self.dnodes: dict = {}
-
-
-class Model(Assembler):
-    def __init__(self, ndm:int, ndf:int):
-        """Basic structural model class
-
-        Parameters
-        -----------
-        ndm: int
-            number of model dimensions
-        ndf: int
-            number of degrees of freedom (dofs) at each node
-
-        """
-        self.ndf: int = ndf
-        self.ndm: int = ndm
-        #self.DOF: list = None
-        self.dtype='float32'
-
+        self.params = {}
+        
         # Define DOF list indexing 
         if ndm == 1:
             self.prob_type = '1d'
             self.ddof: dict = {'x': 0}  # Degrees of freedom at each node
+
+        if ndf == 1 and ndm == 2:
+            self.prob_type = ''
+            self.ddof: dict = { 'x': 0, 'y': 1} # Degrees of freedom
 
         if ndf == 2:
             self.prob_type = '2d-truss'
@@ -89,6 +137,451 @@ class Model(Assembler):
             self.prob_type = '3d-frame'
             self.ddof: dict = { 'x': 0, 'y': 1, 'z':2, 'rx':3, 'ry':4, 'rz':5}
         
+    @property
+    def nn(self) -> int:
+        """Number of nodes in model"""
+        return len(self.nodes)
+
+    @property
+    def ne(self) -> int:
+        """Number of elements in model"""
+        return len(self.nodes)
+
+    @property
+    def nf(self) -> int:
+        "Number of free degrees of freedom."
+        return  self.nt - self.nr
+    
+    @property
+    def nt(self)->int:
+        return self.ndf * len(self.nodes)
+    
+    def param(self,*param_names,shape=0,dtype=float,default=None):
+        """Create a parameter that is managed by the model.
+
+        created 2021-03-31
+        """
+        param_kind = inspect.Parameter.POSITIONAL_OR_KEYWORD
+        if shape != 0:
+            self.params.update({
+                param: anp.empty(shape=shape,dtype=dtype) for param in param_names
+        })
+        else:
+            self.params.update({
+                name: inspect.Parameter(name,param_kind,default=default) for name in param_names
+            })
+        if len(param_names) > 1:
+            return tuple(inspect.Parameter(name,param_kind) for name in param_names)
+        else:
+            return inspect.Parameter(param_names[0],param_kind)
+
+
+
+class MeshGroup(Assembler):
+    """Homogeneous 2D mesh group.
+
+
+    """
+    def __init__(self, *args, ndm=2, ndf=1,  mesh=None, **kwds):
+        super().__init__(ndm=ndm, ndf=ndf)
+        self.mesh = mesh
+        self.nodes = [
+                Node(self, str(i), self.ndf, point) 
+                for i,point in enumerate(mesh.points)
+        ]
+        self.elems = [
+            MeshCell(f"elem-{i}", len(cell), ndf, ndm, [self.nodes[j] for j in cell])
+            for i,cell in enumerate(mesh.cells[0][1])
+        ]
+        self.fixities = mesh.point_data["fixities"]
+
+    @classmethod
+    def read(cls, filename:str, *args, **kwds):
+        """Create a class instance by reading in a mesh file.
+
+        This function should work with any mesh format that is supported
+        in the external `meshio` Python library.
+
+        Parameters
+        ----------
+        filetype: str
+            In addition to those supported in `meshio`, the following formats
+            are supported:
+            `m228`:
+                Simple text file; see docstrings in source code of `_read_m228`.
+        """
+        if "file_type" in kwds:
+            mesh = meshio.read(filename,*args,**kwds)
+        elif "m228" in args:
+            mesh = _read_m228(filename,**kwds)
+        return cls(mesh=mesh)
+
+    def write(self,filename:str, **kwds):
+        """Export mesh using `meshio`.
+        """
+        meshio.write(self.mesh,filename)
+
+    @property
+    def nr(self):
+        """Return number of fixed degrees of freedom"""
+        return np.count_nonzero(self.mesh.point_data["fixities"])
+
+    @property
+    def dofs(self):
+        """Plain DOF numbering scheme.
+        2021-05-07
+        """
+        if self._numberer is None:
+            free_dofs = iter(range(self.nf))
+            fixed_dofs = iter(range(self.nf, self.nt))
+            
+            return [
+                [
+                    next(fixed_dofs) if fixity else next(free_dofs)
+                    for fixity in node 
+                ] for node in self.fixities
+            ]
+
+    def plot(self,values=None,func=None,interact=False,savefig:str=None,**kwds):
+        """
+        Plot mesh using `pyvista` interface to VTK.
+        """
+        from matplotlib import cm
+        if values is None:
+            point_values = [[func(node.xyz)] for node in self.nodes]
+        else:
+            # TODO: appends zeros at the end under the assumption that solution
+            # vanished on Dirichlet boundary. This should be changed.
+            dof_values = anp.concatenate([values, anp.zeros((self.nr,1))],axis=0)
+            point_values = anp.take(dof_values, self.dofs)
+
+        self.mesh.point_data["u"] = point_values
+        
+        import pyvista as pv
+        pv.start_xvfb(wait=0.05)
+        pv.set_plot_theme("document")
+        mesh = pv.utilities.from_meshio(self.mesh)
+        mesh = mesh.warp_by_scalar("u", factor=0.5)
+        mesh.set_active_scalars("u")
+        if not pv.OFF_SCREEN:
+            if interact:
+                plotter_itk = pv.PlotterITK()
+                plotter_itk.add_mesh(mesh)
+                plotter_itk.show(True)
+            else:
+                plotter = pv.Plotter(notebook=True)
+                #mesh.warp_by_scalar()
+                plotter.add_mesh(mesh,
+                   show_edges=True,
+                   cmap=cm.RdYlBu,
+                   lighting=False,
+                   **kwds)
+                plotter.add_mesh(
+                   pv.PolyData(mesh.points), color='red',
+                   point_size=5, render_points_as_spheres=True)
+                plotter.show()
+                if savefig:
+                    plotter.show(screenshot=savefig)
+
+    def norm(self,u,h,quad):
+        du = diff.jacx(u)
+        U = self.compose(quad.points,quad.weights)()
+        inner = None
+        return
+    
+    @template(dim="shape",main="assm")
+    def assemble_integral(self, elem=None,**kwds)->Callable:
+        """
+        Parameters
+        ----------
+        elem: `f(u,xyz) -> R^[ndf*nen]`
+
+        Returns
+        -------
+        f: `f(U, (xi, dV)) -> R^[nf]`
+            quad(elem(U[el], X[el])*dV
+        
+        """
+        ndf = self.ndf
+        nr = self.nr
+        nn = self.nn
+        ne = len(self.elems)
+        nf = self.nf
+        nr = self.nr
+        nodes = set(self.dnodes.keys())
+        shape = ((nf,1),(nf,1))
+        
+        _unpack_coords = lambda xyz: f"[{','.join(str(x) for x in xyz)}]"
+        local_scope = locals()
+        # TODO: coords are not being used
+        exec(
+        f"def collect_coords(*coords):\n"
+         "  return anp.array([\n"
+        f"""    {f",".join(f"[{','.join(_unpack_coords(node.xyz) for node in el.nodes) }]" for el in self.elems )}\n"""
+         "  ])",
+         dict(anp=anp),local_scope,
+        )
+        collect_coords = local_scope["collect_coords"]
+
+
+        if elem is None:
+            elem = self.elems[0].compose()
+        
+        model_map = {
+            el.tag: elem for el in self.elems
+        }
+        param_map = {
+            tag: anon.dual.get_unspecified_parameters(elem) for tag,el in enumerate(self.elems)
+        }
+        el_DOF  = [ elem.dofs for tag,elem in enumerate(self.elems) ]
+        print(el_DOF)
+
+        params = self.params
+        # Assign model degrees of freedom
+        self.DOF = DOF = self.dofs
+        
+        # Create DOF - element mapping
+        Be_map = tuple(
+            [(el,i) for el in range(ne) for i, el_dof in enumerate(self.elems[el].dofs) if dof==el_dof]
+            for dof in range(nf)
+        )
+        state = {
+            ... : [elem.origin[2] for tag in range(ne)]
+        }
+        param_arg = {0: {}}
+
+        _p0 = anp.zeros((nf,1))
+        xyz = eval(f"""{{ { ','.join(f'"{tag}": [{",".join(str(x) for x in node.xyz)}]' for tag, node in self.dnodes.items() )} }}""")
+        
+        def assm(u,p=None,state=None, points=None,weights=None,params=param_arg):
+            U = anp.concatenate([u,anp.zeros((nr,1))],axis=0)
+            coords = collect_coords(None)
+            return  sum(
+                elem(
+                    anp.take(U, anp.asarray(dofs, dtype='int32')-1)[:,None],
+                    None,None,
+                    xyz = coords[tag],
+                    xi = loc,
+                    **params[0]
+                )[1] * weight
+                for tag,dofs in enumerate(el_DOF) for loc,weight in zip(points,weights)
+            )
+        return locals()
+
+
+    @template(dim="shape",main="assm")
+    def assemble_linear(self, elem=None,**kwds)->Callable:
+        """
+        elem(None,xyz) -> R^[ndf*nen]
+
+
+        Returns
+        -------
+        f: `f(U, (xi, dV)) -> R^[nf]`
+            quad(elem(None, X[el])*dV
+        
+        """
+        ndf = self.ndf
+        nr = self.nr
+        nn = self.nn
+        ne = len(self.elems)
+        nf = self.nf
+        nr = self.nr
+        nodes = set(self.dnodes.keys())
+        shape = ((nf,1),(nf,1))
+        
+        _unpack_coords = lambda xyz: f"[{','.join(str(x) for x in xyz)}]"
+        local_scope = locals()
+        # TODO: coords are not being used
+        exec(
+        f"def collect_coords(*coords):\n"
+         "  return anp.array([\n"
+        f"""    {f",".join(f"[{','.join(_unpack_coords(node.xyz) for node in el.nodes) }]" for el in self.elems )}\n"""
+         "  ])",
+         dict(anp=anp),local_scope,
+        )
+        collect_coords = local_scope["collect_coords"]
+
+
+        if elem is None:
+            elem = self.elems[0].compose()
+        
+        model_map = {
+            el.tag: elem for el in self.elems
+        }
+        param_map = {
+            tag: anon.dual.get_unspecified_parameters(elem) for tag,el in enumerate(self.elems)
+        }
+
+        params = self.params
+
+        self.DOF = DOF = self.dofs
+
+        Be_map = tuple(
+            [(el,i) for el in range(ne) for i, el_dof in enumerate(self.elems[el].dofs) if dof==el_dof]
+            for dof in range(nf)
+        )
+
+        state = {
+            ... : [elem.origin[2] for tag in range(ne)]
+        }
+        param_arg = {0: {}}
+
+        _p0 = anp.zeros((nf,1))
+        xyz = eval(f"""{{ { ','.join(f'"{tag}": [{",".join(str(x) for x in node.xyz)}]' for tag, node in self.dnodes.items() )} }}""")
+        
+        def assm(_=None,p=_p0,__=None, params=param_arg):
+            # 
+            coords = collect_coords(None)
+            responses = [
+                elem(
+                    None,None,None,
+                    xyz = coords[tag],
+                    **params[0]
+                )
+                for tag in range(ne)
+            ]
+            F = anp.array([
+                [sum(responses[el][1][i][0] for el,i in dof)]
+                for dof in Be_map
+            ])
+            return None,  F, {}
+
+        DOF_el_jac = {
+            dof_i : {
+                dof_j: [
+                    (tag, i, j)
+                    for tag,el in enumerate(self.elems)
+                        for j, _dof_j in enumerate(el.dofs) if _dof_j == dof_j
+                            for i, _dof_i in enumerate(el.dofs) if _dof_i == dof_i
+               ]
+               for dof_j in range(nf)
+            }
+            for dof_i in range(nf)
+        }
+        elem_jac = diff.jacx(elem)
+        #eljac_map = {tag: diff.jacx(el) for tag,el in model_map.items()}
+        def jacx(u,p,state,xyz=xyz,params=param_arg):
+            coords = collect_coords(None)
+            U = anp.concatenate([u,anp.zeros((nr,1))],axis=0)
+            el_jacs = {
+                tag: elem_jac(
+                    None,None,None,
+                    xyz = coords[tag],
+                    **params[0]
+                ).squeeze()
+              for tag in range(ne)
+            }
+            jac = anp.array([
+                [
+                    sum([el_jacs[tag][i,j]
+                        for tag, i, j  in DOF_el_jac[dof_i][dof_j]
+                    ]) for dof_j in range(nf)
+                ] for dof_i in range(nf)
+            ])
+            return jac
+        return locals()
+
+    def compose(self,elem=None,solver=None):
+        """
+        TODO: try using jax.scipy.sparse.linalg.cg
+
+        2021-05-07
+        """
+        f = self.compose_quad(elem=elem)
+        jac = diff.jacx(f)
+        if solver is None:
+            solver = anp.linalg.solve
+            def F(points, weights):
+                return solver(
+                    sum(jac(xi)*w for xi,w in zip(points,weights)),
+                    sum(f(xi)*w for xi,w in zip(points,weights))
+                )
+        elif solver == "cg":
+            solver = jax.scipy.linalg.sparse.cg
+            def F(points, weights):
+                return solver(
+                    sum(jac(xi)*w for xi,w in zip(points,weights)),
+                    sum(f(xi)*w for xi,w in zip(points,weights))
+                )
+            
+        return F
+
+
+    def compose_quad(self,f=None,jit=True,**kwds):
+        if f is None:
+            f = self.assemble_linear(jit=jit,**kwds,_expose_closure=True)
+        f_jacx = diff.jacx(f)
+        cnl = ',\n'
+        u0 = anp.zeros((self.nf,1))
+        model_map = f.closure["model_map"]
+        param_map = f.closure["param_map"]
+        params = self.params
+        elem = f.closure["elem"]
+        local_scope = locals()
+        #-------------------
+        def _unpack(el):
+            params = get_unspecified_parameters(el,recurse=True)
+            ls = ",".join(
+                f"'{p.name}': {p.default.name}"
+                    for p in params.values()
+                        if isinstance(p,inspect.Parameter) and p.default
+                )
+            if "params" in params and params["params"]:
+                subparams = "'params': {" + ",".join(
+                        f"'{k}': {v.default.name}" for k,v in params["params"].items() if v.default
+                ) + "}"
+                if ls:
+                    return  ",".join((ls, subparams))
+                else:
+                    return subparams
+            else:
+                return ls
+        exec(
+            f"def collect_params({','.join(p for p in self.params )}):\n"
+             "  return {'params': {\n"
+            f"""    { f'0: {{ {_unpack(elem)} }}' }\n"""
+             "  }}",
+             local_scope
+        )
+        collect_params = local_scope["collect_params"]
+
+        exec(
+            f"def resp({','.join(p for p in self.params)}): \n"
+          f"""   params = collect_params({','.join(p for p in self.params)})\n"""
+            f"   return f(f.origin[0], f.origin[1], f.origin[2], params['params'])[1]\n"
+
+            f"def jacx({','.join(p for p in self.params)}): \n"
+          f"""   params = collect_params({','.join(p for p in self.params)})\n"""
+            f"   return f_jacx(f.origin[0], f.origin[1], f.origin[2], None, params['params'])",
+            local_scope
+        )
+        main = local_scope["resp"]
+        main.jacx = local_scope["jacx"]
+        main.collect_params = collect_params
+        main.origin = tuple(anp.zeros(p.shape) if hasattr(p,"shape") else 0.0 for p in self.params)
+        return main
+    #assemble_primal = assemble
+
+
+class Model(Assembler):
+    def __init__(self, ndm:int, ndf:int):
+        """Basic structural model class
+
+        Parameters
+        -----------
+        ndm: int
+            number of model dimensions
+        ndf: int
+            number of degrees of freedom (dofs) at each node
+
+        """
+        super().__init__(ndm=ndm, ndf=ndf)
+        self.ndf: int = ndf
+        self.ndm: int = ndm
+        #self.DOF: list = None
+        self.dtype='float32'
+
 
         self.clean()
     
@@ -297,7 +790,7 @@ class Model(Assembler):
 
     @template(dim="shape",main="force")
     def assemble_force(self, elem=None,**kwds)->Callable:
-        """A simple force composer for skeletal truss structures."""
+        """A simple force composer for skeletal structures."""
         ndf = self.ndf
         nr = self.nr
         nn = self.nn
@@ -418,10 +911,6 @@ class Model(Assembler):
     def rel(self):
         return [rel for elem in self.elems for rel in elem.rel.values()]
 
-    @property
-    def nn(self) -> int:
-        """Number of nodes in model"""
-        return len(self.nodes)
 
     @property
     def nr(self) -> int:
@@ -670,23 +1159,6 @@ class Model(Assembler):
         """
         return self.fix(node, 'y')
 
-    def param(self,*param_names,shape=0,dtype=float,default=None):
-        """Add a parameter to a model.
-        created 2021-03-31
-        """
-        param_kind = inspect.Parameter.POSITIONAL_OR_KEYWORD
-        if shape != 0:
-            self.params.update({
-                param: anp.empty(shape=shape,dtype=dtype) for param in param_names
-        })
-        else:
-            self.params.update({
-                name: inspect.Parameter(name,param_kind,default=default) for name in param_names
-            })
-        if len(param_names) > 1:
-            return tuple(inspect.Parameter(name,param_kind) for name in param_names)
-        else:
-            return inspect.Parameter(param_names[0],param_kind)
 
  # Other
     def material(self, tag: str, E: float):
@@ -1234,7 +1706,8 @@ class Node():
 
         self.x0: float = xyz[0] # x-coordinate in base configuration (unstrained, not necessarily unstressed).  
         self.y0: float = xyz[1] # y-coordinate in base configuration (unstrained, not necessarily unstressed).  
-        self.z0: float = xyz[2] # z-coordinate in base configuration (unstrained, not necessarily unstressed).  
+        # z-coordinate in base configuration (unstrained, not necessarily unstressed).  
+        self.z0: float = xyz[2] if len(xyz) > 2 else None
 
         # Attributes for nonlinear analysis
         # self.xi: float = x # x-coordinate in reference configuration.  
@@ -1243,7 +1716,7 @@ class Node():
         
         self.x: float = xyz[0]
         self.y: float = xyz[1]
-        self.z: float = xyz[2]
+        self.z: float = xyz[2] if len(xyz) > 2 else None
 
         
         self.rxns = [0]*ndf
@@ -1339,8 +1812,8 @@ def spacetruss(ns, Ro, Ri, H):
 
     return model
 
-class SkeletalModel(Model):
-    pass
+SkeletalModel = Model
+
 
 class Domain(Model):
     """Deprecated. Use Model instead."""
@@ -1351,3 +1824,35 @@ class Domain(Model):
 #----------------------------------------------------------------------
 
 
+def number_dof_plain(conn, boun, verbose=False):
+    """Basic dof numbering"""
+    ndf = max(len(con) for con in mesh.values())
+    nr = sum(sum(boun) for boun in bn.values())
+    nodes = {node for con in mesh.values() for node in con[1]}
+    nn = len(nodes)
+
+    crxns = ndf*nn - nr + 1
+
+    df = 1
+    temp = {}
+    try:
+        sorted_nodes = sorted(nodes, key=lambda k: int(k))
+    except:
+        sorted_nodes = sorted(nodes)
+    for node in sorted_nodes:
+        DOFs = []
+        try:
+            for rxn in bn[node]:
+                if not rxn:
+                    DOFs.append(df)
+                    df += 1
+                else:
+                    DOFs.append(crxns)
+                    crxns += 1
+        except KeyError:
+            df -= 1
+            DOFs = [df := df + 1 for _ in range(ndf)]
+            df += 1
+
+        temp[node] = DOFs
+    return temp

@@ -1,2 +1,0 @@
-1. python setup.py clean --all sdist bdist_wheel
-2. twine upload --skip-existing dist/*
