@@ -3,6 +3,7 @@ __version__ = "0.0.1"
 
 import anabel.aisc
 import anabel.analysis
+import anabel.sections
 
 from anabel.assemble import *
 from anabel.matrices import *

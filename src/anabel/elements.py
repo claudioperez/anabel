@@ -165,7 +165,7 @@ class BasicLink():
 class Element(BasicLink):
     """Element parent class"""
 
-    def __init__(self,  ndf, ndm, force_dict=None, nodes=None, elem=None, resp=None, proto=None):
+    def __init__(self,  ndf, ndm, force_dict=None, nodes=None, elem=None, resp=None, proto=None, tag=None):
         super().__init__(ndf, ndm, nodes)
         self._resp = resp
         self.elem = elem
@@ -173,6 +173,8 @@ class Element(BasicLink):
         self.current = {}
         if force_dict is None:
             force_dict = {str(i+1): 0 for i in range(ndf)}
+        if tag is not None:
+            self.tag = tag
 
         nq = len(force_dict)
         self.rel = {str(i): False for i in range(1, nq+1)}
@@ -184,6 +186,9 @@ class Element(BasicLink):
 
         self.basic_forces = np.array([IntForce(self, i, nature=str(i)) for i in range(1, nq+1)])
         self.basic_deformations = self.basic_forces
+
+    @property
+    def nn(self): return len(self.nodes)
 
     @property
     def resp(self):
@@ -314,6 +319,14 @@ class PolyRod(Element):
         B = self.B()
         P = self.E*self.A*(B[0,0]*u[0] + B[1,0]*u[1])
         return P
+
+class MeshCell(Element):
+    def __init__(self, tag, nn, ndf, ndm, nodes):
+        node_map = {}
+        super().__init__(ndf, ndm, nodes=nodes, tag=tag)
+
+    def ke_matrix(self, *args, **kwds):
+        return anp.eye(self.ndm*self.nn)
 
 class Truss(Element):
     nv = 1
