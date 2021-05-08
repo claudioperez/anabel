@@ -55,6 +55,10 @@ class BasicLink():
 
     @property
     def dofs(self):
+        """
+
+        This function is very slow.
+        """
         eid = np.array([],dtype=int)
         for node in self.nodes:
             eid = np.append(eid, node.dofs[0:self.ndf])
@@ -324,6 +328,12 @@ class MeshCell(Element):
     def __init__(self, tag, nn, ndf, ndm, nodes):
         node_map = {}
         super().__init__(ndf, ndm, nodes=nodes, tag=tag)
+    
+    @property
+    def dofs(self):
+        """"""
+        return np.asarray([node.dofs[0:self.ndf] for node in self.nodes])
+
 
     def ke_matrix(self, *args, **kwds):
         return anp.eye(self.ndm*self.nn)

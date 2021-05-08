@@ -1,3 +1,9 @@
+"""
+# Graphics
+
+High-level model visualization library.
+"""
+
 import matplotlib.pyplot as plt
 import numpy as np
 from emme.elements import Truss
@@ -59,6 +65,16 @@ chord_style = [{"color": "black", "linewidth": 1, "linestyle": ":", "zorder": 2}
 
 axis_style = {"color": "grey", "linewidth": 1, "linestyle": "--"}
 
+def get_axes(kwds):
+    if "ax" in kwds:
+        ax = kwds["ax"]
+        if "fig" in kwds:
+            fig = kwds["fig"]
+        else:
+            fig = None
+    else:
+        fig, ax = plt.subplots()
+    return fig, ax
 
 def plot_moments(
     state: object, ax=None, scale: float = None, color: str = None, chords: bool = False
@@ -505,3 +521,4 @@ def plot_2dshape(xyz, N, node=1, ax=None):
 
     xx, yy = np.meshgrid(xyz[:, 0], xyz[:, 1])
     z = N[(i - 1) * 2, 0](xx, yy)
+

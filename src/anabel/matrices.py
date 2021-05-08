@@ -1,9 +1,7 @@
 """
-Matrices
-=======================
+# Matrix API
 
-This module provides functions and classes for constructing various
-structural analysis matrices. 
+This module provides functions and classes for constructing various structural analysis matrices. 
 
 """
 

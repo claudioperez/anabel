@@ -5,6 +5,7 @@
 
 Core model building classes.
 """
+import jax
 import copy
 import inspect
 import functools
@@ -468,19 +469,19 @@ class MeshGroup(Assembler):
             for dof_i in range(nf)
         }
         if verbose: print("Jacobian map complete.")
-        elem_jac = diff.jacx(elem)
-        #eljac_map = {tag: diff.jacx(el) for tag,el in model_map.items()}
+
+        # create a vectorized function. TODO: This currently doesnt handle
+        # arbitrary parameterizations which were handled by keyword args.
+        elem_jac = jax.vmap(diff.jacx(elem),(None,None,None,0,None))
+        
         def jacx(u,p,state,xyz=xyz,params=param_arg):
             coords = collect_coords(None)
             U = anp.concatenate([u,anp.zeros((nr,1))],axis=0)
-            el_jacs = {
-                tag: elem_jac(
-                    None,None,None,
-                    xyz = coords[tag],
-                    **params[0]
-                ).squeeze()
-              for tag in range(ne)
-            }
+            el_jacs = elem_jac(
+                    [],[],[],
+                    coords,
+                    params[0]["xi"]
+            )
             jac = anp.array([
                 [
                     sum([el_jacs[tag][i,j]
@@ -501,11 +502,17 @@ class MeshGroup(Assembler):
         jac = diff.jacx(f)
         if solver is None:
             solver = anp.linalg.solve
+            stiff = jax.vmap(lambda loc,weight: jac(loc)*weight,(0,0))
+            force = jax.vmap(lambda loc,weight: f(loc)*weight, (0,0))
             def F(points, weights):
                 return solver(
-                    sum(jac(xi)*w for xi,w in zip(points,weights)),
-                    sum(f(xi)*w for xi,w in zip(points,weights))
+                    sum(stiff(points,weights)), sum(force(points,weights))
                 )
+            #def F(points, weights):
+            #    return solver(
+            #        sum(jac(xi)*w for xi,w in zip(points,weights)),
+            #        sum(f(xi)*w for xi,w in zip(points,weights))
+            #    )
         elif solver == "cg":
             solver = jax.scipy.linalg.sparse.cg
             def F(points, weights):
@@ -907,9 +914,9 @@ class Model(Assembler):
             }
             jac = anp.array([
                 [
-                    sum([el_jacs[tag][i,j]
+                    sum(el_jacs[tag][i,j]
                         for tag, i, j  in DOF_el_jac[dof_i][dof_j]
-                    ]) for dof_j in range(1,nf+1)
+                    ) for dof_j in range(1,nf+1)
                 ] for dof_i in range(1,nf+1)
             ])
             return jac
@@ -943,7 +950,7 @@ class Model(Assembler):
         """Number of basic element forces"""
         f = []
         for elem in self.elems:
-            f.append(sum([1 for x in elem.q]))
+            f.append(sum(1 for x in elem.q))
         return f
 
     @property
