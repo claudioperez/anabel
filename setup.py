@@ -71,7 +71,7 @@ setup(
     keywords=[],
     python_requires=">=3.6",
     install_requires=[
-        "numpy", "pandoc", "matplotlib", "scipy", "elle.sections"
+        "jax", "jaxlib", "numpy", "pandoc", "matplotlib", "scipy", "elle.sections", "elle.numeric", "anon"
     ],
     extras_require=extras_require,
 )
