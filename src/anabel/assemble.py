@@ -395,42 +395,37 @@ class MeshGroup(Assembler):
             return anp.take(U.flatten(), anp.asarray(dofs, dtype='int32')-1)[:,None]
 
         vresp = jax.vmap(elem,(0,None,None,0,None,None))
-        vdisp = jax.vmap( 
-                map_dofs, (None,0)
-        )
+        vdisp = jax.vmap(map_dofs, (None,0))
         Z = anp.zeros((nr,1))
         def assm(u=_p0, p=_p0, state=None, xyz=None, points=None, weights=None, params=param_arg):
-            U = anp.concatenate([u,Z],axis=0) 
+            U = anp.concatenate([u,Z],axis=0)
             coords = collect_coords(None)
-            #u_el = vdisp(U,el_DOF)
             u_el = anp.take(U,el_DOF,axis=0)
-            #print(f"u_el: {u_el}")
             responses = vresp(u_el,None,None,coords,points,weights)
-            #print(f"Responses:\n{responses}----------------------------------")
             F = anp.array([
                 sum(responses[el][i] for el,i in dof)
                 for dof in Be_map[:nf]
             ])
             #return None,  F, {}
             return F
-        
+
         # create a vectorized function. TODO: This currently doesnt handle
         # arbitrary parameterizations which were handled by keyword args.
-        elem_jac = jax.vmap(diff.jacx(elem),(None,None,None,0,None))
-        vrow = jax.vmap(lambda eJ,eij: sum(eJ[tuple(zip(*(eij)))]), (None,1)) 
-        vjac = jax.vmap(vrow,(None,0))
-
-        def sparse_jac(u,p,state,xyz=xyz,points=None,weights=None,params=param_arg):
+        elem_jac = jax.vmap(diff.jacx(elem),(None,None,None,0,None,None))
+        vrow = jax.vmap(lambda eJ, eij: sum(eJ[tuple(zip(*(eij)))]), (None,1))
+        vjac = jax.vmap(vrow, (None,0))
+        z = anp.zeros((self.nt))
+        def sparse_jac(u,p,state,xyz=None,points=None,weights=None,params=param_arg):
             coords = collect_coords(None)
             el_jacs = elem_jac(
-                    [],[],[],coords, points, weights
+                [],[],[],coords, points, weights
             )
             print("State determination complete")
             K = scipy.sparse.lil_matrix((nf,nf))
-            for tag, el_dofs in enumerate(el_DOF): 
+            for tag, el_dofs in enumerate(el_DOF):
                 for j, dof_j in enumerate(el_dofs):
                     for i, dof_i in enumerate(el_dofs):
-                        K[dof_i,dof_j] +=  el_jacs[tag,i,j]
+                        K[dof_i,dof_j] += el_jacs[tag,i,j]
 
             del el_jacs
             gc.collect()
@@ -602,11 +597,13 @@ class MeshGroup(Assembler):
         elif solver == "sparse":
             F = self.assemble_integral(elem=elem)
             jac = F.sparse_jac
-            solver = jax.scipy.sparse.linalg.spsolve
+            solver = scipy.sparse.linalg.spsolve
             z = anp.zeros((self.nf,1))
             def U(points, weights):
                 b = F(z,None,None,None,points,weights)
-                A = jac(None,None,None,points,weights)
+                print("source vector assembled")
+                A = jac([],None,None,None,points,weights)
+                print("stiffness matrix assembled")
                 return solver(A, -b)
 
         elif solver == "pos":
