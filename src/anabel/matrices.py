@@ -9,7 +9,11 @@ import numpy as np
 import pandas as pd
 import scipy.linalg
 import matplotlib.pyplot as plt
-import emme
+
+try:
+    import emme
+except:
+    import anabel as emme
 # from emme.utilities import Structural_Matrix, Structural_Vector, transfer_vars
 
 

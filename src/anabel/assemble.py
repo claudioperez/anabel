@@ -5,7 +5,7 @@
 
 Core model building classes.
 """
-import jax
+import gc
 import copy
 import inspect
 import functools
@@ -13,13 +13,15 @@ from inspect import signature
 from functools import partial
 from typing import Callable, List
 
+import jax
 import meshio
 import numpy as np
+import scipy.sparse
 from mpl_toolkits.mplot3d import Axes3D
 
 from anon import diff
 from anabel.template import get_unspecified_parameters, template
-from emme.elements import *
+from anabel.elements import *
 try:
     import anon.atom as anp
 except:
@@ -88,7 +90,7 @@ class Assembler:
     is to provide a convenient interface for interacting with 
     and managing these entities.
     """
-    def __init__(self, ndm:int, ndf:int):
+    def __init__(self, ndm:int, ndf:int,verbose=0):
         """
         Parameters
         -----------
@@ -103,6 +105,7 @@ class Assembler:
         self.DOF: list = None
         self._numberer  = None
         self.dtype='float64'
+        self.verbose = verbose
 
         # model inventory lists
         self.elems: list = []
@@ -156,6 +159,20 @@ class Assembler:
     @property
     def nt(self)->int:
         return self.ndf * len(self.nodes)
+
+    @property
+    def element_dofs(self):
+        return anp.concatenate([elem.dofs for tag,elem in enumerate(self.elems)],axis=-1).T
+
+    def dof_element_map(self):
+        el_DOF = self.element_dofs
+        if self.verbose: print("Constructing element-DOF map.")
+        Be_map = [[] for i in range(self.nt)]
+        for el,dofs in enumerate(el_DOF):
+            for i,dof in enumerate(dofs): 
+                Be_map[dof].append((el,i))
+        return Be_map
+
     
     def param(self,*param_names,shape=0,dtype=float,default=None):
         """Create a parameter that is managed by the model.
@@ -181,20 +198,20 @@ class Assembler:
 class MeshGroup(Assembler):
     """Homogeneous 2D mesh group.
 
-
     """
     def __init__(self, *args, ndm=2, ndf=1,  mesh=None, **kwds):
         super().__init__(ndm=ndm, ndf=ndf)
         self.mesh = mesh
         self.nodes = [
-                Node(self, str(i), self.ndf, point) 
-                for i,point in enumerate(mesh.points)
+            Node(self, str(i), self.ndf, point) 
+            for i,point in enumerate(mesh.points)
         ]
         self.elems = [
             MeshCell(f"elem-{i}", len(cell), ndf, ndm, [self.nodes[j] for j in cell])
             for i,cell in enumerate(mesh.cells[0][1])
         ]
-        self.fixities = mesh.point_data["fixities"]
+        self.fixities = mesh.point_data["fixities"] \
+                if "fixities" in mesh.point_data else [[0] for i in range(self.nn)]
 
     @classmethod
     def read(cls, filename:str, *args, **kwds):
@@ -225,11 +242,12 @@ class MeshGroup(Assembler):
     @property
     def nr(self):
         """Return number of fixed degrees of freedom"""
-        return np.count_nonzero(self.mesh.point_data["fixities"])
+        return np.count_nonzero(self.fixities)
 
     @property
     def dofs(self):
         """Plain DOF numbering scheme.
+
         2021-05-07
         """
         if self._numberer is None:
@@ -250,6 +268,9 @@ class MeshGroup(Assembler):
         from matplotlib import cm
         if values is None:
             point_values = [[func(node.xyz)] for node in self.nodes]
+        elif callable(values):
+            point_values = [[values(node.xyz)] for node in self.nodes]
+            print(point_values)
         else:
             # TODO: appends zeros at the end under the assumption that solution
             # vanished on Dirichlet boundary. This should be changed.
@@ -271,15 +292,15 @@ class MeshGroup(Assembler):
                 plotter_itk.show(True)
             else:
                 plotter = pv.Plotter(notebook=True)
-                #mesh.warp_by_scalar()
                 plotter.add_mesh(mesh,
                    show_edges=True,
                    cmap=cm.RdYlBu,
                    lighting=False,
                    **kwds)
-                plotter.add_mesh(
-                   pv.PolyData(mesh.points), color='red',
-                   point_size=5, render_points_as_spheres=True)
+                if self.nn < 1000:
+                    plotter.add_mesh(
+                       pv.PolyData(mesh.points), color='red',
+                       point_size=5, render_points_as_spheres=True)
                 if savefig:
                     plotter.show(screenshot=savefig)
                 else:
@@ -292,7 +313,7 @@ class MeshGroup(Assembler):
         return
     
     @template(dim="shape",main="assm")
-    def assemble_integral(self, elem=None,**kwds)->Callable:
+    def assemble_integral(self, elem=None, verbose=False, **kwds)->Callable:
         """
         Parameters
         ----------
@@ -312,6 +333,9 @@ class MeshGroup(Assembler):
         nr = self.nr
         nodes = set(self.dnodes.keys())
         shape = ((nf,1),(nf,1))
+        params = self.params
+        # Assign model degrees of freedom
+        self.DOF = DOF = self.dofs
         
         _unpack_coords = lambda xyz: f"[{','.join(str(x) for x in xyz)}]"
         local_scope = locals()
@@ -329,25 +353,20 @@ class MeshGroup(Assembler):
         if elem is None:
             elem = self.elems[0].compose()
         
-        #model_map = {
-        #    el.tag: elem for el in self.elems
-        #}
         param_map = {
             tag: anon.dual.get_unspecified_parameters(elem) for tag,el in enumerate(self.elems)
         }
-        el_DOF  = [ elem.dofs for tag,elem in enumerate(self.elems) ]
-        print(el_DOF)
+        #el_DOF  = [ elem.dofs for tag,elem in enumerate(self.elems) ]
+        el_DOF  = self.element_dofs
+        Be_map = self.dof_element_map()
 
-        params = self.params
-        # Assign model degrees of freedom
-        self.DOF = DOF = self.dofs
         
         # Create DOF - element mapping
         if verbose: print("Creating Be_map")
-        Be_map = tuple(
-            [(el,i) for el in range(ne) for i, el_dof in enumerate(el_DOF[el]) if dof==el_dof]
-            for dof in range(nf)
-        )
+        #Be_map = tuple(
+        #    [(el,i) for el in range(ne) for i, el_dof in enumerate(el_DOF[el]) if dof==el_dof]
+        #    for dof in range(nf)
+        #)
         state = {
             ... : [elem.origin[2] for tag in range(ne)]
         }
@@ -357,20 +376,66 @@ class MeshGroup(Assembler):
         
         if verbose: print("Collecting coordinates.")
         xyz = eval(f"""{{ { ','.join(f'"{tag}": [{",".join(str(x) for x in node.xyz)}]' for tag, node in self.dnodes.items() )} }}""")
-        
-        def assm(u,p=None,state=None, points=None,weights=None,params=param_arg):
-            U = anp.concatenate([u,anp.zeros((nr,1))],axis=0)
+         
+        #def assm(u, p=None, state=None, points=None, weights=None, params=param_arg):
+        #    U = anp.concatenate([u,anp.zeros((nr,1))],axis=0)
+        #    coords = collect_coords(None)
+        #    return  sum(
+        #        elem(
+        #            anp.take(U, anp.asarray(dofs, dtype='int32')-1),
+        #            None,None,
+        #            xyz = coords[tag],
+        #            xi = loc,
+        #            **params[0]
+        #        )[1] * weight
+        #        for tag,dofs in enumerate(el_DOF) for loc,weight in zip(points,weights)
+        #    )
+        def map_dofs(U,dofs):
+            print(U,dofs)
+            return anp.take(U.flatten(), anp.asarray(dofs, dtype='int32')-1)[:,None]
+
+        vresp = jax.vmap(elem,(0,None,None,0,None,None))
+        vdisp = jax.vmap( 
+                map_dofs, (None,0)
+        )
+        Z = anp.zeros((nr,1))
+        def assm(u=_p0, p=_p0, state=None, xyz=None, points=None, weights=None, params=param_arg):
+            U = anp.concatenate([u,Z],axis=0) 
             coords = collect_coords(None)
-            return  sum(
-                elem(
-                    anp.take(U, anp.asarray(dofs, dtype='int32')-1)[:,None],
-                    None,None,
-                    xyz = coords[tag],
-                    xi = loc,
-                    **params[0]
-                )[1] * weight
-                for tag,dofs in enumerate(el_DOF) for loc,weight in zip(points,weights)
+            #u_el = vdisp(U,el_DOF)
+            u_el = anp.take(U,el_DOF,axis=0)
+            #print(f"u_el: {u_el}")
+            responses = vresp(u_el,None,None,coords,points,weights)
+            #print(f"Responses:\n{responses}----------------------------------")
+            F = anp.array([
+                sum(responses[el][i] for el,i in dof)
+                for dof in Be_map[:nf]
+            ])
+            #return None,  F, {}
+            return F
+        
+        # create a vectorized function. TODO: This currently doesnt handle
+        # arbitrary parameterizations which were handled by keyword args.
+        elem_jac = jax.vmap(diff.jacx(elem),(None,None,None,0,None))
+        vrow = jax.vmap(lambda eJ,eij: sum(eJ[tuple(zip(*(eij)))]), (None,1)) 
+        vjac = jax.vmap(vrow,(None,0))
+
+        def sparse_jac(u,p,state,xyz=xyz,points,weights,params=param_arg):
+            coords = collect_coords(None)
+            el_jacs = elem_jac(
+                    [],[],[],coords, points, weights
             )
+            print("State determination complete")
+            K = scipy.sparse.lil_matrix((nf,nf))
+            for tag, el_dofs in enumerate(el_DOF): 
+                for j, dof_j in enumerate(el_dofs):
+                    for i, dof_i in enumerate(el_dofs):
+                        K[dof_i,dof_j] +=  el_jacs[tag,i,j]
+
+            del el_jacs
+            gc.collect()
+            return K.to_csr()
+        assm.sparse_jac = sparse_jac
         return locals()
 
 
@@ -394,6 +459,9 @@ class MeshGroup(Assembler):
         nr = self.nr
         nodes = set(self.dnodes.keys())
         shape = ((nf,1),(nf,1))
+        params = self.params
+        if elem is None:
+            elem = self.elems[0].compose()
         
         _unpack_coords = lambda xyz: f"[{','.join(str(x) for x in xyz)}]"
         local_scope = locals()
@@ -406,10 +474,6 @@ class MeshGroup(Assembler):
          dict(anp=anp),local_scope,
         )
         collect_coords = local_scope["collect_coords"]
-
-
-        if elem is None:
-            elem = self.elems[0].compose()
         
         model_map = {
             el.tag: elem for el in self.elems
@@ -418,17 +482,11 @@ class MeshGroup(Assembler):
             tag: anon.dual.get_unspecified_parameters(elem) for tag,el in enumerate(self.elems)
         }
 
-        params = self.params
-
         self.DOF = DOF = self.dofs
-        el_DOF  = [ elem.dofs for tag,elem in enumerate(self.elems) ]
-
-        if verbose: print("Constructing element-DOF map.")
-        Be_map = tuple(
-            [(el,i) for el in range(ne) for i, el_dof in enumerate(self.elems[el].dofs) if dof==el_dof]
-            for dof in range(nf)
-        )
-        if verbose: print("Element-DOF map complete.")
+        el_DOF  = self.element_dofs
+        #el_DOF  = anp.concatenate([ elem.dofs for tag,elem in enumerate(self.elems) ],axis=-1).T
+        Be_map = self.dof_element_map()
+        if self.verbose: print("Element-DOF map complete.")
 
         state = {
             ... : [elem.origin[2] for tag in range(ne)]
@@ -438,42 +496,55 @@ class MeshGroup(Assembler):
         _p0 = anp.zeros((nf,1))
         xyz = eval(f"""{{ { ','.join(f'"{tag}": [{",".join(str(x) for x in node.xyz)}]' for tag, node in self.dnodes.items() )} }}""")
         
-        def assm(_=None,p=_p0,__=None, params=param_arg):
-            # 
+        vresp = jax.vmap(elem,(0,None,None,0,None))
+        vdisp = jax.vmap( 
+                lambda U,dofs:  anp.take(U.flatten(), anp.asarray(dofs, dtype='int32')-1)[:,None], (None,0)
+        )
+        Z = anp.zeros((nr,1))
+        def assm(u=_p0,p=_p0,state=None, xyz=None, params=param_arg):
+            U = anp.concatenate([u,Z],axis=0) 
             coords = collect_coords(None)
-            responses = [
-                elem(
-                    None,None,None,
-                    xyz = coords[tag],
-                    **params[0]
-                )
-                for tag in range(ne)
-            ]
+            u_el = vdisp(U,el_DOF)
+            responses = vresp(u_el,None,None,coords,params[0]["xi"])
+            print(responses)
             F = anp.array([
-                [sum(responses[el][1][i][0] for el,i in dof)]
-                for dof in Be_map
+                sum(responses[el][i] for el,i in dof)
+                for dof in Be_map[:nf]
             ])
             return None,  F, {}
 
+        #----------------------------------------------------------------
         if verbose: print("Constructing jacobian map.")
-        DOF_el_jac = {
-            dof_i : {
-                dof_j: [
-                    (tag, i, j)
-                    for tag,el_dofs in enumerate(el_DOF)
-                        for j, _dof_j in enumerate(el_dofs) if _dof_j == dof_j
-                            for i, _dof_i in enumerate(el_dofs) if _dof_i == dof_i
-               ]
-               for dof_j in range(nf)
-            }
-            for dof_i in range(nf)
-        }
+        DOF_el_jac = [ [ [] for j in range(nr+nf)] for i in range(nr+nf)]
+        for tag,el_dofs in enumerate(el_DOF): 
+            for j, dof_j in enumerate(el_dofs):
+                for i, dof_i in enumerate(el_dofs):
+                    DOF_el_jac[dof_i][dof_j].append([tag,i,j])
         if verbose: print("Jacobian map complete.")
+        #----------------------------------------------------------------
 
         # create a vectorized function. TODO: This currently doesnt handle
         # arbitrary parameterizations which were handled by keyword args.
         elem_jac = jax.vmap(diff.jacx(elem),(None,None,None,0,None))
-        
+        vrow = jax.vmap(lambda eJ,eij: sum(eJ[tuple(zip(*(eij)))]), (None,1)) 
+        vjac = jax.vmap(vrow,(None,0))
+
+        def jac_x(u,p,state,xyz=xyz,params=param_arg):
+            coords = collect_coords(None)
+            U = anp.concatenate([u,anp.zeros((nr,1))],axis=0)
+            el_jacs = elem_jac(
+                    [],[],[],
+                    coords,
+                    params[0]["xi"]
+            )
+            print("State determination complete")
+            K = anp.zeros((nf,nf))
+            for tag, el_dofs in enumerate(el_DOF): 
+                for j, dof_j in enumerate(el_dofs):
+                    for i, dof_i in enumerate(el_dofs):
+                        K = jax.ops.index_add(K, jax.ops.index[dof_i,dof_j], el_jacs[tag,i,j])
+            return K
+
         def jacx(u,p,state,xyz=xyz,params=param_arg):
             coords = collect_coords(None)
             U = anp.concatenate([u,anp.zeros((nr,1))],axis=0)
@@ -482,6 +553,9 @@ class MeshGroup(Assembler):
                     coords,
                     params[0]["xi"]
             )
+            #print(el_jacs.shape)
+            #print(vrow(el_jacs,DOF_el_jac[0]))
+            #jac = vjac(el_jacs,DOF_el_jac)
             jac = anp.array([
                 [
                     sum([el_jacs[tag][i,j]
@@ -498,30 +572,64 @@ class MeshGroup(Assembler):
 
         2021-05-07
         """
-        f = self.compose_quad(elem=elem,verbose=verbose)
-        jac = diff.jacx(f)
         if solver is None:
+            f = self.compose_quad(elem=elem,verbose=verbose)
+            jac = diff.jacx(f)
             solver = anp.linalg.solve
             stiff = jax.vmap(lambda loc,weight: jac(loc)*weight,(0,0))
             force = jax.vmap(lambda loc,weight: f(loc)*weight, (0,0))
-            def F(points, weights):
-                return solver(
-                    sum(stiff(points,weights)), sum(force(points,weights))
-                )
+            def U(points, weights):
+                A = sum(stiff(points,weights))
+                print(A)
+                b = sum(force(points,weights))
+                print(b)
+                return solver(A, b)
             #def F(points, weights):
             #    return solver(
             #        sum(jac(xi)*w for xi,w in zip(points,weights)),
             #        sum(f(xi)*w for xi,w in zip(points,weights))
             #    )
+        elif solver == "2":
+            F = self.assemble_integral(elem=elem)
+            jac = diff.jacx(lambda *args: F(*args)+b)
+            solver = jax.scipy.sparse.linalg.cg
+            z = anp.zeros((self.nf,1))
+            def U(points, weights):
+                b = F(z,None,None,None,points,weights)
+                A = jac(z,None,None,None,points,weights)
+                return solver(A, b)
+
+        elif solver == "sparse":
+            F = self.assemble_integral(elem=elem)
+            jac = F.sparse_jac
+            solver = jax.scipy.sparse.linalg.spsolve
+            z = anp.zeros((self.nf,1))
+            def U(points, weights):
+                b = F(z,None,None,None,points,weights)
+                A = jac(None,None,None,points,weights)
+                return solver(A, -b)
+
+        elif solver == "pos":
+            F = self.assemble_integral(elem=elem)
+            solver = jax.scipy.linalg.solve
+            z = anp.zeros((self.nf,1))
+            def U(points, weights):
+                b = F(z,None,None,None,points,weights)
+                A = lambda U: jax.jvp(lambda x: F(x,None,None,None,points,weights),(z,),(U,))[1]
+                #b = F(z,None,None,None,points,weights)[1]
+                #return solver(lambda U: F(U,None,None,None,points,weights)[1]-b, z, x0=z)[0]
+                return solver(A, -b, tol=1e-12, atol=0.0, x0=z)[0]
+
         elif solver == "cg":
-            solver = jax.scipy.linalg.sparse.cg
-            def F(points, weights):
-                return solver(
-                    sum(jac(xi)*w for xi,w in zip(points,weights)),
-                    sum(f(xi)*w for xi,w in zip(points,weights))
-                )
+            F = self.assemble_integral(elem=elem)
+            solver = jax.scipy.sparse.linalg.cg
+            z = anp.zeros((self.nf,1))
+            def U(points, weights):
+                b = F(z,None,None,None,points,weights)
+                A = lambda U: jax.jvp(lambda x: F(x,None,None,None,points,weights),(z,),(U,))[1]
+                return solver(A, -b, tol=1e-12, atol=0.0, x0=z)[0]
             
-        return F
+        return U
 
 
     def compose_quad(self,f=None,jit=True,verbose=False,**kwds):
@@ -535,13 +643,13 @@ class MeshGroup(Assembler):
         params = self.params
         elem = f.closure["elem"]
         local_scope = locals()
-        #-------------------
+        #------------------------------------------------------------------
         def _unpack(el):
             params = get_unspecified_parameters(el,recurse=True)
             ls = ",".join(
                 f"'{p.name}': {p.default.name}"
                     for p in params.values()
-                        if isinstance(p,inspect.Parameter) and p.default
+                      if isinstance(p,inspect.Parameter) and p.default
                 )
             if "params" in params and params["params"]:
                 subparams = "'params': {" + ",".join(
@@ -564,8 +672,8 @@ class MeshGroup(Assembler):
 
         exec(
             f"def resp({','.join(p for p in self.params)}): \n"
-          f"""   params = collect_params({','.join(p for p in self.params)})\n"""
-            f"   return f(f.origin[0], f.origin[1], f.origin[2], params['params'])[1]\n"
+          f"""   params = collect_params({','.join(p for p in self.params)});\n"""
+            f"   return f(f.origin[0], f.origin[1], f.origin[2], None, params['params'])[1]\n"
 
             f"def jacx({','.join(p for p in self.params)}): \n"
           f"""   params = collect_params({','.join(p for p in self.params)})\n"""
@@ -577,7 +685,6 @@ class MeshGroup(Assembler):
         main.collect_params = collect_params
         main.origin = tuple(anp.zeros(p.shape) if hasattr(p,"shape") else 0.0 for p in self.params)
         return main
-    #assemble_primal = assemble
 
 
 class Model(Assembler):
@@ -1771,7 +1878,7 @@ class Hinge():
         self.elem = elem
         self.node = node
 
-# ##>*****************************************************************************
+
 
 def parabolicArch(length, height):
     pass
@@ -1835,40 +1942,36 @@ class Domain(Model):
     """Deprecated. Use Model instead."""
     pass
 
-#----------------------------------------------------------------------
+
+#def number_dof_plain(conn, boun, verbose=False):
+#    """Basic dof numbering"""
+#    ndf = max(len(con) for con in mesh.values())
+#    nr = sum(sum(boun) for boun in bn.values())
+#    nodes = {node for con in mesh.values() for node in con[1]}
+#    nn = len(nodes)
 #
-#----------------------------------------------------------------------
-
-
-def number_dof_plain(conn, boun, verbose=False):
-    """Basic dof numbering"""
-    ndf = max(len(con) for con in mesh.values())
-    nr = sum(sum(boun) for boun in bn.values())
-    nodes = {node for con in mesh.values() for node in con[1]}
-    nn = len(nodes)
-
-    crxns = ndf*nn - nr + 1
-
-    df = 1
-    temp = {}
-    try:
-        sorted_nodes = sorted(nodes, key=lambda k: int(k))
-    except:
-        sorted_nodes = sorted(nodes)
-    for node in sorted_nodes:
-        DOFs = []
-        try:
-            for rxn in bn[node]:
-                if not rxn:
-                    DOFs.append(df)
-                    df += 1
-                else:
-                    DOFs.append(crxns)
-                    crxns += 1
-        except KeyError:
-            df -= 1
-            DOFs = [df := df + 1 for _ in range(ndf)]
-            df += 1
-
-        temp[node] = DOFs
-    return temp
+#    crxns = ndf*nn - nr + 1
+#
+#    df = 1
+#    temp = {}
+#    try:
+#        sorted_nodes = sorted(nodes, key=lambda k: int(k))
+#    except:
+#        sorted_nodes = sorted(nodes)
+#    for node in sorted_nodes:
+#        DOFs = []
+#        try:
+#            for rxn in bn[node]:
+#                if not rxn:
+#                    DOFs.append(df)
+#                    df += 1
+#                else:
+#                    DOFs.append(crxns)
+#                    crxns += 1
+#        except KeyError:
+#            df -= 1
+#            DOFs = [df := df + 1 for _ in range(ndf)]
+#            df += 1
+#
+#        temp[node] = DOFs
+#    return temp

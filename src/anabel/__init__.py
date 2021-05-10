@@ -1,12 +1,14 @@
-__version__ = "0.0.2"
+__version__ = "0.0.7"
 
+try:
+    import anabel.aisc
+    import anabel.sections
+    import anabel.analysis
+except:
+    pass
 
-import anabel.aisc
-import anabel.analysis
-import anabel.sections
-
-from anabel.assemble import *
 from anabel.matrices import *
+from anabel.assemble import *
 
 from anabel.graphics import *
 #from anabel.solvers import *

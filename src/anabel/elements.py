@@ -11,14 +11,17 @@ import scipy.integrate
 # import tensorflow as tf
 
 import anon
-from emme.matrices import Structural_Matrix, Structural_Vector
 try:
     import anon.atom as anp
 except:
     anp = np
-# dtype = 'float32'
-# int_dtype='int32'
-# tf.keras.backend.set_floatx(dtype)
+
+try:
+    from emme.matrices import Structural_Matrix, Structural_Vector
+except:
+    from anabel.matrices import Structural_Matrix, Structural_Vector
+
+
 
 class IntForce:
     def __init__(self, elem:object, number:int, nature:str=None):

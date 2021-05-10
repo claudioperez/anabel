@@ -6,9 +6,16 @@ High-level model visualization library.
 
 import matplotlib.pyplot as plt
 import numpy as np
-from emme.elements import Truss
-import emme.matrices as mv
-from emme.matrices import U_vector
+
+try:
+    from emme.elements import Truss
+    import emme.matrices as mv
+    from emme.matrices import U_vector
+except:
+    from anabel.elements import Truss
+    import anabel.matrices as mv
+    from anabel.matrices import U_vector
+
 
 __all__ = [
     "plot_displ",

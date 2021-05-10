@@ -69,9 +69,9 @@ setup(
         "Issue Tracker": "https://github.com/claudioperez/anabel/issues",
     },
     keywords=[],
-    python_requires=">=3.6",
+    python_requires=">=3.7",
     install_requires=[
-        "jax", "jaxlib", "numpy", "pandoc", "matplotlib", "scipy", "elle.sections", "anon"
+        "jax", "jaxlib", "numpy", "pandoc", "matplotlib", "scipy", "anon", "meshio"
     ],
     extras_require=extras_require,
 )
