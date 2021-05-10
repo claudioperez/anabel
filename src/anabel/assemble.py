@@ -420,7 +420,7 @@ class MeshGroup(Assembler):
         vrow = jax.vmap(lambda eJ,eij: sum(eJ[tuple(zip(*(eij)))]), (None,1)) 
         vjac = jax.vmap(vrow,(None,0))
 
-        def sparse_jac(u,p,state,xyz=xyz,points,weights,params=param_arg):
+        def sparse_jac(u,p,state,xyz=xyz,points=None,weights=None,params=param_arg):
             coords = collect_coords(None)
             el_jacs = elem_jac(
                     [],[],[],coords, points, weights
