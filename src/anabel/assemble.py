@@ -269,7 +269,7 @@ class MeshGroup(Assembler):
         if values is None:
             point_values = [[func(node.xyz)] for node in self.nodes]
         elif callable(values):
-            point_values = [[values(node.xyz)] for node in self.nodes]
+            point_values = np.array([values(node.xyz) for node in self.nodes])
             print(point_values)
         else:
             # TODO: appends zeros at the end under the assumption that solution
@@ -277,8 +277,9 @@ class MeshGroup(Assembler):
             dof_values = anp.concatenate([values, anp.zeros((self.nr,1))],axis=0)
             point_values = anp.take(dof_values, self.dofs)
 
+        show_edges = True if self.ne < 10_000 else False
         self.mesh.point_data["u"] = point_values
-        
+
         import pyvista as pv
         pv.start_xvfb(wait=0.05)
         pv.set_plot_theme("document")
@@ -293,8 +294,8 @@ class MeshGroup(Assembler):
             else:
                 plotter = pv.Plotter(notebook=True)
                 plotter.add_mesh(mesh,
-                   show_edges=True,
-                   cmap=cm.RdYlBu,
+                   show_edges=show_edges,
+                   cmap=cm.get_cmap("RdYlBu_r"),
                    lighting=False,
                    **kwds)
                 if self.nn < 1000:
@@ -311,7 +312,7 @@ class MeshGroup(Assembler):
         U = self.compose(quad.points,quad.weights)()
         inner = None
         return
-    
+
     @template(dim="shape",main="assm")
     def assemble_integral(self, elem=None, verbose=False, **kwds)->Callable:
         """
@@ -323,7 +324,7 @@ class MeshGroup(Assembler):
         -------
         f: `f(U, (xi, dV)) -> R^[nf]`
             quad(elem(U[el], X[el])*dV
-        
+
         """
         ndf = self.ndf
         nr = self.nr
@@ -373,23 +374,10 @@ class MeshGroup(Assembler):
         param_arg = {0: {}}
 
         _p0 = anp.zeros((nf,1))
-        
+
         if verbose: print("Collecting coordinates.")
         xyz = eval(f"""{{ { ','.join(f'"{tag}": [{",".join(str(x) for x in node.xyz)}]' for tag, node in self.dnodes.items() )} }}""")
-         
-        #def assm(u, p=None, state=None, points=None, weights=None, params=param_arg):
-        #    U = anp.concatenate([u,anp.zeros((nr,1))],axis=0)
-        #    coords = collect_coords(None)
-        #    return  sum(
-        #        elem(
-        #            anp.take(U, anp.asarray(dofs, dtype='int32')-1),
-        #            None,None,
-        #            xyz = coords[tag],
-        #            xi = loc,
-        #            **params[0]
-        #        )[1] * weight
-        #        for tag,dofs in enumerate(el_DOF) for loc,weight in zip(points,weights)
-        #    )
+
         def map_dofs(U,dofs):
             print(U,dofs)
             return anp.take(U.flatten(), anp.asarray(dofs, dtype='int32')-1)[:,None]
@@ -402,11 +390,11 @@ class MeshGroup(Assembler):
             coords = collect_coords(None)
             u_el = anp.take(U,el_DOF,axis=0)
             responses = vresp(u_el,None,None,coords,points,weights)
+
             F = anp.array([
                 sum(responses[el][i] for el,i in dof)
                 for dof in Be_map[:nf]
             ])
-            #return None,  F, {}
             return F
 
         # create a vectorized function. TODO: This currently doesnt handle
@@ -414,14 +402,15 @@ class MeshGroup(Assembler):
         elem_jac = jax.vmap(diff.jacx(elem),(None,None,None,0,None,None))
         vrow = jax.vmap(lambda eJ, eij: sum(eJ[tuple(zip(*(eij)))]), (None,1))
         vjac = jax.vmap(vrow, (None,0))
-        z = anp.zeros((self.nt))
+        nt = self.nt
+        #z = anp.zeros((nt))
         def sparse_jac(u,p,state,xyz=None,points=None,weights=None,params=param_arg):
             coords = collect_coords(None)
             el_jacs = elem_jac(
                 [],[],[],coords, points, weights
             )
             print("State determination complete")
-            K = scipy.sparse.lil_matrix((nf,nf))
+            K = scipy.sparse.lil_matrix((nt,nt))
             for tag, el_dofs in enumerate(el_DOF):
                 for j, dof_j in enumerate(el_dofs):
                     for i, dof_i in enumerate(el_dofs):
@@ -429,7 +418,7 @@ class MeshGroup(Assembler):
 
             del el_jacs
             gc.collect()
-            return K.to_csr()
+            return K[:nf,:nf].tocsr()
         assm.sparse_jac = sparse_jac
         return locals()
 
@@ -563,7 +552,16 @@ class MeshGroup(Assembler):
 
     def compose(self,elem=None,verbose=False,solver=None):
         """
-        TODO: try using jax.scipy.sparse.linalg.cg
+        Parameters
+        ----------
+        elem: Callable
+            local function to be integrated over.
+
+        solver: str
+            Either of the following.
+            "sparse": use `scipy.sparse.linalg.spsolve`
+            "cg": Conjugate gradient using `jax.scipy.sparse.linalg.cg`
+            `None`: default to `anabel.backend.linalg.solve`
 
         2021-05-07
         """
@@ -604,7 +602,7 @@ class MeshGroup(Assembler):
                 print("source vector assembled")
                 A = jac([],None,None,None,points,weights)
                 print("stiffness matrix assembled")
-                return solver(A, -b)
+                return anp.atleast_2d(solver(A, -b)).T
 
         elif solver == "pos":
             F = self.assemble_integral(elem=elem)
