@@ -3,10 +3,12 @@ graft src
 graft ci
 graft tests
 
-include docs/img/emtec-4.png
+include docs/img/*
+include dat/*
 
 include CHANGELOG.md
 include README.md
 
 include tox.ini .travis.yml .appveyor.yml
 global-exclude *.py[cod] __pycache__/* *.so *.dylib
+

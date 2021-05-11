@@ -33,6 +33,19 @@ The in-development version can be installed the following command:
 $ pip install https://github.com/claudioperez/anabel/archive/master.zip
 ```
 
+## Modeling PDEs
+
+```python
+from anabel import template, diff, MappedMesh
+from anabel.interpolate import lagrange_t6
+
+@template(6)
+def poisson_template(u,v,iso,f,):
+    def poisson(uh,xyz):
+        return jac(u,v)
+```
+
+![](docs/img/poisson_2d.png)
 
 ## Documentation
 
