@@ -30,9 +30,8 @@ def get_version(package):
 
 
 extras_require = {
-    "shellcomplete": ["click_completion"],
-    "tensorflow": ["tensorflow~=2.0", "tensorflow-probability~=0.10"],
     "jax": ["jax~=0.1,>0.1.72", "jaxlib~=0.1,>0.1.51"],
+    "interact": ["ipyvtklink", "pyvista"]
 }
 extras_require["backends"] = sorted(
     set(extras_require["tensorflow"] + extras_require["jax"])

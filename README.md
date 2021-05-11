@@ -60,7 +60,7 @@ To build the documentation, run the following command from the project root dire
 $ elstir build
 ```
 
-## Project Organization
+## Organization of Source Code
 
 
 ### Documentation
@@ -68,9 +68,13 @@ $ elstir build
 - [`style/`] Directory holding style/template/theme files for documentation.
 - [`docs/api/`] Automatically generated API documentation files.
 
-### Source
+### Source Code
 - [`setup.py`] Installation/setup; used for pip installation.
 - [`src/anabel/`] Python source code
+- [`lib/`] C++ source code for extension library
+
+### Data
+- [`dat/quadrature/`] Quadrature scheme data.
 
 ### Source Control, Testing, Continuous Integration
 - `.gitignore` Configuration for [Git]() source control.
@@ -79,6 +83,8 @@ $ elstir build
 - `pytest.ini` configuration file for [PyTest](), used to setup testing.
 
 
+<!-- Links to project folders -->
+[`dat/quadrature/`]: ./dat/quadrature/
 [`docs/api/`]: ./docs/api/
 [`src/anabel/`]: ./src/anabel/
 [`elstir.yml`]: ./elstir.yml
@@ -86,6 +92,8 @@ $ elstir build
 [`setup.py`]: ./setup.py
 [`.appveyor.yml`]: ./.appveyor.yml
 
+
+<!-- Links for badges -->
 [black-shield]: https://img.shields.io/badge/code%20style-black-000000.svg
 
 [pypi-v-image]: https://img.shields.io/pypi/v/anabel.svg
