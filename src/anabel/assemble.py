@@ -261,13 +261,17 @@ class MeshGroup(Assembler):
                 ] for node in self.fixities
             ]
 
-    def plot(self,values=None,func=None,interact=False,savefig:str=None,**kwds):
+    def plot(self,values=None,func=None,scale=1.0,interact=False,savefig:str=None,**kwds):
         """
         Plot mesh using `pyvista` interface to VTK.
+
+        Pure numpy is used for generality.
+
+        Claudio Perez
         """
         from matplotlib import cm
         if values is None:
-            point_values = [[func(node.xyz)] for node in self.nodes]
+            point_values = np.asarray([[func(node.xyz)] for node in self.nodes])
         elif callable(values):
             point_values = np.array([values(node.xyz) for node in self.nodes])
             print(point_values)
@@ -277,6 +281,7 @@ class MeshGroup(Assembler):
             dof_values = anp.concatenate([values, anp.zeros((self.nr,1))],axis=0)
             point_values = anp.take(dof_values, self.dofs)
 
+        point_values *= scale
         show_edges = True if self.ne < 10_000 else False
         self.mesh.point_data["u"] = point_values
 
@@ -331,12 +336,16 @@ class MeshGroup(Assembler):
         nn = self.nn
         ne = len(self.elems)
         nf = self.nf
+        nt = self.nt
         nr = self.nr
         nodes = set(self.dnodes.keys())
         shape = ((nf,1),(nf,1))
         params = self.params
         # Assign model degrees of freedom
         self.DOF = DOF = self.dofs
+        #el_DOF  = [ elem.dofs for tag,elem in enumerate(self.elems) ]
+        el_DOF  = self.element_dofs
+        Be_map = self.dof_element_map()
         
         _unpack_coords = lambda xyz: f"[{','.join(str(x) for x in xyz)}]"
         local_scope = locals()
@@ -357,9 +366,6 @@ class MeshGroup(Assembler):
         param_map = {
             tag: anon.dual.get_unspecified_parameters(elem) for tag,el in enumerate(self.elems)
         }
-        #el_DOF  = [ elem.dofs for tag,elem in enumerate(self.elems) ]
-        el_DOF  = self.element_dofs
-        Be_map = self.dof_element_map()
 
         
         # Create DOF - element mapping
@@ -402,19 +408,20 @@ class MeshGroup(Assembler):
         elem_jac = jax.vmap(diff.jacx(elem),(None,None,None,0,None,None))
         vrow = jax.vmap(lambda eJ, eij: sum(eJ[tuple(zip(*(eij)))]), (None,1))
         vjac = jax.vmap(vrow, (None,0))
-        nt = self.nt
         #z = anp.zeros((nt))
         def sparse_jac(u,p,state,xyz=None,points=None,weights=None,params=param_arg):
             coords = collect_coords(None)
             el_jacs = elem_jac(
                 [],[],[],coords, points, weights
             )
-            print("State determination complete")
+            print("\tState determination complete")
             K = scipy.sparse.lil_matrix((nt,nt))
             for tag, el_dofs in enumerate(el_DOF):
                 for j, dof_j in enumerate(el_dofs):
-                    for i, dof_i in enumerate(el_dofs):
-                        K[dof_i,dof_j] += el_jacs[tag,i,j]
+                    if j < nf:
+                        for i, dof_i in enumerate(el_dofs):
+                            if i < nf: K[dof_i,dof_j] += el_jacs[tag,i,j]
+            print("\tMatrix assembly complete")
 
             del el_jacs
             gc.collect()
