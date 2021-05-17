@@ -1,0 +1,8 @@
+\contentsline {section}{Problem 1.}{2}{section*.2}%
+\contentsline {section}{Problem 2}{6}{section*.5}%
+\contentsline {section}{Problem 3}{7}{section*.7}%
+\contentsline {section}{Appendix}{8}{section*.8}%
+\contentsline {subsection}{Solution plots}{8}{section*.9}%
+\contentsline {subsubsection}{Plots of Finite Element Solutions}{8}{section*.10}%
+\contentsline {subsubsection}{Errors in the \(H^1\) and \(L2\) norms}{33}{section*.61}%
+\contentsline {subsection}{Source Code of Interest}{58}{section*.112}%
