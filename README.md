@@ -51,11 +51,11 @@ def poisson_template(u,v,iso,f,):
 
 ### [`anabel.sections`]()
 
-![](img/sections/main.svg)
+![](docs/img/sections/main.svg)
 
 ### [`anabel.interpolate`]()
 
-![](img/interpolate/main.svg)
+![](docs/img/interpolate/main.svg)
 
 ## Documentation
 
