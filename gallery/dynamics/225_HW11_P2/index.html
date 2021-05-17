@@ -140,6 +140,222 @@
           <article class="page col-md-9 p-3">
           
 
+<h1 id="problem-2">Problem 2</h1>
+<p>(see Ex 9.6)</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ema <span class="im">as</span> em</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>config InlineBackend.figure_format <span class="op">=</span> <span class="st">&#39;svg&#39;</span> <span class="co"># used to make plots look nicer</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ema_examples.dynamics <span class="im">import</span> E09_06</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ema.utilities.ipyutils <span class="im">import</span> disp_sbs </span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.linalg <span class="im">import</span> eig</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>L <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>mass <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>EI <span class="op">=</span> <span class="dv">1</span><span class="op">/</span><span class="dv">12</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>mdl <span class="op">=</span> E09_06(L<span class="op">=</span>L, m <span class="op">=</span> mass, EI <span class="op">=</span> EI)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>em.plot_structure(mdl, ax)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>mdl.DOF</span></code></pre></div>
+<pre><code>[[7, 8, 9], [1, 2, 3], [4, 5, 6]]</code></pre>
+<figure>
+<img src="img/output_2_1.svg" style="margin:auto; display: block; max-width: 75%" alt="svg" /><figcaption aria-hidden="true">svg</figcaption>
+</figure>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>m, K <span class="op">=</span> em.Mass_matrix(mdl), em.K_matrix(mdl)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>m[<span class="dv">0</span>,<span class="dv">0</span>] <span class="op">=</span> <span class="fl">3.</span><span class="op">*</span>mass</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>m[<span class="dv">1</span>,<span class="dv">1</span>] <span class="op">=</span> <span class="fl">1.</span><span class="op">*</span>mass</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>m[<span class="dv">2</span>:,<span class="dv">2</span>:] <span class="op">=</span> <span class="dv">0</span><span class="op">*</span>mass</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>disp_sbs(m.f.df, K.f.df)</span></code></pre></div>
+<table style = "display:inline" border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>$u_{{1}}$</th>
+      <th>$u_{{2}}$</th>
+      <th>$u_{{3}}$</th>
+      <th>$u_{{4}}$</th>
+      <th>$u_{{5}}$</th>
+      <th>$u_{{6}}$</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>$u_{{1}}$</th>
+      <td>3.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>$u_{{2}}$</th>
+      <td>0.0</td>
+      <td>1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>$u_{{3}}$</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>$u_{{4}}$</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>$u_{{5}}$</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>$u_{{6}}$</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table style = "display:inline">
+<table style = "display:inline" border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>$1$</th>
+      <th>$2$</th>
+      <th>$3$</th>
+      <th>$4$</th>
+      <th>$5$</th>
+      <th>$6$</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>$P_{1}$</th>
+      <td>8334.333333</td>
+      <td>0.000000</td>
+      <td>0.500000</td>
+      <td>-8333.333333</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>$P_{2}$</th>
+      <td>0.000000</td>
+      <td>8334.333333</td>
+      <td>0.500000</td>
+      <td>0.000000</td>
+      <td>-1.0</td>
+      <td>0.500000</td>
+    </tr>
+    <tr>
+      <th>$P_{3}$</th>
+      <td>0.500000</td>
+      <td>0.500000</td>
+      <td>0.666667</td>
+      <td>0.000000</td>
+      <td>-0.5</td>
+      <td>0.166667</td>
+    </tr>
+    <tr>
+      <th>$P_{4}$</th>
+      <td>-8333.333333</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>8333.333333</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>$P_{5}$</th>
+      <td>0.000000</td>
+      <td>-1.000000</td>
+      <td>-0.500000</td>
+      <td>0.000000</td>
+      <td>1.0</td>
+      <td>-0.500000</td>
+    </tr>
+    <tr>
+      <th>$P_{6}$</th>
+      <td>0.000000</td>
+      <td>0.500000</td>
+      <td>0.166667</td>
+      <td>0.000000</td>
+      <td>-0.5</td>
+      <td>0.333333</td>
+    </tr>
+  </tbody>
+</table style = "display:inline">
+<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># k, m = em.analysis.StaticCondensation(k.f, m.f, idxs=[3,4])</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>k <span class="op">=</span> em.analysis.kStaticCondensation(K.f, idxs<span class="op">=</span>[<span class="dv">3</span>,<span class="dv">4</span>])</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># disp_sbs(k.df)</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>k</span></code></pre></div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>$4$</th>
+      <th>$5$</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>$4$</th>
+      <td>0.571384</td>
+      <td>0.214267</td>
+    </tr>
+    <tr>
+      <th>$5$</th>
+      <td>0.214267</td>
+      <td>0.142849</td>
+    </tr>
+  </tbody>
+</table>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> m[<span class="dv">0</span>:<span class="dv">2</span>,<span class="dv">0</span>:<span class="dv">2</span>]</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>freq2, Phi <span class="op">=</span> eig(m, k)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>Phi<span class="op">/</span><span class="fl">0.57293852</span></span></code></pre></div>
+<pre><code>array([[-1.        , -0.75123369],
+       [-1.4305171 ,  1.57544505]])</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>M <span class="op">=</span> Phi.T<span class="op">@</span>m<span class="op">@</span>Phi</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>K <span class="op">=</span> Phi.T<span class="op">@</span>k<span class="op">@</span>Phi</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>M</span></code></pre></div>
+<pre><code>Structural_Vector([[ 1.65651710e+00, -1.11022302e-16],
+                   [ 0.00000000e+00,  1.37050677e+00]])</code></pre>
+<h2 id="a-modal-expansion-of-earthquake-forces">a) Modal expansion of earthquake forces</h2>
+<p><span class="math display">\[\mathrm{p}_{\mathrm{eff}}(t)=-\mathrm{m} \iota \ddot{u}_{g}(t)\]</span></p>
+<p><span class="math display">\[\mathbf{m} \iota=\sum_{n=1}^{N} \mathbf{s}_{n}=\sum_{n=1}^{N} \Gamma_{n} \mathbf{m} \phi_{n}\]</span></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>I <span class="op">=</span> N <span class="op">=</span> <span class="dv">2</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>iota <span class="op">=</span> np.array([<span class="dv">0</span>, <span class="dv">1</span>])</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>Ln <span class="op">=</span> np.array([<span class="bu">sum</span>(Phi.T[n,i]<span class="op">*</span><span class="bu">sum</span>(m[i,j]<span class="op">*</span>iota[j] <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(I)) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(I)) <span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(N)])</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>Ln <span class="op">=</span> Phi.T<span class="op">@</span>m<span class="op">@</span>iota</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>Ln</span></code></pre></div>
+<pre><code>Structural_Vector([-0.81959835,  0.90263316])</code></pre>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>gamma <span class="op">=</span> np.array([Ln[n]<span class="op">/</span>M[n,n] <span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(N)])</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>gamma</span></code></pre></div>
+<pre><code>array([-0.49477204,  0.65861269])</code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>sn <span class="op">=</span> [gamma[n]<span class="op">*</span>(m<span class="op">@</span>Phi[:,n]) <span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(N)]</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>sn</span></code></pre></div>
+<pre><code>[Structural_Vector([0.85042189, 0.40551435]),
+ Structural_Vector([-0.85042189,  0.59448565])]</code></pre>
 
     
           </article>

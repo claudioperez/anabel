@@ -86,6 +86,162 @@
           <article class="page col-md-9 p-3">
           
 
+<p><a href="https://github.com/claudioperez/elle-0002/compare/v0.0.0...master"><img src="img/e4170d51c0f36bf88d954a5b37e12b191cfeeb3b.svg" style="margin:auto; display: block; max-width: 75%" alt="Commits since latest release" /></a></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> elle.numeric</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>plt.style.use(<span class="st">&quot;typewriter&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> anon.conf</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>anon.conf.config.update(<span class="st">&#39;jax_disable_jit&#39;</span>, <span class="va">True</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>anon.conf.config.update(<span class="st">&#39;jax_enable_x64&#39;</span>, <span class="va">True</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> anabel</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> anon</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> jax</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> anon.atom <span class="im">as</span> anp</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> elle.sections</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> elle.beam2d</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> elle.springs</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> anabel <span class="im">as</span> em</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>mat <span class="op">=</span> elle.springs.isokin.no1(<span class="fl">3600.0</span>,<span class="fl">4.0</span>,H0<span class="op">=</span><span class="fl">3.0</span>)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># mat = elle.springs.gmp.no5(60.0,29e3)</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>GirderSec <span class="op">=</span> anabel.sections.Tee</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>ColumnSec <span class="op">=</span> anabel.sections.Rectangle</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>geom_template <span class="op">=</span> elle.beam2d.transform_no2(elle.beam2d.geom_no2)</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>beam_template <span class="op">=</span> elle.beam2d.resp_no6</span></code></pre></div>
+<p>An <code>Assembler</code> is an object with an <code>.assemble()</code> and optionally a <code>.compose()</code> method</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a model Assembler</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> em.SkeletalModel(ndm<span class="op">=</span><span class="dv">2</span>,ndf<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Define problem parameters</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>P1 <span class="op">=</span> model.param(<span class="st">&quot;P1&quot;</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Define model components</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>girder_section <span class="op">=</span> GirderSec(d<span class="op">=</span><span class="fl">24.0</span>, bf<span class="op">=</span><span class="fl">60.0</span>, tf<span class="op">=</span><span class="fl">6.0</span>, tw<span class="op">=</span><span class="fl">18.0</span>, mat<span class="op">=</span>mat).assemble()</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>column_section <span class="op">=</span> ColumnSec(d<span class="op">=</span><span class="fl">30.0</span>, b<span class="op">=</span><span class="fl">30.0</span>,mat<span class="op">=</span>mat).assemble()</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>basic_girder  <span class="op">=</span> beam_template(<span class="op">*</span>[girder_section]<span class="op">*</span><span class="dv">4</span>, quad<span class="op">=</span>{<span class="st">&quot;n&quot;</span>: <span class="dv">4</span>, <span class="st">&quot;rule&quot;</span>: <span class="st">&quot;lobatto&quot;</span>})</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="co"># basic_column  = beam_template(*[column_section]*8, quad={&quot;n&quot;: 4, &quot;rule&quot;: &quot;mid&quot;})</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>basic_column <span class="op">=</span> elle.beam2d.resp_no1(A<span class="op">=</span><span class="fl">30.0</span><span class="op">**</span><span class="dv">2</span>,E<span class="op">=</span><span class="fl">3600.0</span>,I<span class="op">=</span><span class="dv">30</span><span class="op">**</span><span class="dv">4</span><span class="op">/</span><span class="dv">12</span>)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>girder <span class="op">=</span> geom_template(basic_girder)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>column <span class="op">=</span> geom_template(basic_column)</span></code></pre></div>
+<pre><code>WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)</code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set up nodes</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>ft <span class="op">=</span> <span class="fl">12.</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>B, H <span class="op">=</span> <span class="fl">30.</span><span class="op">*</span>ft, <span class="fl">13.</span><span class="op">*</span>ft</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>model.node(<span class="st">&quot;1&quot;</span>,  <span class="fl">0.</span>,  <span class="fl">0.</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>model.node(<span class="st">&quot;2&quot;</span>,  <span class="fl">0.</span>,  H )</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>model.node(<span class="st">&quot;3&quot;</span>, B<span class="op">/</span><span class="dv">2</span>,  H )</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>model.node(<span class="st">&quot;4&quot;</span>,  B ,  H )</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>model.node(<span class="st">&quot;5&quot;</span>,  B ,  <span class="fl">0.</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>model.beam(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;1&quot;</span>, <span class="st">&quot;2&quot;</span>, elem<span class="op">=</span>column)</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>model.beam(<span class="st">&quot;b&quot;</span>, <span class="st">&quot;2&quot;</span>, <span class="st">&quot;3&quot;</span>, elem<span class="op">=</span>girder)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>model.beam(<span class="st">&quot;c&quot;</span>, <span class="st">&quot;3&quot;</span>, <span class="st">&quot;4&quot;</span>, elem<span class="op">=</span>girder)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>model.beam(<span class="st">&quot;d&quot;</span>, <span class="st">&quot;4&quot;</span>, <span class="st">&quot;5&quot;</span>, elem<span class="op">=</span>column)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>model.boun(<span class="st">&quot;1&quot;</span>, [<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>])</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>model.boun(<span class="st">&quot;5&quot;</span>, [<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>])</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>model.load(<span class="st">&quot;2&quot;</span>, P1, dof<span class="op">=</span><span class="st">&quot;x&quot;</span>)</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>model.load(<span class="st">&quot;2&quot;</span>, <span class="op">-</span><span class="fl">2.0</span>, dof<span class="op">=</span><span class="st">&quot;y&quot;</span>)</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>model.load(<span class="st">&quot;2&quot;</span>, <span class="op">-</span><span class="fl">2.0</span>, dof<span class="op">=</span><span class="st">&quot;y&quot;</span>)</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>em.plot_skeletal(model)<span class="op">;</span></span></code></pre></div>
+<p><img src="img/744d1ec866217eecc6ff1375e31dfc95098bd9ba.png" style="margin:auto; display: block; max-width: 75%" /></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>model.dofs</span></code></pre></div>
+<pre><code>[[9, 10, 11], [0, 1, 2], [3, 4, 5], [6, 7, 8], [12, 13, 14]]</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> model.compose_displ()</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>model.cycle(<span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">3000</span>, <span class="dv">10</span>,<span class="dv">2</span>,<span class="dv">0</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>P <span class="op">=</span> model.build_load_path(<span class="dv">0</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>F <span class="op">=</span> elle.numeric.accumulate(f)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>X, Y, S <span class="op">=</span> F(P)</span></code></pre></div>
+<pre><code>0/18
+1/18
+2/18
+
+/home/claudio/elle/numeric/elle/numeric/inverse.py:149: UserWarning: Function inversion failed to converge.
+  warnings.warn(&quot;Function inversion failed to converge.&quot;)
+
+3/18
+
+/home/claudio/elle/numeric/elle/numeric/inverse.py:149: UserWarning: Function inversion failed to converge.
+  warnings.warn(&quot;Function inversion failed to converge.&quot;)
+
+4/18
+
+/home/claudio/elle/numeric/elle/numeric/inverse.py:149: UserWarning: Function inversion failed to converge.
+  warnings.warn(&quot;Function inversion failed to converge.&quot;)
+
+5/18
+
+/home/claudio/elle/numeric/elle/numeric/inverse.py:149: UserWarning: Function inversion failed to converge.
+  warnings.warn(&quot;Function inversion failed to converge.&quot;)
+
+6/18
+
+/home/claudio/elle/numeric/elle/numeric/inverse.py:149: UserWarning: Function inversion failed to converge.
+  warnings.warn(&quot;Function inversion failed to converge.&quot;)
+
+7/18
+
+/home/claudio/elle/numeric/elle/numeric/inverse.py:149: UserWarning: Function inversion failed to converge.
+  warnings.warn(&quot;Function inversion failed to converge.&quot;)
+
+8/18
+
+/home/claudio/elle/numeric/elle/numeric/inverse.py:149: UserWarning: Function inversion failed to converge.
+  warnings.warn(&quot;Function inversion failed to converge.&quot;)
+
+9/18
+
+/home/claudio/elle/numeric/elle/numeric/inverse.py:149: UserWarning: Function inversion failed to converge.
+  warnings.warn(&quot;Function inversion failed to converge.&quot;)
+
+10/18
+
+/home/claudio/elle/numeric/elle/numeric/inverse.py:149: UserWarning: Function inversion failed to converge.
+  warnings.warn(&quot;Function inversion failed to converge.&quot;)
+
+11/18
+
+/home/claudio/elle/numeric/elle/numeric/inverse.py:149: UserWarning: Function inversion failed to converge.
+  warnings.warn(&quot;Function inversion failed to converge.&quot;)
+
+12/18
+
+/home/claudio/elle/numeric/elle/numeric/inverse.py:149: UserWarning: Function inversion failed to converge.
+  warnings.warn(&quot;Function inversion failed to converge.&quot;)
+
+13/18
+
+/home/claudio/elle/numeric/elle/numeric/inverse.py:149: UserWarning: Function inversion failed to converge.
+  warnings.warn(&quot;Function inversion failed to converge.&quot;)
+
+14/18
+
+/home/claudio/elle/numeric/elle/numeric/inverse.py:149: UserWarning: Function inversion failed to converge.
+  warnings.warn(&quot;Function inversion failed to converge.&quot;)
+
+15/18
+
+/home/claudio/elle/numeric/elle/numeric/inverse.py:149: UserWarning: Function inversion failed to converge.
+  warnings.warn(&quot;Function inversion failed to converge.&quot;)
+
+16/18
+
+/home/claudio/elle/numeric/elle/numeric/inverse.py:149: UserWarning: Function inversion failed to converge.
+  warnings.warn(&quot;Function inversion failed to converge.&quot;)
+
+17/18
+
+/home/claudio/elle/numeric/elle/numeric/inverse.py:149: UserWarning: Function inversion failed to converge.
+  warnings.warn(&quot;Function inversion failed to converge.&quot;)</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode python"><code class="sourceCode python"></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>plt.plot(Y[:,<span class="dv">0</span>,:],P[:,<span class="dv">0</span>,:])</span></code></pre></div>
+<pre><code>[&lt;matplotlib.lines.Line2D at 0x7f988409aac0&gt;]</code></pre>
+<p><img src="img/f017de0730378f4bf2f8334b1d8e611c67c02b57.png" style="margin:auto; display: block; max-width: 75%" /></p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>model.dofs</span></code></pre></div>
+<pre><code>[[9, 10, 11], [0, 1, 2], [3, 4, 5], [6, 7, 8], [12, 13, 14]]</code></pre>
+<div class="sourceCode" id="cb18"><pre class="sourceCode python"><code class="sourceCode python"></code></pre></div>
 
     
           </article>

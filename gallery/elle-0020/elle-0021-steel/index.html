@@ -86,6 +86,146 @@
           <article class="page col-md-9 p-3">
           
 
+<p><a href="https://github.com/claudioperez/elle-0002/compare/v0.0.0...master"><img src="img/e4170d51c0f36bf88d954a5b37e12b191cfeeb3b.svg" style="margin:auto; display: block; max-width: 75%" alt="Commits since latest release" /></a></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> anon</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>anon.conf.config.update(<span class="st">&#39;jax_disable_jit&#39;</span>, <span class="va">True</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>anon.conf.config.update(<span class="st">&quot;jax_enable_x64&quot;</span>, <span class="va">True</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> anon.atom <span class="im">as</span> anp</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> elle.sections</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> elle.beam2d</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> anabel <span class="im">as</span> em</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>geom_template <span class="op">=</span> elle.beam2d.transform_no2(elle.beam2d.geom_no2)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>beam_template <span class="op">=</span> elle.beam2d.resp_no1</span></code></pre></div>
+<p>An <code>Assembler</code> is an object with an <code>.assemble()</code> and optionally a <code>.compose()</code> method</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a model Assembler</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> em.SkeletalModel(ndm<span class="op">=</span><span class="dv">2</span>,ndf<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Define problem parameters</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>ColumnE  <span class="op">=</span> model.param(<span class="st">&quot;ColumnE&quot;</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>GirderE  <span class="op">=</span> model.param(<span class="st">&quot;GirderE&quot;</span>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>P1 <span class="op">=</span> model.param(<span class="st">&quot;P1&quot;</span>)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Define model components</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>girder_section <span class="op">=</span> em.aisc.load(<span class="st">&quot;w33x130&quot;</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>column_section <span class="op">=</span> em.aisc.load(<span class="st">&quot;w14x159&quot;</span>)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>basic_girder  <span class="op">=</span> beam_template(<span class="op">**</span>girder_section, E<span class="op">=</span>GirderE)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>basic_column  <span class="op">=</span> beam_template(<span class="op">**</span>column_section, E<span class="op">=</span>ColumnE)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>girder <span class="op">=</span> geom_template(basic_girder)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>column <span class="op">=</span> geom_template(basic_column)</span></code></pre></div>
+<pre><code>WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set up nodes</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>ft <span class="op">=</span> <span class="dv">12</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>B, H <span class="op">=</span> <span class="fl">30.</span><span class="op">*</span>ft, <span class="fl">13.</span><span class="op">*</span>ft</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>model.node(<span class="st">&quot;1&quot;</span>,  <span class="fl">0.</span>,  <span class="fl">0.</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>model.node(<span class="st">&quot;2&quot;</span>,  <span class="fl">0.</span>,  H )</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>model.node(<span class="st">&quot;3&quot;</span>, B<span class="op">/</span><span class="dv">2</span>,  H )</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>model.node(<span class="st">&quot;4&quot;</span>,  B ,  H )</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>model.node(<span class="st">&quot;5&quot;</span>,  B ,  <span class="fl">0.</span>)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>model.beam(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;1&quot;</span>, <span class="st">&quot;2&quot;</span>, <span class="op">**</span>column_section, elem<span class="op">=</span>column)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>model.beam(<span class="st">&quot;b&quot;</span>, <span class="st">&quot;2&quot;</span>, <span class="st">&quot;3&quot;</span>, <span class="op">**</span>girder_section, elem<span class="op">=</span>girder)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>model.beam(<span class="st">&quot;c&quot;</span>, <span class="st">&quot;3&quot;</span>, <span class="st">&quot;4&quot;</span>, <span class="op">**</span>girder_section, elem<span class="op">=</span>girder)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>model.beam(<span class="st">&quot;d&quot;</span>, <span class="st">&quot;4&quot;</span>, <span class="st">&quot;5&quot;</span>, <span class="op">**</span>column_section, elem<span class="op">=</span>column)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>model.boun(<span class="st">&quot;1&quot;</span>, [<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>])</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>model.boun(<span class="st">&quot;5&quot;</span>, [<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>])</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>model.load(<span class="st">&quot;2&quot;</span>, P1, dof<span class="op">=</span><span class="st">&quot;x&quot;</span>)</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>model.load(<span class="st">&quot;2&quot;</span>, <span class="op">-</span><span class="fl">2e3</span>, dof<span class="op">=</span><span class="st">&quot;y&quot;</span>)</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>model.load(<span class="st">&quot;4&quot;</span>, <span class="op">-</span><span class="fl">2e3</span>, dof<span class="op">=</span><span class="st">&quot;y&quot;</span>)</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>em.plot_skeletal(model)<span class="op">;</span></span></code></pre></div>
+<p><img src="img/e7f0945b65a8accee4fd3e3bebd167afb0d829a7.png" style="margin:auto; display: block; max-width: 75%" /></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> model.compose()</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>f(<span class="fl">3600.</span>,<span class="fl">3600.</span>,<span class="fl">2e3</span>)</span></code></pre></div>
+<pre><code>/home/claudio/elle/numeric/elle/numeric/inverse.py:111: UserWarning: Function inversion failed to converge.
+  warnings.warn(&quot;Function inversion failed to converge.&quot;)
+
+DeviceArray([[   0.28355172],
+             [ 171.74283748],
+             [   0.84689206],
+             [-202.66515683],
+             [-149.92389898],
+             [   5.04060219],
+             [ -14.82161937],
+             [-148.43045677],
+             [   5.1556104 ]], dtype=float64)</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> em.plot_displ(model, f(<span class="fl">29e6</span>,<span class="fl">29e6</span>,<span class="fl">20e3</span>),scale<span class="op">=</span><span class="fl">1e3</span>)</span></code></pre></div>
+<pre><code>/home/claudio/elle/numeric/elle/numeric/inverse.py:111: UserWarning: Function inversion failed to converge.
+  warnings.warn(&quot;Function inversion failed to converge.&quot;)</code></pre>
+<p><img src="img/04b10ab85b5c349639d2a1580e2cb270f4398b16.png" style="margin:auto; display: block; max-width: 75%" /></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> anon.diff.jacfwd(f, <span class="va">None</span>, (<span class="dv">0</span>,<span class="dv">1</span>),squeeze<span class="op">=</span><span class="va">False</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>df(<span class="fl">29e6</span>,<span class="fl">29e6</span>,<span class="fl">20e3</span>)</span></code></pre></div>
+<pre><code>dx: Traced&lt;ConcreteArray([[20000.]
+ [-2000.]
+ [    0.]
+ [    0.]
+ [    0.]
+ [    0.]
+ [    0.]
+ [-2000.]
+ [    0.]])&gt;with&lt;JVPTrace(level=2/0)&gt;
+  with primal = DeviceArray([[20000.],
+                             [-2000.],
+                             [    0.],
+                             [    0.],
+                             [    0.],
+                             [    0.],
+                             [    0.],
+                             [-2000.],
+                             [    0.]], dtype=float64)
+       tangent = Traced&lt;ShapedArray(float64[9,1])&gt;with&lt;BatchTrace(level=1/0)&gt;
+                   with val = DeviceArray([[[-0.],
+                                            [-0.]],
+                              
+                                           [[-0.],
+                                            [-0.]],
+                              
+                                           [[-0.],
+                                            [-0.]],
+                              
+                                           [[-0.],
+                                            [-0.]],
+                              
+                                           [[-0.],
+                                            [-0.]],
+                              
+                                           [[-0.],
+                                            [-0.]],
+                              
+                                           [[-0.],
+                                            [-0.]],
+                              
+                                           [[-0.],
+                                            [-0.]],
+                              
+                                           [[-0.],
+                                            [-0.]]], dtype=float64)
+                        batch_dim = 1
+
+/home/claudio/elle/numeric/elle/numeric/inverse.py:112: UserWarning: Function inversion failed to converge.
+  warnings.warn(&quot;Function inversion failed to converge.&quot;)
+
+(DeviceArray([[-2.04476205e-09],
+              [-1.10382234e-11],
+              [ 7.00882848e-13],
+              [-2.04415680e-09],
+              [-5.35148746e-12],
+              [-2.71208496e-13],
+              [-2.04355123e-09],
+              [ 2.30895445e-11],
+              [ 9.53551267e-13]], dtype=float64),
+ DeviceArray([[-5.79214813e-10],
+              [ 9.60734398e-13],
+              [ 7.15495715e-12],
+              [-5.24811184e-10],
+              [ 3.78153916e-11],
+              [-3.37652007e-12],
+              [-4.70407107e-10],
+              [-1.95779547e-12],
+              [ 6.30254346e-12]], dtype=float64))</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode python"><code class="sourceCode python"></code></pre></div>
 
     
           </article>
