@@ -33,7 +33,7 @@ The in-development version can be installed the following command:
 $ pip install https://github.com/claudioperez/anabel/archive/master.zip
 ```
 
-## Modeling PDEs
+## Core API - Modeling PDEs 
 
 ```python
 from anabel import template, diff, MappedMesh
@@ -46,6 +46,16 @@ def poisson_template(u,v,iso,f,):
 ```
 
 ![](docs/img/poisson_2d.png)
+
+## Utility Modules
+
+### [`anabel.sections`]()
+
+![](img/sections/main.svg)
+
+### [`anabel.interpolate`]()
+
+![](img/interpolate/main.svg)
 
 ## Documentation
 
