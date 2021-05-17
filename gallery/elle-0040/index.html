@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     
-    <link rel="canonical" href="https://claudioperez.github.io/anabel/gallery/dynamics/">
+    <link rel="canonical" href="https://claudioperez.github.io/anabel/gallery/elle-0040/">
     <link rel="shortcut icon" href="../../img/favicon.ico">
-    <title>Dynamics - anabel</title>
+    <title>Transient Heat - anabel</title>
     <!-- <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> -->
     <link href="../../css/bootstrap.min.css" rel="stylesheet">
     <link href="../../css/font-awesome.min.css" rel="stylesheet">
@@ -33,16 +33,20 @@
         </button>
         <div id="navbar-collapse" class="navbar-collapse collapse">
           <ul class="nav navbar-nav ml-auto">
-          <!-- Main navigation -->
-            <li class="navitem">
-                <a href="../../guides/" class="nav-link">Guides</a>
-            </li>
-            <li class="navitem">
-                <a href="../../api/latest/" class="nav-link">API</a>
-            </li>
-            <li class="navitem">
-                <a href="../" class="nav-link">Gallery</a>
-            </li>
+      <ul class="nav navbar-nav ml-auto">
+          
+          <li class="navitem">
+              <a href="../../guides/" class="nav-link">Guides</a>
+          </li>
+          
+          <li class="navitem">
+              <a href="../../api/latest/" class="nav-link">API</a>
+          </li>
+          
+          <li class="navitem">
+              <a href="../" class="nav-link">Gallery</a>
+          </li>
+      </ul>
                     <!-- <ul class="nav navbar-nav ml-auto"> -->
             <li>
             
@@ -81,9 +85,9 @@
               <ul class="nav flex-column">
               <div class="dropdown-divider"></div>
                     
-            <li class="nav-item active" data-level="2">
-              <a href="/anabel/gallery/dynamics/" class="active">Dynamics</a>
-              <!-- <a href="/anabel/gallery/dynamics/" class="nav-link active">Dynamics</a> -->
+            <li class="nav-item " data-level="2">
+              <a href="/anabel/gallery/dynamics/" class="">Dynamics</a>
+              <!-- <a href="/anabel/gallery/dynamics/" class="nav-link ">Dynamics</a> -->
               
               <ul class="nav flex-column">
               
@@ -112,9 +116,9 @@
             </li>
                     
                     
-            <li class="nav-item " data-level="2">
-              <a href="/anabel/gallery/elle-0040/" class="">Transient Heat</a>
-              <!-- <a href="/anabel/gallery/elle-0040/" class="nav-link ">Transient Heat</a> -->
+            <li class="nav-item active" data-level="2">
+              <a href="/anabel/gallery/elle-0040/" class="active">Transient Heat</a>
+              <!-- <a href="/anabel/gallery/elle-0040/" class="nav-link active">Transient Heat</a> -->
               
               <ul class="nav flex-column">
               
@@ -186,86 +190,146 @@
           <article class="page col-md-9 p-3">
           
 
-<h1 id="examples-in-dynamics">Examples in Dynamics</h1>
+<h1 id="transient-heat">Transient Heat</h1>
+<p><span class="math inline">\(-\alpha u_{xx} + Au = f\)</span></p>
+<blockquote>
+<p>Consider the modified Poisson equation <span class="math display">\[
+-\alpha u_{xx} + Au = f, \quad (0\le x\le 1), \qquad u(0)=0,\; u(1)=0,
+\]</span> where <span class="math inline">\(\alpha&gt;0\)</span> and <span class="math inline">\(A\ge0\)</span>. Use 4th order finite elments on a uniformly spaced grid,</p>
+<p><span class="math display">\[
+x_j = j/M, \qquad\quad 0\le j\le M
+\]</span></p>
+<p>where <span class="math inline">\(M\)</span> is divisible by 4 and the <span class="math inline">\(r\)</span>th element includes nodes <span class="math inline">\(x_{4r+i}\)</span> for <span class="math inline">\(0\le r&lt;M/4\)</span> and <span class="math inline">\(0\le i\le 4\)</span>.</p>
+</blockquote>
+<h2 id="part-a">Part A</h2>
+<p>Multiplying by a test function <span class="math inline">\(v\)</span> and integrating over the domain (applying integration by parts) yields:</p>
+<p><span class="math display">\[
+\int_\Omega -\alpha u_{xx} v + \gamma u v = \int_\Omega f v
+\]</span></p>
+<p><span class="math display">\[
+\int \alpha u_x v_x dx - \left. \alpha u_x v \right| + \gamma \int u v dx = \int f v dx
+\]</span></p>
+<p>For test functions which vanish on the boundary one obtains:</p>
+<p><span class="math display">\[
+\int_\Omega \alpha u_x v_x + \gamma u v = \int_\Omega f v
+\]</span></p>
+<p><span class="math display">\[
+a(\alpha u,v) + \langle Au,v \rangle = \langle f,v\rangle
+\]</span></p>
+<h3 id="fourth-order-element">Fourth-order element</h3>
+<p>A fourth order isoparametric 1D element is developed by applying Lagrange interpolation over 5 equally spaced sampling points.</p>
+<figure>
+<img src="img/lagrange.png" style="margin:auto; display: block; max-width: 75%" alt="Shape functions" /><figcaption aria-hidden="true">Shape functions</figcaption>
+</figure>
+<h3 id="convergence">Convergence</h3>
+<blockquote>
+<ol type="a">
+<li>Do a convergence study for <span class="math inline">\(\alpha=1/100\)</span>, <span class="math inline">\(A=0\)</span> and <span class="math inline">\(f(x)=\frac{\pi^2}{100}\sum_{k=0}^4 \sin\big((2k+1)\pi x \big)\)</span>.</li>
+</ol>
+</blockquote>
+<p>The exact integral for this problem is as follows:</p>
+<p><span class="math display">\[
+\frac{1}{\alpha 100} \sum{\frac{1}{(2k+1)^2}\sin{\left((2k+1)\pi x\right)} }
+\]</span></p>
+<figure>
+<img src="img/p3a-exact.png" style="margin:auto; display: block; max-width: 75%" alt="Source curve f and exact solution u" /><figcaption aria-hidden="true">Source curve <span class="math inline">\(f\)</span> and exact solution <span class="math inline">\(u\)</span></figcaption>
+</figure>
+<figure>
+<img src="img/p3a-conv.png" style="margin:auto; display: block; max-width: 75%" alt="Convergence study for finite element solution of steady-state problem." /><figcaption aria-hidden="true">Convergence study for finite element solution of steady-state problem.</figcaption>
+</figure>
+<h2 id="part-b-transient-analysis">Part B: Transient Analysis</h2>
+<blockquote>
+<ol start="2" type="a">
+<li>Solve <span class="math inline">\(u_t=\frac1{100}u_{xx}+f(x)\sin(\pi t)\)</span> from <span class="math inline">\(t=0\)</span> to <span class="math inline">\(t=1\)</span> with initial condition <span class="math inline">\(u(x,0)=0\)</span> and the same <span class="math inline">\(f\)</span> as in part (a). Use the 4th order implicit SDIRK timestepper with Butcher array given below.</li>
+</ol>
+</blockquote>
+<p>The exact solution of the transient problem was derrived using the <code>sympy</code> CAS library. A plot is shown below for various times.</p>
+<figure>
+<img src="img/p3b-exact.png" style="margin:auto; display: block; max-width: 75%" alt="Analytic solution curves" /><figcaption aria-hidden="true">Analytic solution curves</figcaption>
+</figure>
+<figure>
+<img src="img/p3b-fem-iso.png" style="margin:auto; display: block; max-width: 75%" alt="FEM solution" /><figcaption aria-hidden="true">FEM solution</figcaption>
+</figure>
+<h3 id="sdirk-implementation">SDIRK Implementation</h3>
+<p>In HW2 a Runge-Kutta algorithm was implemented for problems with the following form:</p>
+<p><span class="math display">\[
+\mathbf{u}_t + B\mathbf{u} = \mathbf{d}(t)
+\]</span></p>
+<p>Where <span class="math inline">\(B\)</span> is a linear operator . At stage <span class="math inline">\(i\)</span> of a diagonal Runge-Kutta method one has</p>
+<p><span class="math display">\[
+\ell_{i}=F\left(t_{n}+c_{i} k, \vec{u}_{n}+k \sum_{j=1}^{i-1} a_{i j} \ell_{j}+k a_{i j} \ell_{i}\right)
+\]</span></p>
+<p>where <span class="math inline">\(k=\Delta t\)</span>. For problems of the aforementioned form, this simplifies to</p>
+<p><span class="math display">\[
+\left(I - k a_{i i} B\right) \ell_{i} = B \left(\vec{u}_{n}+k \sum_{j=1}^{i-1} a_{i j} \ell_{j}\right) + d(t_n+c_i k) 
+\]</span></p>
+<p>The following data is required to set up a particular scheme for <span class="math inline">\(\mathbf{u}\in \mathbb{R}^n\)</span> with <span class="math inline">\(s\in\mathbf{Z^+}\)</span> stages:</p>
+<dl>
+<dt><span class="math inline">\(\mathcal{T}\)</span></dt>
+<dd>A Butcher tableau with zero entries above the diagonal.
+</dd>
+</dl>
+<p><span class="math inline">\(B, \mathbb{R}^n \rightarrow \mathbb{R}^n\)</span>: Discrete space operator</p>
+<dl>
+<dt><span class="math inline">\(\mathbf{d}, \mathbb{R} \rightarrow \mathbb{R}^n\)</span></dt>
+<dd>Source term.
+</dd>
+</dl>
+<p>The problem at hand is manipulated to fit the following form:</p>
+<p><span class="math display">\[\vec{u}_{t}=-\frac{1}{100} {M}^{-1} A \vec{u}+\vec{f} \sin \pi t\]</span></p>
+<p>so that</p>
+<p><span class="math display">\[
+\begin{gathered}
+B=\frac{-1}{100}M^{-1}A \\
+\mathbf{d}=M^{-1}b\sin{\pi t}
+\end{gathered}
+\]</span></p>
+<p>where <span class="math inline">\(A\)</span>, <span class="math inline">\(M\)</span>, and <span class="math inline">\(b\)</span> are the stiffness, mass and load vectors as readily produced by the implementation for Part B.</p>
+<p><span class="math display">\[
+\left(M+\frac{k a_{i i}}{100} A\right) l_{i} = -\frac{1}{100} A\left(\vec{u}_{n}+k \sum_{j=1}^{i-1} a_{i j} \ell_{j}\right) + M \vec{f} \sin \pi\left(t_{n}+c_{i} k\right)
+\]</span></p>
+<p>The tableau <span class="math inline">\(\mathcal{T}\)</span> is given as</p>
+<p><span class="math display">\[
+\begin{array}{c|ccccc}
+  1/4 &amp; 1/4 \\
+  3/4 &amp; 1/2 &amp; 1/4 \\
+  11/20 &amp; 17/50 &amp; -1/25 &amp; 1/4 \\
+  1/2 &amp; 371/1360 &amp; -137/2720 &amp; 15/544 &amp; 1/4 \\
+  1 &amp; 25/24 &amp; -49/48 &amp; 125/16 &amp; -85/12 &amp; 1/4 \\
+  \hline
+  &amp; 25/24 &amp; -49/48 &amp; 125/16 &amp; -85/12 &amp; 1/4
+\end{array}
+\]</span></p>
+<hr />
+<p><span class="math inline">\(u(x,t) = \sum_j u_j(t)\phi_j(x)\)</span></p>
+<p><span class="math display">\[u_{t}=\frac{1}{100} u_{x x}+f(x) \sin \pi t\]</span></p>
+<p>let <span class="math inline">\(u_t = \sum_ju_{j,t}\phi_j\)</span>, and <span class="math inline">\(v=\phi_i\)</span></p>
+<p><span class="math display">\[
+\langle u_{t}, v\rangle = -\frac{1}{100} a(u, v)+\langle f, v\rangle \sin \pi t
+\]</span></p>
+<p><span class="math display">\[
+M \vec{u}_{t}=-\frac{1}{100} A \vec{u} + M \vec{f} \sin \pi t
+\]</span></p>
+<p><span class="math display">\[
+\vec{u}_{t}=-\frac{1}{100} {M}^{-1} A \vec{u}+\vec{f} \sin \pi t
+\]</span></p>
+<!-- where $M^{-1}A$ is a FE approximation to $-\Delta()$. -->
+<h3 id="convergence-1">Convergence</h3>
+<p>Convergence studies are presented below for time discretizations using both the SDIRK scheme provided and the Crank-Nicolson scheme.</p>
+<figure>
+<img src="img/p3b-conv.png" style="margin:auto; display: block; max-width: 75%" alt="Convergence study." /><figcaption aria-hidden="true">Convergence study.</figcaption>
+</figure>
+<figure>
+<img src="img/p3b-conv-cn.png" style="margin:auto; display: block; max-width: 75%" alt="Convergence study for Crank-Nicolson tableau." /><figcaption aria-hidden="true">Convergence study for Crank-Nicolson tableau.</figcaption>
+</figure>
+<h1 id="appendix">Appendix</h1>
+<h2 id="source-code">Source Code</h2>
+<h3 id="fourth-order-lagrange-element">Fourth-order Lagrange element</h3>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"></code></pre></div>
+<h3 id="analytic-transient-solution">Analytic Transient Solution</h3>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"></code></pre></div>
 
     
-
-<div class="container mt-3 pt-3">
-
-<div class="card shadow-sm bg-gray my-2">
-    <div class="row no-gutters">
-        <div class="col-md-5">
-        <div class="card-body">
-        <a href="/anabel/gallery/dynamics/225_HW09_P1/" class="stretched-link">
-        <h5 class="card-title">Modal Analysis - Beam</h5>
-        </a>
-        
-        </div>
-        </div>
-        
-        <div class="col-md-4 ml-auto mr-2">
-            <img src="225_HW09_P1/main.svg" class="card-image" style="max-width:275px;max-height:220px;width:auto;height:auto;">
-        </div>
-        
-    </div>
-</div>
-
-<div class="card shadow-sm bg-gray my-2">
-    <div class="row no-gutters">
-        <div class="col-md-5">
-        <div class="card-body">
-        <a href="/anabel/gallery/dynamics/225_HW11_P2/" class="stretched-link">
-        <h5 class="card-title">Problem 2</h5>
-        </a>
-        
-        </div>
-        </div>
-        
-        <div class="col-md-4 ml-auto mr-2">
-            <img src="225_HW11_P2/main.svg" class="card-image" style="max-width:275px;max-height:220px;width:auto;height:auto;">
-        </div>
-        
-    </div>
-</div>
-
-<div class="card shadow-sm bg-gray my-2">
-    <div class="row no-gutters">
-        <div class="col-md-5">
-        <div class="card-body">
-        <a href="/anabel/gallery/dynamics/225_HW09_P2v2/" class="stretched-link">
-        <h5 class="card-title">Modal Analysis - 1r</h5>
-        </a>
-        
-        </div>
-        </div>
-        
-        <div class="col-md-4 ml-auto mr-2">
-            <img src="225_HW09_P2v2/main.svg" class="card-image" style="max-width:275px;max-height:220px;width:auto;height:auto;">
-        </div>
-        
-    </div>
-</div>
-
-<div class="card shadow-sm bg-gray my-2">
-    <div class="row no-gutters">
-        <div class="col-md-5">
-        <div class="card-body">
-        <a href="/anabel/gallery/dynamics/225_HW11_P3-2/" class="stretched-link">
-        <h5 class="card-title">Time History Analysis - MDF Frame</h5>
-        </a>
-        
-        </div>
-        </div>
-        
-        <div class="col-md-4 ml-auto mr-2">
-            <img src="225_HW11_P3-2/main.svg" class="card-image" style="max-width:275px;max-height:220px;width:auto;height:auto;">
-        </div>
-        
-    </div>
-</div>
-
-</div>
-
           </article>
   
         </div>

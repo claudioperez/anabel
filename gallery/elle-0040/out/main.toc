@@ -1,0 +1,16 @@
+\contentsline {section}{Problem 1 (\(\mathbf {u}_t + A \mathbf {u}_x = \mathbf {0}\))}{2}{section*.2}%
+\contentsline {section}{Problem 2.}{4}{section*.3}%
+\contentsline {subsubsection}{State \(i=0\)}{6}{section*.5}%
+\contentsline {subsubsection}{State \(i=1\)}{6}{section*.6}%
+\contentsline {subsubsection}{State \(i=2\)}{6}{section*.7}%
+\contentsline {section}{Problem 3 (\(-\mitalpha u_{xx} + Au = f\))}{8}{section*.8}%
+\contentsline {subsection}{Part A}{8}{section*.9}%
+\contentsline {subsubsection}{Fourth-order element}{8}{section*.10}%
+\contentsline {subsubsection}{Convergence}{9}{section*.12}%
+\contentsline {subsection}{Part B: Transient Analysis}{11}{section*.15}%
+\contentsline {subsubsection}{SDIRK Implementation}{12}{section*.18}%
+\contentsline {subsubsection}{Convergence}{14}{section*.19}%
+\contentsline {section}{Appendix}{16}{section*.22}%
+\contentsline {subsection}{Source Code}{16}{section*.23}%
+\contentsline {subsubsection}{Fourth-order Lagrange element}{16}{section*.24}%
+\contentsline {subsubsection}{Analytic Transient Solution}{18}{section*.25}%
