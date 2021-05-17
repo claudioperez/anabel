@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     
-    <link rel="canonical" href="https://claudioperez.github.io/anabel/api/latest/">
+    <link rel="canonical" href="https://claudioperez.github.io/anabel/gallery/elle-0020/">
     <link rel="shortcut icon" href="../../img/favicon.ico">
-    <title>API - anabel</title>
+    <title>`elle-002x` - anabel</title>
     <!-- <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet"> -->
     <link href="../../css/bootstrap.min.css" rel="stylesheet">
     <link href="../../css/font-awesome.min.css" rel="stylesheet">
@@ -33,16 +33,20 @@
         </button>
         <div id="navbar-collapse" class="navbar-collapse collapse">
           <ul class="nav navbar-nav ml-auto">
-          <!-- Main navigation -->
-            <li class="navitem">
-                <a href="../../guides/" class="nav-link">Guides</a>
-            </li>
-            <li class="navitem">
-                <a href="./" class="nav-link">API</a>
-            </li>
-            <li class="navitem">
-                <a href="../../gallery/" class="nav-link">Gallery</a>
-            </li>
+      <ul class="nav navbar-nav ml-auto">
+          
+          <li class="navitem">
+              <a href="../../guides/" class="nav-link">Guides</a>
+          </li>
+          
+          <li class="navitem">
+              <a href="../../api/latest/" class="nav-link">API</a>
+          </li>
+          
+          <li class="navitem">
+              <a href="../" class="nav-link">Gallery</a>
+          </li>
+      </ul>
                     <!-- <ul class="nav navbar-nav ml-auto"> -->
             <li>
             
@@ -63,98 +67,103 @@
         <!-- <div id="particles-js" style="background-size: cover; background-repeat: no-repeat; background-position: 50% 50%;"></div> -->
 	<div class="row" style="z-index: 9999;">
   
+          <div class="col-md-3"><div class="navbar-light navbar-expand-md bs-sidebar hidden-print affix" role="complementary">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" data-target="#toc-collapse" title="Table of Contents">
+            <span class="fa fa-angle-down"></span>
+        </button>
+    </div>
+    
+    <div id="toc-collapse" class="navbar-collapse collapse card ">
+        <ul class="nav flex-column">
+        
+            
+            <li class="nav-item " data-level="1">
+              <a href="/anabel/gallery/" class="">Galleries</a>
+              <!-- <a href="/anabel/gallery/" class="nav-link ">Galleries</a> -->
+              
+              <ul class="nav flex-column">
+              <div class="dropdown-divider"></div>
+                    
+            <li class="nav-item " data-level="2">
+              <a href="/anabel/gallery/dynamics/" class="">Dynamics</a>
+              <!-- <a href="/anabel/gallery/dynamics/" class="nav-link ">Dynamics</a> -->
+              
+              <ul class="nav flex-column">
+              
+                    
+                    
+                    
+                    
+              </ul>
+              
+            </li>
+                    
+                    
+            <li class="nav-item " data-level="2">
+              <a href="/anabel/gallery/matrix_analysis/" class="">Matrix Analysis</a>
+              <!-- <a href="/anabel/gallery/matrix_analysis/" class="nav-link ">Matrix Analysis</a> -->
+              
+              <ul class="nav flex-column">
+              
+                    
+                    
+                    
+                    
+                    
+              </ul>
+              
+            </li>
+                    
+                    
+            <li class="nav-item " data-level="2">
+              <a href="/anabel/gallery/plastic_analysis/" class="">Plastic Analysis</a>
+              <!-- <a href="/anabel/gallery/plastic_analysis/" class="nav-link ">Plastic Analysis</a> -->
+              
+              <ul class="nav flex-column">
+              
+                    
+                    
+                    
+                    
+                    
+              </ul>
+              
+            </li>
+                    
+                    
+            <li class="nav-item active" data-level="2">
+              <a href="/anabel/gallery/elle-0020/" class="active">`elle-002x`</a>
+              <!-- <a href="/anabel/gallery/elle-0020/" class="nav-link active">`elle-002x`</a> -->
+              
+              <ul class="nav flex-column">
+              
+              </ul>
+              
+            </li>
+                    
+              </ul>
+              
+            </li>
+        
+        </ul>
+    </div>
+</div></div>
   
   
-          <article class="page col-md-12 p-3">
+          <article class="page col-md-9 p-3">
           
 
-<h1 id="modeling-api">Modeling API</h1>
-<p>The high-level modeling API is composed of six modules.</p>
+<h1 id="elle-002x"><code>elle-002x</code></h1>
+<p>The <code>elle-002x</code> series of studies are centered around a 2D reinforced concrete portal frame.</p>
+<h2 id="elle-0020">elle-0020</h2>
+<ul>
+<li><a href="src/elle-0020"><code>elle-0020</code></a> This Jupyter notebook uses a beam element from the <code>elle.beam2d</code> library.</li>
+<li><a href="src/elle-0020"><code>elle-0020-oo</code></a> This Jupyter notebook uses the default beam element applied by the <code>emme.SkeletalModel</code> generator.</li>
+<li>[<code>opsy-0020</code>]</li>
+</ul>
 
     
-
-<div class="mt-3 pt-3">
-
-<hr>
-<div class="row mb-4  mx-4 align-items-center">
-   <div class="col-md-7 ml-5 mr-auto">
-      <h2>anabel.matrices</h2>
-      
-      <p class="font-weight-normal">This module provides functions and classes for constructing various structural analysis matrices.</p>
-      
-      <a class="btn btn-lg btn-outline-primary mb-3" href="/anabel/api/latest/matrices/">Read more</a>
-      
-   </div>
-   
-</div>
-
-<hr>
-<div class="row mb-4  mx-4 align-items-center">
-   <div class="col-md-7 ml-5 mr-auto">
-      <h2>anabel.transient</h2>
-      
-      <p class="font-weight-normal">General transformations and utilities for transient modeling.</p>
-      
-      <a class="btn btn-lg btn-outline-primary mb-3" href="/anabel/api/latest/transient/">Read more</a>
-      
-   </div>
-   
-</div>
-
-<hr>
-<div class="row mb-4  mx-4 align-items-center">
-   <div class="col-md-7 ml-5 mr-auto">
-      <h2>anabel.template</h2>
-      
-      <p class="font-weight-normal">Wrappers, decorators and utilities for constructing expression templates.</p>
-      
-      <a class="btn btn-lg btn-outline-primary mb-3" href="/anabel/api/latest/template/">Read more</a>
-      
-   </div>
-   
-</div>
-
-<hr>
-<div class="row mb-4  mx-4 align-items-center">
-   <div class="col-md-7 ml-5 mr-auto">
-      <h2>anabel.sections</h2>
-      
-      <p class="font-weight-normal">High-level section modeling API.</p>
-      
-      <a class="btn btn-lg btn-outline-primary mb-3" href="/anabel/api/latest/sections/">Read more</a>
-      
-   </div>
-   
-</div>
-
-<hr>
-<div class="row mb-4  mx-4 align-items-center">
-   <div class="col-md-7 ml-5 mr-auto">
-      <h2>anabel.assemble</h2>
-      
-      <p class="font-weight-normal">Core model building classes.</p>
-      
-      <a class="btn btn-lg btn-outline-primary mb-3" href="/anabel/api/latest/assemble/">Read more</a>
-      
-   </div>
-   
-</div>
-
-<hr>
-<div class="row mb-4  mx-4 align-items-center">
-   <div class="col-md-7 ml-5 mr-auto">
-      <h2>anabel.graphics</h2>
-      
-      <p class="font-weight-normal">High-level model visualization library.</p>
-      
-      <a class="btn btn-lg btn-outline-primary mb-3" href="/anabel/api/latest/graphics/">Read more</a>
-      
-   </div>
-   
-</div>
-
-</div>
-
           </article>
   
         </div>
