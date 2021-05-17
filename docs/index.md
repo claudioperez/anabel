@@ -64,7 +64,7 @@ template: particles.html
 
 <article><div class="row featurette home-feature feature">
     <div class="col-4" style="position: relative;">
-      <img style="vertical-align:middle; max-width: 100%; height: auto" src="img/pde-iso.svg" class="img-fluid"/>
+      <img style="vertical-align:middle; max-width: 100%; height: auto" src="img/mesh5-gauss19.png" class="img-fluid"/>
     </div>
     <div class="col-7">
       <h2 class="featurette-heading">Partial Differential Equations</h2>
