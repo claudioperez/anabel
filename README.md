@@ -12,7 +12,7 @@ An end to end differentiable finite element framework.
 <!-- [![Commits since latest release][gh-image]][gh-link] -->
 <!-- [![Github All Releases](https://img.shields.io/tokei/lines/github/claudioperez/anabel?style=plastic)]() -->
 
-[Foundations](claudioperez.github.io/anabel/guides/foundations)
+[Foundations](https://claudioperez.github.io/anabel/guides/foundations)
 
 ## Installation
 
@@ -46,7 +46,7 @@ def poisson_template(u,v,iso,f,):
         return diff.jacx(u)(u,v)
 ```
 
-![](docs/img/pde-iso.png)
+<!-- ![](docs/img/pde-iso.png) -->
 
 ## Utility Modules
 
