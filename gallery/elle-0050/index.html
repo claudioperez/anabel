@@ -199,8 +199,12 @@
            u &amp;= 0, &amp; &amp;\text{on $\partial\Omega$}
  \end{aligned}
 \]</span></p>
-<p>on the unit disk <span class="math inline">\(\Omega=\{(x,y)\;:\; x^2+y^2\le 1\}\)</span> using quadratic isoparametric elements.</p>
+<p>on the unit disk <span class="math inline">\(\Omega=\{(x,y)\;:\; x^2+y^2\le 1\}\)</span></p>
 </blockquote>
+<p>The exact solution to this problem is</p>
+<p><span class="math display">\[
+\boxed{u = 1 - x^2 - y^2}
+\]</span></p>
 <p>A function implementing quadratic Lagrange interpolation over a reference triangle is implemented in the file <a href="src/interpolate.py"><code>interpolate.py</code></a> which is used by the function <code>poisson2</code> from <code>poisson.py</code> to create a finite element that locally evaluates the following variational Poisson problem</p>
 <p><span class="math display">\[
 \sum_{j=1}^{n} \mathbf{u}_{j} \int_{\Omega} \nabla \phi_{j} \cdot \nabla \phi_{i}=\int_{\Omega} \phi_{i} f+\int_{\partial \Omega_{N}} \phi_{i} g_{N}-\sum_{j=n+1}^{n+n_{\partial}} \mathbf{u}_{j} \int_{\Omega} \nabla \phi_{j} \cdot \nabla \phi_{i}
@@ -226,24 +230,13 @@ $$
 <figure>
 <img src="img/mesh5-gauss02.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution using order-2 Gaussian quadrature" /><figcaption aria-hidden="true">Finite element solution using order-2 Gaussian quadrature</figcaption>
 </figure>
-<blockquote>
-<p>What is the exact solution?</p>
-</blockquote>
-<p>The exact solution is</p>
-<p><span class="math display">\[
-\boxed{u = 1 - x^2 - y^2}
-\]</span></p>
 <figure>
 <img src="img/analytic-a.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Closed-form solution to the stated Poisson problem." /><figcaption aria-hidden="true">Closed-form solution to the stated Poisson problem.</figcaption>
 </figure>
-<blockquote>
-<p>Compute the <span class="math inline">\(H^1\)</span> seminorm and <span class="math inline">\(L^2\)</span> norm of the error for each of the meshes. Ignore the fringe error due to the piecewise parabolic mesh boundary not quite aligning with the circular domain.</p>
-</blockquote>
 <p><img src="img/mesh5-gauss02-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="img/mesh5-gauss02-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
-<blockquote>
-<p>Turn in a table of your errors and <span class="math inline">\(\log\)</span>-<span class="math inline">\(\log\)</span> plots of the error vs.~the mesh parameter, <span class="math inline">\(h\)</span>.</p>
-</blockquote>
-<p><img src="img/conv-3.png" style="margin:auto; display: block; max-width: 75%" /></p>
+<figure>
+<img src="img/conv-3.png" style="margin:auto; display: block; max-width: 75%" alt="Convergence study." /><figcaption aria-hidden="true">Convergence study.</figcaption>
+</figure>
 <!--
 Find $u$ such that
 
