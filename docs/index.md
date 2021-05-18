@@ -58,7 +58,7 @@ template: particles.html
       <!--<a class="btn btn-outline-secondary" href="Guides/Developing" role="button">Developer's Manual</a>-->
     </div>
     <div class="col-4" style="position: relative;">
-      <img style="vertical-align:middle; max-width: 100%; height: auto" src="img/pde-iso.svg" class="img-fluid"/>
+      <img style="vertical-align:middle; max-width: 100%; height: auto" src="img/sections/main.svg" class="img-fluid"/>
     </div>
 </div></article>
 

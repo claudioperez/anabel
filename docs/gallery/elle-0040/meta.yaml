@@ -1,0 +1,15 @@
+toc-depth: 3
+
+from: markdown+implicit_figures+raw_html-markdown_in_html_blocks+raw_attribute+inline_code_attributes
+
+metadata:
+  title: Homework 6
+  nocite: |
+    @kernighan1988programming, @*
+  institute: University of California, Berkeley
+  authors: ["Claudio Perez"]
+  date: April 23, 2021
+  geometry:
+    - margin=1truein
+  citation_package: citeproc
+

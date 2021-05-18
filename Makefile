@@ -23,10 +23,16 @@ api:
 	anabel.matrices \
 	anabel.graphics \
 	anabel.template \
-	anabel.sections
+	anabel.sections \
+	anabel.transient
 	#rm $(DOCDIR)/$(PACKAGE)/index.html
 	mv $(DOCDIR)/$(PACKAGE)/*.html $(DOCDIR)/api/latest/
 	for item in $(DOCDIR)/api/latest/*.html; do mv $$item $${item%.html}.md; done
+web:
+	#cat README.md | sed 's:(docs/img:\.\./img:g' > docs/guides/index.md
+	elstir build
+	/bin/cp -r out/web/* ~/web/ana/
+	rm ~/web/ana/*.mako
 
 gallery:
 

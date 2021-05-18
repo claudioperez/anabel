@@ -3,7 +3,7 @@ site_name: anabel
 site_dir: out/web
 site_url: "https://claudioperez.github.io/anabel/"
 repo_url: "https://www.github.com/claudioperez/anabel"
-copyright: '&copy 2021 <a href="http://claudioperez.xyz/">Claudio Perez</a>'
+copyright: 'Berkeley, CA'
   #site_favicon: /img/favicon.ico
 nav_logo: img/emtec-4.png
 pandoc: style/pandoc-web.yaml
