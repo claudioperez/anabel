@@ -12,6 +12,7 @@ src/emme/seismic
 *.swp
 
 # C extensions
+*.out
 *.so
 
 # Distribution / packaging

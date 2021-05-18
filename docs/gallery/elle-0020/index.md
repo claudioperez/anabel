@@ -15,10 +15,15 @@ The `elle-002x` series of studies are centered around a 2D reinforced concrete p
 
 ## Model Components
 
-Girders
-: T-girders with the following dimensions:
+Structure
+: The structure is depicted in @fig:frame
 
-  - $t_w = 6\text{in}$
+![](img/frame.svg){#fig:frame}
+
+Girders
+: T-girders with the following properties:
+
+![](tee.svg)
 
 Columns
 : Square $30\times 30$ concrete columns fixed at the base.

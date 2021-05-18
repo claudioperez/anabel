@@ -1,6 +1,9 @@
 ---
 hide_toc: true
+title: Guides
 ...
+
+[Foundations](foundations)
 
 ## Modeling
 

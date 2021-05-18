@@ -28,7 +28,20 @@ $$
 \sum_{j=1}^{n} \mathbf{u}_{j} \int_{\Omega} \nabla \phi_{j} \cdot \nabla \phi_{i}=\int_{\Omega} \phi_{i} f+\int_{\partial \Omega_{N}} \phi_{i} g_{N}-\sum_{j=n+1}^{n+n_{\partial}} \mathbf{u}_{j} \int_{\Omega} \nabla \phi_{j} \cdot \nabla \phi_{i}
 $$
 
-This is then integrated over the domain using a self-implemented system optimization package called `anabel` which leverages the JAX library to vectorize element state determination in a manner that can be accelerated on specialized hardware.
+A model is constructed by loading a pre-defined mesh from the file `mesh.m228` as follows:
+
+```python
+model =  anabel.MeshGroup.read(f"../dat/circle_iso/mesh.m228", cell="triangle6")
+elem = poisson(*[lagrange_t6()]*3, f=f)
+U = model.compose(elem=elem, solver="sparse", verbose=True)
+```
+
+This builds a function `U` which accepts quadrature locations and weights as input. Given a particular quadrature rule, a solution may be computed and plotted as follows:
+
+```python
+quad = anon.quad.simplex.Simplex.load(f"../dat/quadrature/gauss{g:02}.m")
+model.plot(U(quad.points, quad.weights))
+```
 
 <!--
 Element stiffness matrix:
@@ -55,9 +68,6 @@ $$
 ![Closed-form solution to the stated Poisson problem.](img/analytic-a.png){width=50%}
 
 
->Compute the $H^1$ seminorm and $L^2$ norm of the error for each of the
->meshes. Ignore the fringe error due to the piecewise parabolic mesh
->boundary not quite aligning with the circular domain.
 
 ![](img/mesh5-gauss02-H1.png){width=50%}
 ![](img/mesh5-gauss02-L2.png){width=50%}

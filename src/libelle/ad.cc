@@ -1,4 +1,5 @@
 /* Claudio Perez, 2021 */
+/* ad.cc */
 #include <cstdio>
 #define D(x) dual_t((x),1.0)
 typedef double real_t;

@@ -1,16 +1,20 @@
 
 verbosity: INFO
-from: markdown+raw_html-markdown_in_html_blocks+raw_attribute
+from: markdown+raw_html-markdown_in_html_blocks+raw_attribute+inline_code_attributes+link_attributes
 to: 'html'
 bibliography: 
   - 'docs/elle.bib'
+  - 'style/foundations.bib'
+
 cite-method: citeproc
 citeproc: true
 metadata:
   link-citations: true
+
 csl: style/citestyle-web.csl
 
 filters:
+  - pandoc-crossref
   - image_center.lua
   - include.lua
   - include-code-files.lua
