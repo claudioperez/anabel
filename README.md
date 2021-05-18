@@ -6,11 +6,11 @@ An end to end differentiable finite element framework.
 -------------------------------------
 
 [![Code Style: Black][black-shield]]()
-<!-- ![Build status][build-img] -->
 [![PyPI Version][pypi-v-image]][pypi-v-link]
+[![Documentation](https://img.shields.io/badge/documentation-blue)](https://claudioperez.github.io/anabel/)
+<!-- ![Build status][build-img] -->
 <!-- [![Commits since latest release][gh-image]][gh-link] -->
 <!-- [![Github All Releases](https://img.shields.io/tokei/lines/github/claudioperez/anabel?style=plastic)]() -->
-[![Documentation](https://img.shields.io/badge/documentation-blue)](https://claudioperez.github.io/anabel/)
 
 [Foundations](claudioperez.github.io/anabel/guides/foundations)
 
@@ -46,7 +46,7 @@ def poisson_template(u,v,iso,f,):
         return diff.jacx(u)(u,v)
 ```
 
-![](docs/img/poisson_2d.png)
+![](docs/img/pde-iso.png)
 
 ## Utility Modules
 
