@@ -1,9 +1,15 @@
 #include "ad.cc"
 
-// #define JACFWD(FUNC, T1, T2, T3) FUNC<decltype(A1), decltype(A2)>(A1,A2)
 
+template<typename TX, typename TC>
+auto f(TX x, TC c){
+    return c - x;
+}
 
-
+template<typename TX,typename TA, typename TB>
+auto g(TX x, TA a, TB b){
+  return a * x + f(x)*b;
+}
 
 template<typename TF,typename TW, typename TB, typename TH>
 auto area(TF tf, TW tw, TB b, TH h){
@@ -12,8 +18,6 @@ auto area(TF tf, TW tw, TB b, TH h){
   return b * tf + (h - tf) *tw;
 }
 
-// template<TF, TW, TB, TH>
-// T moment(T b, real_t h){
 
 int main(int argc, char **argv){
   real_t E = 29000000.0;
@@ -25,5 +29,6 @@ int main(int argc, char **argv){
 */
   real_t tf = 6.0;
   dual_t dA = area(D(tf),tw,b,h);
+  real_t A = area(tf, tw, b, h);
   printd(dA);
 }

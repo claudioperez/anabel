@@ -12,6 +12,8 @@ csl: style/citestyle-web.csl
 
 filters:
   - image_center.lua
+  - include.lua
+  - include-code-files.lua
 
 # method is plain, webtex, gladtex, mathml, mathjax, katex
 # you may specify a url with webtex, mathjax, katex

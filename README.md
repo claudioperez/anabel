@@ -6,12 +6,13 @@ An end to end differentiable finite element framework.
 -------------------------------------
 
 [![Code Style: Black][black-shield]]()
-![Build status][build-img]
+<!-- ![Build status][build-img] -->
 [![PyPI Version][pypi-v-image]][pypi-v-link]
-[![Commits since latest release][gh-image]][gh-link]
-[![Github All Releases](https://img.shields.io/tokei/lines/github/claudioperez/anabel?style=plastic)]()
+<!-- [![Commits since latest release][gh-image]][gh-link] -->
+<!-- [![Github All Releases](https://img.shields.io/tokei/lines/github/claudioperez/anabel?style=plastic)]() -->
 [![Documentation](https://img.shields.io/badge/documentation-blue)](https://claudioperez.github.io/anabel/)
 
+[Foundations](claudioperez.github.io/anabel/guides/foundations)
 
 ## Installation
 
@@ -42,7 +43,7 @@ from anabel.interpolate import lagrange_t6
 @template(6)
 def poisson_template(u,v,iso,f,):
     def poisson(uh,xyz):
-        return jac(u,v)
+        return diff.jacx(u)(u,v)
 ```
 
 ![](docs/img/poisson_2d.png)
@@ -51,13 +52,21 @@ def poisson_template(u,v,iso,f,):
 
 ### [`anabel.sections`]()
 
+```python
+from anabel.sections import Tee
+
+t_section = Tee(bf=60, tf=6, tw=18, d=24)
+t_section.plot()
+```
+
 ![](docs/img/sections/main.svg)
 
-### [`anabel.interpolate`]()
+### [`anabel.transient`]()
 
-![](docs/img/interpolate/main.svg)
+![](docs/img/transient/main.svg)
 
-## Documentation
+
+## Building The Documentation
 
 The following additional dependencies are required to build the project documentation:
 
