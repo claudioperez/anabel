@@ -195,12 +195,18 @@
 <blockquote>
 <p>Consider the modified Poisson equation <span class="math display">\[
 -\alpha u_{xx} + Au = f, \quad (0\le x\le 1), \qquad u(0)=0,\; u(1)=0,
-\]</span> where <span class="math inline">\(\alpha&gt;0\)</span> and <span class="math inline">\(A\ge0\)</span>. Use 4th order finite elments on a uniformly spaced grid,</p>
-<p><span class="math display">\[
-x_j = j/M, \qquad\quad 0\le j\le M
-\]</span></p>
-<p>where <span class="math inline">\(M\)</span> is divisible by 4 and the <span class="math inline">\(r\)</span>th element includes nodes <span class="math inline">\(x_{4r+i}\)</span> for <span class="math inline">\(0\le r&lt;M/4\)</span> and <span class="math inline">\(0\le i\le 4\)</span>.</p>
+\]</span> where <span class="math inline">\(\alpha&gt;0\)</span> and <span class="math inline">\(A\ge0\)</span>.</p>
 </blockquote>
+<!--
+4th order finite elments on a uniformly spaced grid,
+
+$$
+x_j = j/M, \qquad\quad 0\le j\le M
+$$
+
+where $M$ is divisible by 4 and the $r$th element includes nodes $x_{4r+i}$ for
+$0\le r<M/4$ and $0\le i\le 4$. 
+-->
 <h2 id="part-a">Part A</h2>
 <p>Multiplying by a test function <span class="math inline">\(v\)</span> and integrating over the domain (applying integration by parts) yields:</p>
 <p><span class="math display">\[
@@ -217,9 +223,9 @@ x_j = j/M, \qquad\quad 0\le j\le M
 a(\alpha u,v) + \langle Au,v \rangle = \langle f,v\rangle
 \]</span></p>
 <h3 id="fourth-order-element">Fourth-order element</h3>
-<p>A fourth order isoparametric 1D element is developed by applying Lagrange interpolation over 5 equally spaced sampling points.</p>
+<p>A fourth order isoparametric 1D element is developed by applying Lagrange interpolation over 5 equally spaced sampling points. These are plotted in fig. 1.</p>
 <figure>
-<img src="img/lagrange.png" style="margin:auto; display: block; max-width: 75%" alt="Shape functions" /><figcaption aria-hidden="true">Shape functions</figcaption>
+<img src="img/lagrange.png" id="fig:lagrange-shape" style="margin:auto; display: block; max-width: 75%" alt="Figure 1: Shape functions" /><figcaption aria-hidden="true">Figure 1: Shape functions</figcaption>
 </figure>
 <h3 id="convergence">Convergence</h3>
 <blockquote>
