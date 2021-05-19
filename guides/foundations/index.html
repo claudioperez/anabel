@@ -107,13 +107,7 @@
           <article class="page col-md-9 p-3">
           
 
-<!-- >*"The purpose of abstraction is not to be vague, but to create a new semantic level in which one can be absolutely precise."* - Edsger Dijkstra-->
-<h2 id="preface">Preface</h2>
-<p>Engineers have become quite good at approximating how much a body with precisely <em>these</em> properties and exactly <em>that</em> composition might deflect, if this particular load acted on it in exactly <em>that</em> way. The trouble is we don’t really know what we’re modeling. The earthquake will come from an angle we didn’t consider, <!-- the trouble is we've still got no idea what loads will act where, and  --> and exactly how long the foreman<!--contractor's foreman--> let the garden hose run after the concrete showed up late, is a secret buried deeper than the inspector’s forgotten Coke bottle, laid to rest for eternity when the footing was poured. It’s an uncertain world. Exciting strides are being taken to characterize this uncertainty and researchers have made powerful links between the axioms of probability and finite element (FE) methods<!-- [@derkiureghianStructural1986]-->. But unlike the FE method which was quickly decomposed into linear algebraic operations and put into FORTRAN to be disseminated across the globe <span class="citation" data-cites="clough1960finite wilson1970sap wilson1975etabs">[@clough1960finite; @wilson1970sap; @wilson1975etabs]</span>, these models don’t lend themselves so directly to traditional paradigms of scientific computing.</p>
-<p>Problems like this can be considered alongside a broader class of “next-generation” modeling problems for which a FE model will not provide the end result itself, but instead play a role inside an encompassing analysis procedure. Several problems of great relevance to infrastructure resilience entail these demands including regional-scale modeling, parameter calibration, system reliability and design/topology optimization. Modern attempts to tackle such problems often incur large computational overheads and quickly grow in implementation complexity, making remotely modular and reusable solutions exceedingly rare. Furthermore, these solutions typically demand additional information from components of the FE model to be hard-coded into the framework in order to obtain exact or approximate gradients. <!-- Although typically applied to problems with uncertainty, programs that are thought of abstractly as artificial neural networks (ANNs) are not nebulous black boxes; they are precise mathematical expressions.--> <!-- $\null\nobreak\ensuremath{\blacksquare}$ --></p>
-<!-- This project will result in publications presenting a novel formulation of the finite element method  -->
-<p>This project proposes a modeling paradigm and a reference programming framework that mirrors the graph-like structure of artificial neural networks (ANNs) <!-- to allow the same rigorous deductions to be made about nonlinear and path-dependent finite element (FE) models.  --> so that elements of a FE model, as well as the model itself, can be algorithmically differentiated and parallelized, with the modularity of a node in a computational graph.</p>
-<p>The resulting framework exposes a convenient high-level interface through the Python programming language which can be used to state, compose, and efficiently deploy complex physical models. <!--, and algorithmically derive *analytic* response gradients as they develop new finite elements--> <!--, all without computing a single derivative by hand (should one be so careless)-->. Not only does this open the door for powerful new computational procedures and inverse analyses, but it substantially simplifies how we interact with FE software, and provides an accessible tool for engineering education.</p>
+<p>[clad]: https://github.com/vgvassilev/clad {citeprgm=vassilev2015clad}</p>
 <h1 id="part-i-composition-of-expressions">Part I: Composition of Expressions</h1>
 <!-- Recently the field of deep learning has found its way into every day life and it seems as though the sorcerers at Google. The work horses beneath these monumental strides in technology are available to the public through tools like TensorFlow, Matlab, and PyTorch which have become household names in the realm of scientific computing.  -->
 <p>In <span class="citation" data-cites="frostig2018compiling">[@frostig2018compiling]</span>, researchers from the Google Brain team begin their presentation of the revolutionary JAX project with a simple observation; machine learning workloads tend to consist largely of subroutines satisfying two simple properties:</p>
@@ -345,112 +339,92 @@ g(t_f, b_f) = u_{max} - \Phi(t_f, b_f)
 </figure>
 <h2 id="conclusion">Conclusion</h2>
 <p>An approach to finite element modeling was presented in which models are composed from trees of expressions which map between well-defined sets of inputs to outputs in a completely stateless manner. It was shown that this statelessness admits arbitrary compositions while maintaining mathematical properties/guarantees. These guarantees may be exploited through JIT compilation to extract unexpected performance from otherwise inherently slow programming languages/environments.</p>
-<p>&lt;!– Additional examples illustrating the capabilities of the proposed protocol are listed below.</p>
-```{=latex}
-<p>–&gt;</p>
-<pre><code># Appendix
-
-## Forward-mode AD Library for C++
-
-``` {.cpp include=&quot;/home/claudio/pkgs/anabel/src/libelle/ad.cc&quot;}</code></pre>
-<p></p>
+<h1 id="appendix">Appendix</h1>
+<h2 id="forward-mode-ad-library-for-c">Forward-mode AD Library for C++</h2>
+<div id="cb8" class="sourceCode" data-include="/home/claudio/pkgs/anabel/src/libelle/ad.cc">
+<pre class="sourceCode cpp"><code class="sourceCode cpp"></code></pre>
+</div>
 <h2 id="example-using-forward-mode-ad-in-c">Example Using Forward-mode AD in C++</h2>
 <div id="cb9" class="sourceCode" data-include="/home/claudio/pkgs/anabel/src/libelle/tee.cc">
 <pre class="sourceCode cpp"><code class="sourceCode cpp"></code></pre>
 </div>
-<p></p>
 <h2 id="simple-portal-frame-composition">Simple Portal Frame Composition</h2>
 <div id="cb10" class="sourceCode" data-include="/home/claudio/stdy/elle-0020/src/simple_portal.py">
 <pre class="sourceCode python"><code class="sourceCode python"></code></pre>
 </div>
 <div id="refs" class="references csl-bib-body" role="doc-bibliography" role="doc-bibliography">
-<div id="ref-clough1960finite" class="csl-entry" role="doc-biblioentry" role="doc-biblioentry">
-<ol type="1">
-<li>Clough, R. W. <span>“<strong>The Finite Element Method in Plane Stress Analysis</strong>”</span> (1960):</li>
-</ol>
-</div>
-<div id="ref-wilson1970sap" class="csl-entry" role="doc-biblioentry" role="doc-biblioentry">
-<ol start="2" type="1">
-<li>Wilson, E. L. <span>“<strong><span>SAP</span> - <span>A General Structural Analysis Program</span></strong>”</span> (1970):</li>
-</ol>
-</div>
-<div id="ref-wilson1975etabs" class="csl-entry" role="doc-biblioentry" role="doc-biblioentry">
-<ol start="3" type="1">
-<li>Wilson, E. L. <span>“<strong><span>ETABS</span></strong>”</span> (1975):</li>
-</ol>
-</div>
 <div id="ref-frostig2018compiling" class="csl-entry" role="doc-biblioentry" role="doc-biblioentry">
-<ol start="4" type="1">
+<ol type="1">
 <li>Frostig, R., Johnson, M. J., and Leary, C. <span>“<strong>Compiling Machine Learning Programs via High-Level Tracing</strong>”</span> (2018): Available at <a href="https://cs.stanford.edu/~rfrostig/pubs/jax-mlsys2018.pdf">https://cs.stanford.edu/~rfrostig/pubs/jax-mlsys2018.pdf</a></li>
 </ol>
 </div>
 <div id="ref-ozaki1995higherorder" class="csl-entry" role="doc-biblioentry" role="doc-biblioentry">
-<ol start="5" type="1">
+<ol start="2" type="1">
 <li>Ozaki, I., Kimura, F., and Berz, M. <span>“<strong>Higher-Order Sensitivity Analysis of Finite Element Method by Automatic Differentiation</strong>”</span> (1995): 223–234. doi:<a href="https://doi.org/cqq274">cqq274</a></li>
 </ol>
 </div>
 <div id="ref-martins2001connection" class="csl-entry" role="doc-biblioentry" role="doc-biblioentry">
-<ol start="6" type="1">
+<ol start="3" type="1">
 <li>Martins, J., Sturdza, P., and Alonso, J. <span>“<strong>The Connection Between the Complex-Step Derivative Approximation and Algorithmic Differentiation</strong>”</span> (2001): doi:<a href="https://doi.org/10.2514/6.2001-921">10.2514/6.2001-921</a></li>
 </ol>
 </div>
 <div id="ref-hoffmann2016hitchhiker" class="csl-entry" role="doc-biblioentry" role="doc-biblioentry">
-<ol start="7" type="1">
+<ol start="4" type="1">
 <li>Hoffmann, P. H. W. <span>“<strong>A <span>Hitchhiker</span>’s <span>Guide</span> to <span>Automatic Differentiation</span></strong>”</span> (2016): 775–811. doi:<a href="https://doi.org/ggsd72">ggsd72</a>, Available at <a href="https://arxiv.org/abs/1411.0583">https://arxiv.org/abs/1411.0583</a></li>
 </ol>
 </div>
 <div id="ref-pearlmutter2007lazy" class="csl-entry" role="doc-biblioentry" role="doc-biblioentry">
-<ol start="8" type="1">
+<ol start="5" type="1">
 <li>Pearlmutter, B. A. and Siskind, J. M. <span>“<strong>Lazy Multivariate Higher-Order Forward-Mode <span>AD</span></strong>”</span> (2007): 155. doi:<a href="https://doi.org/bpjm8z">bpjm8z</a></li>
 </ol>
 </div>
 <div id="ref-lattner2004llvm" class="csl-entry" role="doc-biblioentry" role="doc-biblioentry">
-<ol start="9" type="1">
+<ol start="6" type="1">
 <li>Lattner, C. and Adve, V. <span>“<strong><span>LLVM</span>: A Compilation Framework for Lifelong Program Analysis Transformation</strong>”</span> (2004): 75–86. doi:<a href="https://doi.org/d5brsd">d5brsd</a></li>
 </ol>
 </div>
 <div id="ref-beck1994automatic" class="csl-entry" role="doc-biblioentry" role="doc-biblioentry">
-<ol start="10" type="1">
+<ol start="7" type="1">
 <li>Beck, T. <span>“<strong>Automatic Differentiation of Iterative Processes</strong>”</span> (1994): 109–118. doi:<a href="https://doi.org/10.1016/0377-0427(94)90293-3">10.1016/0377-0427(94)90293-3</a></li>
 </ol>
 </div>
 <div id="ref-gilbert1992automatic" class="csl-entry" role="doc-biblioentry" role="doc-biblioentry">
-<ol start="11" type="1">
+<ol start="8" type="1">
 <li>Gilbert, J. C. <span>“<strong>Automatic Differentiation and Iterative Processes</strong>”</span> (1992): 13–21. doi:<a href="https://doi.org/10.1080/10556789208805503">10.1080/10556789208805503</a></li>
 </ol>
 </div>
 <div id="ref-griewank1993derivative" class="csl-entry" role="doc-biblioentry" role="doc-biblioentry">
-<ol start="12" type="1">
+<ol start="9" type="1">
 <li>Griewank, A., Bischof, C., Corliss, G., Carle, A., and Williamson, K. <span>“<strong>Derivative Convergence for Iterative Equation Solvers</strong>”</span> (1993): 321–355. doi:<a href="https://doi.org/10.1080/10556789308805549">10.1080/10556789308805549</a></li>
 </ol>
 </div>
 <div id="ref-iri2009automatic" class="csl-entry" role="doc-biblioentry" role="doc-biblioentry">
-<ol start="13" type="1">
+<ol start="10" type="1">
 <li>Iri, M. and Kubota, K. <span>“<strong>Automatic Differentiation: Introduction, History and Rounding Error <span class="nocase">estimationAutomatic Differentiation</span>: <span>Introduction</span>, <span>History</span> and <span>Rounding Error Estimation</span></strong>”</span> (2009): 153–159. doi:<a href="https://doi.org/10.1007/978-0-387-74759-0_26">10.1007/978-0-387-74759-0_26</a></li>
 </ol>
 </div>
 <div id="ref-wengert1964simple" class="csl-entry" role="doc-biblioentry" role="doc-biblioentry">
-<ol start="14" type="1">
+<ol start="11" type="1">
 <li>Wengert, R. E. <span>“<strong>A Simple Automatic Derivative Evaluation Program</strong>”</span> (1964): 463–464. doi:<a href="https://doi.org/bwkd4g">bwkd4g</a></li>
 </ol>
 </div>
 <div id="ref-elliott2009beautiful" class="csl-entry" role="doc-biblioentry" role="doc-biblioentry">
-<ol start="15" type="1">
+<ol start="12" type="1">
 <li>Elliott, C. M. <span>“<strong>Beautiful <span>Differentiation</span></strong>”</span> (2009): 12. doi:<a href="https://doi.org/10.1145/1631687.1596579">10.1145/1631687.1596579</a></li>
 </ol>
 </div>
 <div id="ref-spacone1996fibre" class="csl-entry" role="doc-biblioentry" role="doc-biblioentry">
-<ol start="16" type="1">
+<ol start="13" type="1">
 <li>Spacone, E. and Filippou, F. C. <span>“<strong>Fibre Beam–Column Model for Non‐linear Analysis of <span>R</span>/<span>C</span> Frames: <span>Part I</span>. <span>Formulation</span></strong>”</span> (1996): 15.</li>
 </ol>
 </div>
 <div id="ref-mckenna2010nonlinear" class="csl-entry" role="doc-biblioentry" role="doc-biblioentry">
-<ol start="17" type="1">
+<ol start="14" type="1">
 <li>McKenna, F., Scott, M. H., and Fenves, G. L. <span>“<strong>Nonlinear <span>Finite</span>-<span>Element Analysis Software Architecture Using Object Composition</span></strong>”</span> (2010): 95–107. doi:<a href="https://doi.org/10.1061/(ASCE)CP.1943-5487.0000002">10.1061/(ASCE)CP.1943-5487.0000002</a></li>
 </ol>
 </div>
 <div id="ref-elle-0050" class="csl-entry" role="doc-biblioentry" role="doc-biblioentry">
-<ol start="18" type="1">
+<ol start="15" type="1">
 <li>Perez, C. <span>“<strong>Parameterized Finite Element Analysis of a <span>Poisson</span> Problem in <span>2d</span></strong>”</span> (2021): Available at <a href="https://claudioperez.github.io/anabel/gallery/elle-0050/">https://claudioperez.github.io/anabel/gallery/elle-0050/</a></li>
 </ol>
 </div>
@@ -476,17 +450,10 @@ g(t_f, b_f) = u_{max} - \Phi(t_f, b_f)
               <p class="my-0 font-size-base">Berkeley, CA</p>
             </div>
             <div class="col-md-3 ml-auto">
-              <a href="site-info" class="md-footer-icon">&#9432;</a>
-              <a href="https://github.com/claudioperez" target="_blank" rel="noopener" title="github.com" class="md-footer-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"></path></svg>
-              </a>
-              <!-- <a href="https://linkedin.com/in/claudiomperez/" target="_blank" rel="noopener" title="linkedin.com" class="md-footer-icon">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path d="M416 32H31.9C14.3 32 0 46.5 0 64.3v383.4C0 465.5 14.3 480 31.9 480H416c17.6 0 32-14.5 32-32.3V64.3c0-17.8-14.4-32.3-32-32.3zM135.4 416H69V202.2h66.5V416zm-33.2-243c-21.3 0-38.5-17.3-38.5-38.5S80.9 96 102.2 96c21.2 0 38.5 17.3 38.5 38.5 0 21.3-17.2 38.5-38.5 38.5zm282.1 243h-66.4V312c0-24.8-.5-56.7-34.5-56.7-34.6 0-39.9 27-39.9 54.9V416h-66.4V202.2h63.7v29.2h.9c8.9-16.8 30.6-34.5 62.9-34.5 67.2 0 79.7 44.3 79.7 101.9V416z"></path></svg>
-	      </a>-->
-              <!--<a href="/Perez_Claudio_Resume.pdf" class="md-footer-icon">
-                <img src="/img/cv.svg" class="md-footer-icon">
-	      </a> -->
-	      <a href="../../site-info" class="md-footer-icon">&#9432; &copy</a>
+	      <a href="../../site-info" class="md-footer-icon">&#9432;</a>
+	      
+	      
+	      <!-- <a href="../../site-info" class="md-footer-icon">&copy All rights reserved.</a> -->
             </div>
           </div>
         </section>
