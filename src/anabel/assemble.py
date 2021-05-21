@@ -11,7 +11,7 @@ import inspect
 import functools
 from inspect import signature
 from functools import partial
-from typing import Callable, List
+from typing import Callable, List, Union
 
 import jax
 import meshio
@@ -27,7 +27,7 @@ try:
 except:
     anp = np
 
-__all__ = ["Assembler", "MeshGroup", "Model", "rModel", "SkeletalModel"]
+__all__ = ["MeshGroup", "Model", "rModel", "SkeletalModel"]
 
 def _is_sequence(obj):
     return hasattr(type(obj), '__iter__')
@@ -110,6 +110,7 @@ class Assembler:
         # model inventory lists
         self.elems: list = []
         self.nodes: list = []
+        self.paths: dict = {}
 
         self.bound: list = []
         self.cells: list = []
@@ -118,6 +119,7 @@ class Assembler:
         self.delems: dict = {}
         self.dnodes: dict = {}
         self.params = {}
+        self.expressions = {}
         
         # Define DOF list indexing 
         if ndm == 1:
@@ -140,7 +142,7 @@ class Assembler:
         elif ndm == 3 and ndf ==6:
             self.prob_type = '3d-frame'
             self.ddof: dict = { 'x': 0, 'y': 1, 'z':2, 'rx':3, 'ry':4, 'rz':5}
-        
+    
     @property
     def nn(self) -> int:
         """Number of nodes in model"""
@@ -149,29 +151,51 @@ class Assembler:
     @property
     def ne(self) -> int:
         """Number of elements in model"""
-        return len(self.nodes)
+        return len(self.elems)
 
     @property
     def nf(self) -> int:
         "Number of free degrees of freedom."
         return  self.nt - self.nr
-    
-    @property
-    def nt(self)->int:
-        return self.ndf * len(self.nodes)
 
-    @property
-    def element_dofs(self):
-        return anp.concatenate([elem.dofs for tag,elem in enumerate(self.elems)],axis=-1).T
 
-    def dof_element_map(self):
-        el_DOF = self.element_dofs
-        if self.verbose: print("Constructing element-DOF map.")
-        Be_map = [[] for i in range(self.nt)]
-        for el,dofs in enumerate(el_DOF):
-            for i,dof in enumerate(dofs): 
-                Be_map[dof].append((el,i))
-        return Be_map
+    def cycle(self, tag, 
+        origin, 
+        max_val, 
+        steps:int, 
+        quarter_cycles:int,
+        dof:Union[int,str]=None, 
+        parameter=None
+    ):
+        """Create a parameter path that is managed by the model.
+
+        created 2021-05-16
+        """
+        if isinstance(origin,(float,int)):
+            assert (dof is not None), "Scalar value must be assigned to a DOF."
+        if tag not in self.paths:
+            self.paths[tag] = {}
+
+        delta = (max_val - origin)/steps
+        self.paths[tag].update({dof: anp.array([
+            anp.linspace(
+                    origin if not i%2 else max_val, max_val - delta if not i%2 else origin + delta, steps -1
+            ) * (1 if (not i%4) or (not (i-1)%4) else -1)
+                for i in range(quarter_cycles)
+            ]).flatten() 
+        })
+
+    def build_load_path(self, tag):
+        dofs = self.dofs
+        path = self.paths[tag]
+        # start as regular numpy array to support index assignment
+        load = np.zeros((self.nf,len(list(path.values())[0])))
+        for dof in path:
+            load[dof,:] = path[dof]
+        return anp.stack([l[:,None] for l in load.T])
+
+         
+
 
     
     def param(self,*param_names,shape=0,dtype=float,default=None):
@@ -193,9 +217,54 @@ class Assembler:
         else:
             return inspect.Parameter(param_names[0],param_kind)
 
+    def expr(self, expression:Callable, *parameters):
+        n = len(self.expressions)
+        name = f"_expr_{n}"
+        param = self.param(name)#, default=expression)
+        self.expressions.update({name: {"params": list(map(lambda x: x.name,parameters)), "expression": expression}})
+        return param
 
 
-class MeshGroup(Assembler):
+class UniformAssembler(Assembler):
+    """Abstract base class for model where every element is of the same arity.
+    """
+
+    
+    @property
+    def nt(self)->int:
+        return self.ndf * len(self.nodes)
+
+    @property
+    def dofs(self):
+        """Plain DOF numbering scheme.
+
+        2021-05-07
+        """
+        if self._numberer is None:
+            free_dofs = iter(range(self.nf))
+            fixed_dofs = iter(range(self.nf, self.nt))
+            return [
+                [
+                    next(fixed_dofs) if fixity else next(free_dofs)
+                    for fixity in node 
+                ] for node in self.fixities
+            ]
+
+    @property
+    def element_dofs(self):
+        return anp.concatenate([elem.dofs for tag,elem in enumerate(self.elems)],axis=-1).T
+
+    def dof_element_map(self):
+        el_DOF = self.element_dofs
+        if self.verbose: print("Constructing element-DOF map.")
+        Be_map = [[] for i in range(self.nt)]
+        for el,dofs in enumerate(el_DOF):
+            for i,dof in enumerate(dofs): 
+                Be_map[dof].append((el,i))
+        return Be_map
+
+
+class MeshGroup(UniformAssembler):
     """Homogeneous 2D mesh group.
 
     """
@@ -218,7 +287,7 @@ class MeshGroup(Assembler):
         """Create a class instance by reading in a mesh file.
 
         This function should work with any mesh format that is supported
-        in the external `meshio` Python library.
+        in the external [`meshio`](https://github.com/nschloe/meshio) Python library.
 
         Parameters
         ----------
@@ -267,7 +336,7 @@ class MeshGroup(Assembler):
                 ] for node in self.fixities
             ]
 
-    def plot(self,values=None,func=None,interact=False,savefig:str=None,**kwds):
+    def plot(self,values=None,func=None,scale=1.0,interact=False,savefig:str=None,**kwds):
         """
         Parameters
         ----------
@@ -279,10 +348,14 @@ class MeshGroup(Assembler):
 
 
         Plot mesh using `pyvista` interface to VTK.
+
+        Pure numpy is used for generality.
+
+        Claudio Perez
         """
         from matplotlib import cm
         if values is None:
-            point_values = [[func(node.xyz)] for node in self.nodes]
+            point_values = np.asarray([[func(node.xyz)] for node in self.nodes])
         elif callable(values):
             point_values = np.array([values(node.xyz) for node in self.nodes])
             print(point_values)
@@ -292,6 +365,7 @@ class MeshGroup(Assembler):
             dof_values = anp.concatenate([values, anp.zeros((self.nr,1))],axis=0)
             point_values = anp.take(dof_values, self.dofs)
 
+        point_values *= scale
         show_edges = True if self.ne < 10_000 else False
         self.mesh.point_data["u"] = point_values
 
@@ -346,12 +420,16 @@ class MeshGroup(Assembler):
         nn = self.nn
         ne = len(self.elems)
         nf = self.nf
+        nt = self.nt
         nr = self.nr
         nodes = set(self.dnodes.keys())
         shape = ((nf,1),(nf,1))
         params = self.params
         # Assign model degrees of freedom
         self.DOF = DOF = self.dofs
+        #el_DOF  = [ elem.dofs for tag,elem in enumerate(self.elems) ]
+        el_DOF  = self.element_dofs
+        Be_map = self.dof_element_map()
         
         _unpack_coords = lambda xyz: f"[{','.join(str(x) for x in xyz)}]"
         local_scope = locals()
@@ -372,9 +450,6 @@ class MeshGroup(Assembler):
         param_map = {
             tag: anon.dual.get_unspecified_parameters(elem) for tag,el in enumerate(self.elems)
         }
-        #el_DOF  = [ elem.dofs for tag,elem in enumerate(self.elems) ]
-        el_DOF  = self.element_dofs
-        Be_map = self.dof_element_map()
 
         
         # Create DOF - element mapping
@@ -417,19 +492,20 @@ class MeshGroup(Assembler):
         elem_jac = jax.vmap(diff.jacx(elem),(None,None,None,0,None,None))
         vrow = jax.vmap(lambda eJ, eij: sum(eJ[tuple(zip(*(eij)))]), (None,1))
         vjac = jax.vmap(vrow, (None,0))
-        nt = self.nt
         #z = anp.zeros((nt))
         def sparse_jac(u,p,state,xyz=None,points=None,weights=None,params=param_arg):
             coords = collect_coords(None)
             el_jacs = elem_jac(
                 [],[],[],coords, points, weights
             )
-            print("State determination complete")
+            print("\tState determination complete")
             K = scipy.sparse.lil_matrix((nt,nt))
             for tag, el_dofs in enumerate(el_DOF):
                 for j, dof_j in enumerate(el_dofs):
-                    for i, dof_i in enumerate(el_dofs):
-                        K[dof_i,dof_j] += el_jacs[tag,i,j]
+                    if j < nf:
+                        for i, dof_i in enumerate(el_dofs):
+                            if i < nf: K[dof_i,dof_j] += el_jacs[tag,i,j]
+            print("\tMatrix assembly complete")
 
             del el_jacs
             gc.collect()
@@ -441,7 +517,7 @@ class MeshGroup(Assembler):
     @template(dim="shape",main="assm")
     def assemble_linear(self, elem=None,verbose=False,**kwds)->Callable:
         """
-        elem(None,xyz) -> R^[ndf*nen]
+        `elem(None,xyz) -> R^[ndf*nen]`
 
 
         Returns
@@ -697,6 +773,7 @@ class MeshGroup(Assembler):
         return main
 
 
+
 class Model(Assembler):
     def __init__(self, ndm:int, ndf:int):
         """Basic structural model class
@@ -730,13 +807,11 @@ class Model(Assembler):
         if "params" not in keep:
             self.params: dict = {}
             """2021-03-31"""
-
         self.rxns:  list = []
         self.hinges: list = []
         self.iforces: list = []
         self.states: list = []
         self.redundants: list = []
-
         # model inventory dictionaries
         self.delems: dict = {}
         self.dnodes: dict = {}
@@ -750,14 +825,31 @@ class Model(Assembler):
         # Initialize default material/section properties
         self.material('default', 1.0)
         self.xsection('default', 1.0, 1.0)
+    
+    @property
+    def dofs(self):
+        """Plain DOF numbering scheme.
+
+        2021-05-07
+        """
+        if self._numberer is None:
+            free_dofs = iter(range(self.nf))
+            fixed_dofs = iter(range(self.nf, self.nt))
+            return [
+                [
+                    next(fixed_dofs) if fixity else next(free_dofs)
+                    for fixity in node.rxns 
+                ] for node in self.nodes
+            ]
 
 
 
     def compose(self,resp="d",jit=True,verbose=False,**kwds):
         return self.compose_param(jit_force=jit,verbose=verbose,**kwds)
 
-    def compose_param(self,jit_force=True,verbose=False,**kwds):
-        f = self.compose_displ(jit_force=jit_force,**kwds,verbose=verbose,_expose_closure=True)
+    def compose_param(self,f=None,jit_force=True,verbose=False,**kwds):
+        if f is None:
+            f = self.compose_displ(jit_force=jit_force,**kwds,verbose=verbose,_expose_closure=True)
         cnl = ',\n'
         u0 = anp.zeros((self.nf,1))
         model_map = f.closure["model_map"]
@@ -769,18 +861,21 @@ class Model(Assembler):
         #params.update({
         #    p.name: p for el in param_map.values() for p in el.values()
         #})
+        expressions = self.expressions
         local_scope = locals()
         #-------------------
         def _unpack(el):
             params = get_unspecified_parameters(el,recurse=True)
             ls = ",".join(
-                f"'{p.name}': {p.default.name}"
+                f"'{p.name}': {p.default.name}" 
                     for p in params.values()
                         if isinstance(p,inspect.Parameter) and p.default
                 )
             if "params" in params and params["params"]:
                 subparams = "'params': {" + ",".join(
-                        f"'{k}': {v.default.name}" for k,v in params["params"].items() if v.default
+                            f"'{k}': {v.default.name}" if "expr" not in v.default.name 
+                            else f"'{k}': expressions['{v.default.name}']['expression']({','.join(expressions[v.default.name]['params'])})" 
+                    for k,v in params["params"].items() if v.default
                 ) + "}"
                 if ls:
                     return  ",".join((ls, subparams))
@@ -790,7 +885,7 @@ class Model(Assembler):
             else:
                 return ls
         exec(
-            f"def collect_params({','.join(p for p in self.params )}):\n"
+            f"def collect_params({','.join(p for p in self.params if 'expr' not in p )}):\n"
              "  return {'params': {\n"
             f"""    {cnl.join(f'"{tag}": {{ {_unpack(el)} }}' for tag,el in model_map.items()) }\n"""
              "  }}",
@@ -799,7 +894,6 @@ class Model(Assembler):
         collect_params = local_scope["collect_params"]
 
         #-------------------
-        #local_scope = locals()
         exec(
         f"def collect_loads({','.join(p for p in parameterized_loads.values() if isinstance(p,str) )}):\n"
          "  return anp.array([\n"
@@ -811,8 +905,8 @@ class Model(Assembler):
 
         #-------------------
         exec(
-            f"def displ({','.join(p for p in self.params)}): \n"
-          f"""   params = collect_params({','.join(p for p in self.params)})\n"""
+            f"def displ({','.join(p for p in self.params if 'expr' not in p)}): \n"
+          f"""   params = collect_params({','.join(p for p in self.params if 'expr' not in p)})\n"""
             f"   return f(collect_loads({','.join(p for p in parameterized_loads.values() if isinstance(p,str) )}), f.origin[1], f.origin[2], params)[1]",
             local_scope
         )
@@ -821,7 +915,6 @@ class Model(Assembler):
 
         # Evaluate once with zeros to JIT-compile
         return main
-        #return collect_params
     
     def compose_force(self,jit=True,**kwds):
         f = self.assemble_force(jit=jit,**kwds,_expose_closure=True)
@@ -901,6 +994,8 @@ class Model(Assembler):
                     "tol": 1e-10,
                     "maxiter": 10
             }
+        if "steps" in kwds:
+            solver_opts.update({"steps": kwds["steps"]})
         f = self.assemble_force(_jit=jit_force,**kwds,_expose_closure=True)
         model_map = f.closure["model_map"]
         state = {...:f.origin[2]}
@@ -916,9 +1011,6 @@ class Model(Assembler):
         model_map = f.closure["model_map"]
         param_map = f.closure["param_map"]
         main = solver(f,jacx=jacx,**solver_opts)
-        # def main(p, u, state=state, params={}):
-        #     return g()
-
         return locals()
 
     @template(dim="shape",main="force")
@@ -931,7 +1023,6 @@ class Model(Assembler):
         nr = self.nr
         nodes = set(self.dnodes.keys())
         shape = ((nf,1),(nf,1))
-        #shape = nf
         
         _unpack_coords = lambda xyz: f"[{','.join(str(x) for x in xyz)}]"
         local_scope = locals()
@@ -1016,7 +1107,7 @@ class Model(Assembler):
             for dof_i in range(1,nf+1)
         }
 
-        def jacx(u,p,state,xyz=None,params=param_arg):
+        def jac_x(u,p,state,xyz=None,params=param_arg):
             coords = collect_coords(xyz)
             U = anp.concatenate([u,anp.zeros((nr,1))],axis=0)
             el_jacs = {
@@ -1240,7 +1331,7 @@ class Model(Assembler):
 
         Parameters
         ----------
-        node: emme.Node
+        node: anabel.Node
 
         dirn: Sequence[String]
 
@@ -1275,7 +1366,7 @@ class Model(Assembler):
 
         Parameters
         ----------
-        node: emme.Node
+        node: anabel.Node
 
         """
         for node in nodes:
@@ -1953,35 +2044,3 @@ class Domain(Model):
     pass
 
 
-#def number_dof_plain(conn, boun, verbose=False):
-#    """Basic dof numbering"""
-#    ndf = max(len(con) for con in mesh.values())
-#    nr = sum(sum(boun) for boun in bn.values())
-#    nodes = {node for con in mesh.values() for node in con[1]}
-#    nn = len(nodes)
-#
-#    crxns = ndf*nn - nr + 1
-#
-#    df = 1
-#    temp = {}
-#    try:
-#        sorted_nodes = sorted(nodes, key=lambda k: int(k))
-#    except:
-#        sorted_nodes = sorted(nodes)
-#    for node in sorted_nodes:
-#        DOFs = []
-#        try:
-#            for rxn in bn[node]:
-#                if not rxn:
-#                    DOFs.append(df)
-#                    df += 1
-#                else:
-#                    DOFs.append(crxns)
-#                    crxns += 1
-#        except KeyError:
-#            df -= 1
-#            DOFs = [df := df + 1 for _ in range(ndf)]
-#            df += 1
-#
-#        temp[node] = DOFs
-#    return temp

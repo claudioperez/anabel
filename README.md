@@ -6,12 +6,13 @@ An end to end differentiable finite element framework.
 -------------------------------------
 
 [![Code Style: Black][black-shield]]()
-![Build status][build-img]
 [![PyPI Version][pypi-v-image]][pypi-v-link]
-[![Commits since latest release][gh-image]][gh-link]
-[![Github All Releases](https://img.shields.io/tokei/lines/github/claudioperez/anabel?style=plastic)]()
 [![Documentation](https://img.shields.io/badge/documentation-blue)](https://claudioperez.github.io/anabel/)
+<!-- ![Build status][build-img] -->
+<!-- [![Commits since latest release][gh-image]][gh-link] -->
+<!-- [![Github All Releases](https://img.shields.io/tokei/lines/github/claudioperez/anabel?style=plastic)]() -->
 
+[Foundations](https://claudioperez.github.io/anabel/guides/foundations)
 
 ## Installation
 
@@ -33,7 +34,7 @@ The in-development version can be installed the following command:
 $ pip install https://github.com/claudioperez/anabel/archive/master.zip
 ```
 
-## Modeling PDEs
+## Core API - Modeling PDEs 
 
 ```python
 from anabel import template, diff, MappedMesh
@@ -42,12 +43,30 @@ from anabel.interpolate import lagrange_t6
 @template(6)
 def poisson_template(u,v,iso,f,):
     def poisson(uh,xyz):
-        return jac(u,v)
+        return diff.jacx(u)(u,v)
 ```
 
-![](docs/img/poisson_2d.png)
+<!-- ![](docs/img/pde-iso.png) -->
 
-## Documentation
+## Utility Modules
+
+### [`anabel.sections`]()
+
+```python
+from anabel.sections import Tee
+
+t_section = Tee(bf=60, tf=6, tw=18, d=24)
+t_section.plot()
+```
+
+![](docs/img/sections/main.svg)
+
+### [`anabel.transient`]()
+
+![](docs/img/transient/main.svg)
+
+
+## Building The Documentation
 
 The following additional dependencies are required to build the project documentation:
 
@@ -99,8 +118,8 @@ $ elstir build
 [pypi-v-image]: https://img.shields.io/pypi/v/anabel.svg
 [pypi-v-link]: https://pypi.org/project/anabel/
 
-[gh-link]: https://github.com/claudioperez/anabel/compare/0.0.3...master
-[gh-image]: https://img.shields.io/github/commits-since/claudioperez/anabel/0.0.3?style=social
+[gh-link]: https://github.com/claudioperez/anabel/compare/0.0.9...master
+[gh-image]: https://img.shields.io/github/commits-since/claudioperez/anabel/0.0.9?style=social
 
 [build-img]: https://ci.appveyor.com/api/projects/status/github/claudioperez/anabel?branch=master&svg=true
 
