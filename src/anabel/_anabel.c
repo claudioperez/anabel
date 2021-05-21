@@ -52,14 +52,14 @@ static PyObject* execute_model(PyObject *self, PyObject *value) {
     return result;
 }
 
-PyDoc_STRVAR(unimplemented_function_with_long_name_doc, "Docstring for unimplemented_function_with_long_name function.");
+PyDoc_STRVAR(skeletal_assemble_no1_doc, "Docstring for skeletal_assemble_no1 function.");
 
 static struct PyMethodDef module_functions[] = {
-    {"unimplemented_function_with_long_name", unimplemented_function_with_long_name, METH_O, unimplemented_function_with_long_name_doc},
+    {"skeletal_assemble_no1", skeletal_assemble_no1, METH_O, skeletal_assemble_no1_doc},
     {NULL, NULL}
 };
 
-#if PY_MAJOR_VERSION >= 3
+
 static struct PyModuleDef moduledef = {
     PyModuleDef_HEAD_INIT,
     "anabel._anabel", /* m_name */
@@ -71,16 +71,11 @@ static struct PyModuleDef moduledef = {
     NULL,             /* m_clear */
     NULL,             /* m_free */
 };
-#endif
 
 static PyObject* moduleinit(void) {
     PyObject *module;
 
-#if PY_MAJOR_VERSION >= 3
     module = PyModule_Create(&moduledef);
-#else
-    module = Py_InitModule3("anabel._anabel", module_functions, NULL);
-#endif
 
     if (module == NULL)
         return NULL;
@@ -88,13 +83,7 @@ static PyObject* moduleinit(void) {
     return module;
 }
 
-#if PY_MAJOR_VERSION < 3
-PyMODINIT_FUNC init_anabel(void) {
-    moduleinit();
-}
-#else
 PyMODINIT_FUNC PyInit__anabel(void) {
     return moduleinit();
 }
-#endif
 

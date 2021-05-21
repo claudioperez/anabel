@@ -6,14 +6,18 @@ $-\alpha u_{xx} + Au = f$
 >$$
   -\alpha u_{xx} + Au = f, \quad (0\le x\le 1), \qquad u(0)=0,\; u(1)=0,
 >$$
->where $\alpha>0$ and $A\ge0$. Use 4th order finite elments on a uniformly spaced grid,
->
->$$
-  x_j = j/M, \qquad\quad 0\le j\le M
->$$
->
->where $M$ is divisible by 4 and the $r$th element includes nodes $x_{4r+i}$ for
+>where $\alpha>0$ and $A\ge0$. 
+
+<!--
+4th order finite elments on a uniformly spaced grid,
+
+$$
+x_j = j/M, \qquad\quad 0\le j\le M
+$$
+
+where $M$ is divisible by 4 and the $r$th element includes nodes $x_{4r+i}$ for
 $0\le r<M/4$ and $0\le i\le 4$. 
+-->
 
 ## Part A
 
@@ -39,9 +43,9 @@ $$
 
 ### Fourth-order element
 
-A fourth order isoparametric 1D element is developed by applying Lagrange interpolation over 5 equally spaced sampling points.
+A fourth order isoparametric 1D element is developed by applying Lagrange interpolation over 5 equally spaced sampling points. These are plotted in @fig:lagrange-shape.
 
-![Shape functions](img/lagrange.png)
+![Shape functions](img/lagrange.png){#fig:lagrange-shape}
 
 
 ### Convergence

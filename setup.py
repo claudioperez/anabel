@@ -34,7 +34,7 @@ extras_require = {
     "interact": ["ipyvtklink", "pyvista"]
 }
 extras_require["backends"] = sorted(
-    set(extras_require["tensorflow"] + extras_require["jax"])
+    set(extras_require["jax"])
 )
 
 
@@ -46,7 +46,15 @@ setup(
     long_description_content_type="text/markdown",
     author="Claudio M. Perez",
     author_email="claudio_perez@berkeley.edu",
+
+    #url="https://github.com/claudioperez/anabel",
     url="https://claudioperez.github.io/anabel",
+    project_urls={
+        "Documentation": "https://claudioperez.github.io/anabel"
+        "Changelog": "https://github.com/claudioperez/anabel/blob/master/CHANGELOG.md",
+        "Issue Tracker": "https://github.com/claudioperez/anabel/issues",
+    },
+
     packages=find_packages("src"),
     package_dir={"": "src"},
     py_modules=[splitext(basename(path))[0] for path in glob("src/*.py")],
@@ -63,10 +71,7 @@ setup(
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
     ],
-    project_urls={
-        "Changelog": "https://github.com/claudioperez/anabel/blob/master/CHANGELOG.md",
-        "Issue Tracker": "https://github.com/claudioperez/anabel/issues",
-    },
+
     keywords=[],
     python_requires=">=3.7",
     install_requires=[

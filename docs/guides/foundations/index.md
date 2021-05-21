@@ -1,10 +1,4 @@
-<!-- >*"The purpose of abstraction is not to be vague, but to create a new semantic level in which one can be absolutely precise."* - Edsger Dijkstra-->
-<h2 id="preface">Preface</h2>
-<p>Engineers have become quite good at approximating how much a body with precisely <em>these</em> properties and exactly <em>that</em> composition might deflect, if this particular load acted on it in exactly <em>that</em> way. The trouble is we don’t really know what we’re modeling. The earthquake will come from an angle we didn’t consider, <!-- the trouble is we've still got no idea what loads will act where, and  --> and exactly how long the foreman<!--contractor's foreman--> let the garden hose run after the concrete showed up late, is a secret buried deeper than the inspector’s forgotten Coke bottle, laid to rest for eternity when the footing was poured. It’s an uncertain world. Exciting strides are being taken to characterize this uncertainty and researchers have made powerful links between the axioms of probability and finite element (FE) methods<!-- [@derkiureghianStructural1986]-->. But unlike the FE method which was quickly decomposed into linear algebraic operations and put into FORTRAN to be disseminated across the globe <span class="citation" data-cites="clough1960finite wilson1970sap wilson1975etabs">[@clough1960finite; @wilson1970sap; @wilson1975etabs]</span>, these models don’t lend themselves so directly to traditional paradigms of scientific computing.</p>
-<p>Problems like this can be considered alongside a broader class of “next-generation” modeling problems for which a FE model will not provide the end result itself, but instead play a role inside an encompassing analysis procedure. Several problems of great relevance to infrastructure resilience entail these demands including regional-scale modeling, parameter calibration, system reliability and design/topology optimization. Modern attempts to tackle such problems often incur large computational overheads and quickly grow in implementation complexity, making remotely modular and reusable solutions exceedingly rare. Furthermore, these solutions typically demand additional information from components of the FE model to be hard-coded into the framework in order to obtain exact or approximate gradients. <!-- Although typically applied to problems with uncertainty, programs that are thought of abstractly as artificial neural networks (ANNs) are not nebulous black boxes; they are precise mathematical expressions.--> <!-- $\null\nobreak\ensuremath{\blacksquare}$ --></p>
-<!-- This project will result in publications presenting a novel formulation of the finite element method  -->
-<p>This project proposes a modeling paradigm and a reference programming framework that mirrors the graph-like structure of artificial neural networks (ANNs) <!-- to allow the same rigorous deductions to be made about nonlinear and path-dependent finite element (FE) models.  --> so that elements of a FE model, as well as the model itself, can be algorithmically differentiated and parallelized, with the modularity of a node in a computational graph.</p>
-<p>The resulting framework exposes a convenient high-level interface through the Python programming language which can be used to state, compose, and efficiently deploy complex physical models. <!--, and algorithmically derive *analytic* response gradients as they develop new finite elements--> <!--, all without computing a single derivative by hand (should one be so careless)-->. Not only does this open the door for powerful new computational procedures and inverse analyses, but it substantially simplifies how we interact with FE software, and provides an accessible tool for engineering education.</p>
+<p>[clad]: https://github.com/vgvassilev/clad {citeprgm=vassilev2015clad}</p>
 <h1 id="part-i-composition-of-expressions">Part I: Composition of Expressions</h1>
 <!-- Recently the field of deep learning has found its way into every day life and it seems as though the sorcerers at Google. The work horses beneath these monumental strides in technology are available to the public through tools like TensorFlow, Matlab, and PyTorch which have become household names in the realm of scientific computing.  -->
 <p>In <span class="citation" data-cites="frostig2018compiling">[@frostig2018compiling]</span>, researchers from the Google Brain team begin their presentation of the revolutionary JAX project with a simple observation; machine learning workloads tend to consist largely of subroutines satisfying two simple properties:</p>
@@ -222,104 +216,58 @@ g(t_f, b_f) = u_{max} - \Phi(t_f, b_f)
 </figure>
 <h2 id="conclusion">Conclusion</h2>
 <p>An approach to finite element modeling was presented in which models are composed from trees of expressions which map between well-defined sets of inputs to outputs in a completely stateless manner. It was shown that this statelessness admits arbitrary compositions while maintaining mathematical properties/guarantees. These guarantees may be exploited through JIT compilation to extract unexpected performance from otherwise inherently slow programming languages/environments.</p>
-<!--
-Additional examples illustrating the capabilities of the proposed protocol are listed below.
-
-\pagebreak
-
-```{=latex}
-\begin{description}
-  \item[\href{https://claudioperez.github.io/anabel/gallery/elle-0040}{1D Transient Poisson Equation}] \hfil \\ 
-    \begin{minipage}[c]{0.35\linewidth} 
-       \begin{flushleft}
-    A study of the transient heat equation. The method of lines is used so that a solution in space is obtained using the finite element method, and time discretization is handled through an implicit Runge-Kutta solver accepting an arbitrary lower-diagonal Butcher tableau.
-       \end{flushleft}
-    \end{minipage}
-    \begin{minipage}[c]{0.5\linewidth}
-      \begin{flushright}
-    %\adjustbox{valign=t}{%
-        \includegraphics[width=0.9\linewidth,height=\textheight,keepaspectratio,valign=t]{img/pde-iso.svg}
-      \end{flushright}
-    \end{minipage}
-  \item[\href{https://claudioperez.github.io/anabel/gallery/elle-0050}{Poisson Equation in 2D}] \hfil \\ 
-    \begin{minipage}[c]{0.35\linewidth} 
-       \begin{flushleft}
-    A parametric study of the 2D Poisson equation using both a classical sparse linear solve, and a conjugate gradient solve with algorithmic tangent. Element integration weights are parameterized across the domain and model assembly procedures are collected into a vectorized function. Highest resolution mesh includes over $12,000$ degrees of freedom and $13,000$ elements. 
-       \end{flushleft}
-    \end{minipage}
-    \begin{minipage}[c]{0.5\linewidth}
-      \begin{flushright}
-    %\adjustbox{valign=t}{%
-        \includegraphics[width=0.9\linewidth,height=\textheight,keepaspectratio,valign=t]{img/mesh4-gauss02.png}
-      \end{flushright}
-    \end{minipage}
-\end{description}
-<p>–&gt;</p>
-<pre><code># Appendix
-
-## Forward-mode AD Library for C++
-
-``` {.cpp include=&quot;/home/claudio/pkgs/anabel/src/libelle/ad.cc&quot;}</code></pre>
-<p></p>
+<h1 id="appendix">Appendix</h1>
+<h2 id="forward-mode-ad-library-for-c">Forward-mode AD Library for C++</h2>
+<div class="sourceCode" id="cb8" data-include="/home/claudio/pkgs/anabel/src/libelle/ad.cc"><pre class="sourceCode cpp"><code class="sourceCode cpp"></code></pre></div>
 <h2 id="example-using-forward-mode-ad-in-c">Example Using Forward-mode AD in C++</h2>
 <div class="sourceCode" id="cb9" data-include="/home/claudio/pkgs/anabel/src/libelle/tee.cc"><pre class="sourceCode cpp"><code class="sourceCode cpp"></code></pre></div>
-<p></p>
 <h2 id="simple-portal-frame-composition">Simple Portal Frame Composition</h2>
 <div class="sourceCode" id="cb10" data-include="/home/claudio/stdy/elle-0020/src/simple_portal.py"><pre class="sourceCode python"><code class="sourceCode python"></code></pre></div>
 <div id="refs" class="references csl-bib-body" role="doc-bibliography">
-<div id="ref-clough1960finite" class="csl-entry" role="doc-biblioentry">
-1. Clough, R. W. <span>“<strong>The Finite Element Method in Plane Stress Analysis</strong>”</span> (1960):
-</div>
-<div id="ref-wilson1970sap" class="csl-entry" role="doc-biblioentry">
-2. Wilson, E. L. <span>“<strong><span>SAP</span> - <span>A General Structural Analysis Program</span></strong>”</span> (1970):
-</div>
-<div id="ref-wilson1975etabs" class="csl-entry" role="doc-biblioentry">
-3. Wilson, E. L. <span>“<strong><span>ETABS</span></strong>”</span> (1975):
-</div>
 <div id="ref-frostig2018compiling" class="csl-entry" role="doc-biblioentry">
-4. Frostig, R., Johnson, M. J., and Leary, C. <span>“<strong>Compiling Machine Learning Programs via High-Level Tracing</strong>”</span> (2018): Available at <a href="https://cs.stanford.edu/~rfrostig/pubs/jax-mlsys2018.pdf">https://cs.stanford.edu/~rfrostig/pubs/jax-mlsys2018.pdf</a>
+1. Frostig, R., Johnson, M. J., and Leary, C. <span>“<strong>Compiling Machine Learning Programs via High-Level Tracing</strong>”</span> (2018): Available at <a href="https://cs.stanford.edu/~rfrostig/pubs/jax-mlsys2018.pdf">https://cs.stanford.edu/~rfrostig/pubs/jax-mlsys2018.pdf</a>
 </div>
 <div id="ref-ozaki1995higherorder" class="csl-entry" role="doc-biblioentry">
-5. Ozaki, I., Kimura, F., and Berz, M. <span>“<strong>Higher-Order Sensitivity Analysis of Finite Element Method by Automatic Differentiation</strong>”</span> (1995): 223–234. doi:<a href="https://doi.org/cqq274">cqq274</a>
+2. Ozaki, I., Kimura, F., and Berz, M. <span>“<strong>Higher-Order Sensitivity Analysis of Finite Element Method by Automatic Differentiation</strong>”</span> (1995): 223–234. doi:<a href="https://doi.org/cqq274">cqq274</a>
 </div>
 <div id="ref-martins2001connection" class="csl-entry" role="doc-biblioentry">
-6. Martins, J., Sturdza, P., and Alonso, J. <span>“<strong>The Connection Between the Complex-Step Derivative Approximation and Algorithmic Differentiation</strong>”</span> (2001): doi:<a href="https://doi.org/10.2514/6.2001-921">10.2514/6.2001-921</a>
+3. Martins, J., Sturdza, P., and Alonso, J. <span>“<strong>The Connection Between the Complex-Step Derivative Approximation and Algorithmic Differentiation</strong>”</span> (2001): doi:<a href="https://doi.org/10.2514/6.2001-921">10.2514/6.2001-921</a>
 </div>
 <div id="ref-hoffmann2016hitchhiker" class="csl-entry" role="doc-biblioentry">
-7. Hoffmann, P. H. W. <span>“<strong>A <span>Hitchhiker</span>’s <span>Guide</span> to <span>Automatic Differentiation</span></strong>”</span> (2016): 775–811. doi:<a href="https://doi.org/ggsd72">ggsd72</a>, Available at <a href="https://arxiv.org/abs/1411.0583">https://arxiv.org/abs/1411.0583</a>
+4. Hoffmann, P. H. W. <span>“<strong>A <span>Hitchhiker</span>’s <span>Guide</span> to <span>Automatic Differentiation</span></strong>”</span> (2016): 775–811. doi:<a href="https://doi.org/ggsd72">ggsd72</a>, Available at <a href="https://arxiv.org/abs/1411.0583">https://arxiv.org/abs/1411.0583</a>
 </div>
 <div id="ref-pearlmutter2007lazy" class="csl-entry" role="doc-biblioentry">
-8. Pearlmutter, B. A. and Siskind, J. M. <span>“<strong>Lazy Multivariate Higher-Order Forward-Mode <span>AD</span></strong>”</span> (2007): 155. doi:<a href="https://doi.org/bpjm8z">bpjm8z</a>
+5. Pearlmutter, B. A. and Siskind, J. M. <span>“<strong>Lazy Multivariate Higher-Order Forward-Mode <span>AD</span></strong>”</span> (2007): 155. doi:<a href="https://doi.org/bpjm8z">bpjm8z</a>
 </div>
 <div id="ref-lattner2004llvm" class="csl-entry" role="doc-biblioentry">
-9. Lattner, C. and Adve, V. <span>“<strong><span>LLVM</span>: A Compilation Framework for Lifelong Program Analysis Transformation</strong>”</span> (2004): 75–86. doi:<a href="https://doi.org/d5brsd">d5brsd</a>
+6. Lattner, C. and Adve, V. <span>“<strong><span>LLVM</span>: A Compilation Framework for Lifelong Program Analysis Transformation</strong>”</span> (2004): 75–86. doi:<a href="https://doi.org/d5brsd">d5brsd</a>
 </div>
 <div id="ref-beck1994automatic" class="csl-entry" role="doc-biblioentry">
-10. Beck, T. <span>“<strong>Automatic Differentiation of Iterative Processes</strong>”</span> (1994): 109–118. doi:<a href="https://doi.org/10.1016/0377-0427(94)90293-3">10.1016/0377-0427(94)90293-3</a>
+7. Beck, T. <span>“<strong>Automatic Differentiation of Iterative Processes</strong>”</span> (1994): 109–118. doi:<a href="https://doi.org/10.1016/0377-0427(94)90293-3">10.1016/0377-0427(94)90293-3</a>
 </div>
 <div id="ref-gilbert1992automatic" class="csl-entry" role="doc-biblioentry">
-11. Gilbert, J. C. <span>“<strong>Automatic Differentiation and Iterative Processes</strong>”</span> (1992): 13–21. doi:<a href="https://doi.org/10.1080/10556789208805503">10.1080/10556789208805503</a>
+8. Gilbert, J. C. <span>“<strong>Automatic Differentiation and Iterative Processes</strong>”</span> (1992): 13–21. doi:<a href="https://doi.org/10.1080/10556789208805503">10.1080/10556789208805503</a>
 </div>
 <div id="ref-griewank1993derivative" class="csl-entry" role="doc-biblioentry">
-12. Griewank, A., Bischof, C., Corliss, G., Carle, A., and Williamson, K. <span>“<strong>Derivative Convergence for Iterative Equation Solvers</strong>”</span> (1993): 321–355. doi:<a href="https://doi.org/10.1080/10556789308805549">10.1080/10556789308805549</a>
+9. Griewank, A., Bischof, C., Corliss, G., Carle, A., and Williamson, K. <span>“<strong>Derivative Convergence for Iterative Equation Solvers</strong>”</span> (1993): 321–355. doi:<a href="https://doi.org/10.1080/10556789308805549">10.1080/10556789308805549</a>
 </div>
 <div id="ref-iri2009automatic" class="csl-entry" role="doc-biblioentry">
-13. Iri, M. and Kubota, K. <span>“<strong>Automatic Differentiation: Introduction, History and Rounding Error <span class="nocase">estimationAutomatic Differentiation</span>: <span>Introduction</span>, <span>History</span> and <span>Rounding Error Estimation</span></strong>”</span> (2009): 153–159. doi:<a href="https://doi.org/10.1007/978-0-387-74759-0_26">10.1007/978-0-387-74759-0_26</a>
+10. Iri, M. and Kubota, K. <span>“<strong>Automatic Differentiation: Introduction, History and Rounding Error <span class="nocase">estimationAutomatic Differentiation</span>: <span>Introduction</span>, <span>History</span> and <span>Rounding Error Estimation</span></strong>”</span> (2009): 153–159. doi:<a href="https://doi.org/10.1007/978-0-387-74759-0_26">10.1007/978-0-387-74759-0_26</a>
 </div>
 <div id="ref-wengert1964simple" class="csl-entry" role="doc-biblioentry">
-14. Wengert, R. E. <span>“<strong>A Simple Automatic Derivative Evaluation Program</strong>”</span> (1964): 463–464. doi:<a href="https://doi.org/bwkd4g">bwkd4g</a>
+11. Wengert, R. E. <span>“<strong>A Simple Automatic Derivative Evaluation Program</strong>”</span> (1964): 463–464. doi:<a href="https://doi.org/bwkd4g">bwkd4g</a>
 </div>
 <div id="ref-elliott2009beautiful" class="csl-entry" role="doc-biblioentry">
-15. Elliott, C. M. <span>“<strong>Beautiful <span>Differentiation</span></strong>”</span> (2009): 12. doi:<a href="https://doi.org/10.1145/1631687.1596579">10.1145/1631687.1596579</a>
+12. Elliott, C. M. <span>“<strong>Beautiful <span>Differentiation</span></strong>”</span> (2009): 12. doi:<a href="https://doi.org/10.1145/1631687.1596579">10.1145/1631687.1596579</a>
 </div>
 <div id="ref-spacone1996fibre" class="csl-entry" role="doc-biblioentry">
-16. Spacone, E. and Filippou, F. C. <span>“<strong>Fibre Beam–Column Model for Non‐linear Analysis of <span>R</span>/<span>C</span> Frames: <span>Part I</span>. <span>Formulation</span></strong>”</span> (1996): 15.
+13. Spacone, E. and Filippou, F. C. <span>“<strong>Fibre Beam–Column Model for Non‐linear Analysis of <span>R</span>/<span>C</span> Frames: <span>Part I</span>. <span>Formulation</span></strong>”</span> (1996): 15.
 </div>
 <div id="ref-mckenna2010nonlinear" class="csl-entry" role="doc-biblioentry">
-17. McKenna, F., Scott, M. H., and Fenves, G. L. <span>“<strong>Nonlinear <span>Finite</span>-<span>Element Analysis Software Architecture Using Object Composition</span></strong>”</span> (2010): 95–107. doi:<a href="https://doi.org/10.1061/(ASCE)CP.1943-5487.0000002">10.1061/(ASCE)CP.1943-5487.0000002</a>
+14. McKenna, F., Scott, M. H., and Fenves, G. L. <span>“<strong>Nonlinear <span>Finite</span>-<span>Element Analysis Software Architecture Using Object Composition</span></strong>”</span> (2010): 95–107. doi:<a href="https://doi.org/10.1061/(ASCE)CP.1943-5487.0000002">10.1061/(ASCE)CP.1943-5487.0000002</a>
 </div>
 <div id="ref-elle-0050" class="csl-entry" role="doc-biblioentry">
-18. Perez, C. <span>“<strong>Parameterized Finite Element Analysis of a <span>Poisson</span> Problem in <span>2d</span></strong>”</span> (2021): Available at <a href="https://claudioperez.github.io/anabel/gallery/elle-0050/">https://claudioperez.github.io/anabel/gallery/elle-0050/</a>
+15. Perez, C. <span>“<strong>Parameterized Finite Element Analysis of a <span>Poisson</span> Problem in <span>2d</span></strong>”</span> (2021): Available at <a href="https://claudioperez.github.io/anabel/gallery/elle-0050/">https://claudioperez.github.io/anabel/gallery/elle-0050/</a>
 </div>
 </div>
 <section class="footnotes" role="doc-endnotes">
