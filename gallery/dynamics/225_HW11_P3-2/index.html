@@ -140,6 +140,184 @@
           <article class="page col-md-9 p-3">
           
 
+<h1 id="time-history-analysis-mdf-frame">Time History Analysis: MDF Frame</h1>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ema <span class="im">as</span> em</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>config InlineBackend.figure_format <span class="op">=</span> <span class="st">&#39;svg&#39;</span> <span class="co"># used to make plots look nicer</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ema_examples.dynamics <span class="im">import</span> P09_07</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ema.utilities.ipyutils <span class="im">import</span> disp_sbs</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>ft <span class="op">=</span> <span class="dv">12</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>h <span class="op">=</span> <span class="dv">12</span><span class="op">*</span>ft</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>m <span class="op">=</span> <span class="dv">80</span><span class="op">/</span><span class="fl">386.4</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>E <span class="op">=</span> <span class="dv">29000</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>I <span class="op">=</span> <span class="dv">1000</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>EI <span class="op">=</span> E<span class="op">*</span>I</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>RHA <span class="op">=</span> <span class="va">False</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>N <span class="op">=</span> I <span class="op">=</span> <span class="dv">3</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>mdl <span class="op">=</span> P09_07(h <span class="op">=</span> h, m <span class="op">=</span> m, EI <span class="op">=</span> EI)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># fig, ax = plt.subplots()</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># em.plot_structure(mdl, ax)</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>m, k <span class="op">=</span> em.Mass_matrix(mdl), em.K_matrix(mdl)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>k, m <span class="op">=</span> em.analysis.StaticCondensation(k, m)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>disp_sbs(m.df, k.df)</span></code></pre></div>
+<table style="display:inline" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>$u_{1}$</th>
+      <th>$u_{2}$</th>
+      <th>$u_{3}$</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>$u_{1}$</th>
+      <td>0.207039</td>
+      <td>0.000000</td>
+      <td>0.00000</td>
+    </tr>
+    <tr>
+      <th>$u_{2}$</th>
+      <td>0.000000</td>
+      <td>0.207039</td>
+      <td>0.00000</td>
+    </tr>
+    <tr>
+      <th>$u_{3}$</th>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.10352</td>
+    </tr>
+  </tbody>
+</table>
+<table style="display:inline" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>$1$</th>
+      <th>$2$</th>
+      <th>$3$</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>$P_{1}$</th>
+      <td>466.177984</td>
+      <td>-233.088992</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>$P_{2}$</th>
+      <td>-233.088992</td>
+      <td>466.177984</td>
+      <td>-233.088992</td>
+    </tr>
+    <tr>
+      <th>$P_{3}$</th>
+      <td>0.000000</td>
+      <td>-233.088992</td>
+      <td>233.088992</td>
+    </tr>
+  </tbody>
+</table>
+<p>The function <code>ema.analysis.ModalAnalysis</code> wraps a scipy routine for solving the eigenvalue problem.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>freq2, Phi <span class="op">=</span> em.analysis.ModalAnalysis(mdl, norm<span class="op">=</span><span class="st">&#39;last&#39;</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>Phi</span></code></pre></div>
+<pre><code>array([[ 5.00000000e-01, -1.00000000e+00,  5.00000000e-01],
+       [ 8.66025404e-01,  2.28035323e-16, -8.66025404e-01],
+       [ 1.00000000e+00,  1.00000000e+00,  1.00000000e+00]])</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>omega <span class="op">=</span> np.array([np.sqrt(np.real(freq)) <span class="cf">for</span> freq <span class="kw">in</span> freq2])</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>omega</span></code></pre></div>
+<pre><code>array([17.36843442, 47.45144529, 64.81987972])</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>M <span class="op">=</span> Phi.T<span class="op">@</span>m<span class="op">@</span>Phi</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>K <span class="op">=</span> Phi.T<span class="op">@</span>k<span class="op">@</span>Phi</span></code></pre></div>
+<h2 id="modal-expansion-of-earthquake-forces">Modal expansion of earthquake forces</h2>
+<p><span class="math display">\[\mathrm{p}_{\mathrm{eff}}(t)=-\mathrm{m} \iota \ddot{u}_{g}(t)\]</span></p>
+<p><span class="math display">\[\mathbf{m} \iota=\sum_{n=1}^{N} \mathbf{s}_{n}=\sum_{n=1}^{N} \Gamma_{n} \mathbf{m} \phi_{n}\]</span></p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>I <span class="op">=</span> N <span class="op">=</span> <span class="dv">3</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>iota <span class="op">=</span> np.ones(I)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>L <span class="op">=</span> np.array([<span class="bu">sum</span>(Phi.T[n,i]<span class="op">*</span><span class="bu">sum</span>(m[i,j]<span class="op">*</span>iota[j] <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(I)) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(I)) <span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(N)])</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>L <span class="op">=</span> Phi.T<span class="op">@</span>m<span class="op">@</span>iota</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>L</span></code></pre></div>
+<pre><code>Structural_Vector([ 0.38634066, -0.10351967,  0.02773801])</code></pre>
+<div class="sourceCode" id="cb11"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>gamma <span class="op">=</span> np.array([L[n]<span class="op">/</span>M[n,n]  <span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(N)])</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>gamma</span></code></pre></div>
+<pre><code>array([ 1.24401694, -0.33333333,  0.0893164 ])</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>s <span class="op">=</span> np.array([gamma[n]<span class="op">*</span>(m<span class="op">@</span>Phi.T[n]) <span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(N)]).T</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>s</span></code></pre></div>
+<pre><code>array([[ 1.28780221e-01,  6.90131125e-02,  9.24600388e-03],
+       [ 2.23053886e-01, -1.57374274e-17, -1.60145485e-02],
+       [ 1.28780221e-01, -3.45065562e-02,  9.24600388e-03]])</code></pre>
+<h2 id="a-determine-a_n-and-d_n">a) Determine <span class="math inline">\(A_n\)</span> and <span class="math inline">\(D_n\)</span></h2>
+<div class="sourceCode" id="cb15"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Values read from response spectrum:</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>D <span class="op">=</span> np.array([<span class="fl">0.877</span>, <span class="fl">0.10</span>, <span class="fl">0.04</span>]) <span class="co"># inches</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>D</span></code></pre></div>
+<pre><code>array([0.877, 0.1  , 0.04 ])</code></pre>
+<div class="sourceCode" id="cb17"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># if RHA:</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>D <span class="op">=</span> []</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>u <span class="op">=</span> []</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, w <span class="kw">in</span> <span class="bu">enumerate</span>(omega):</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    zeta <span class="op">=</span> <span class="fl">0.05</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    t, d <span class="op">=</span> em.analysis.ElcentroRHA(zeta, w)</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    D.append(<span class="bu">max</span>(d))</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    u.append([t,d])</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(D)</span></code></pre></div>
+<pre><code>[0.923352660303864, 0.09304519274915218, 0.03763691127115581]</code></pre>
+<p>Plot modes:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>fig2, ax2 <span class="op">=</span> plt.subplots()</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>em.plot_structure(mdl, ax2)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">3</span>):</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    plt.plot(<span class="dv">10</span><span class="op">*</span>u[i][<span class="dv">0</span>],<span class="dv">200</span><span class="op">+</span><span class="dv">300</span><span class="op">*</span>u[i][<span class="dv">1</span>], linewidth<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div>
+<figure>
+<img src="img/output_15_0.svg" style="margin:auto; display: block; max-width: 75%" alt="svg" /><figcaption aria-hidden="true">svg</figcaption>
+</figure>
+<div class="sourceCode" id="cb20"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> np.array([D[n]<span class="op">*</span>omega[n]<span class="op">**</span><span class="dv">2</span> <span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(N)])</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>A</span></code></pre></div>
+<pre><code>array([278.54088513, 209.50424621, 158.13587895])</code></pre>
+<h2 id="b-modal-response-quantities">b) Modal response quantities</h2>
+<h3 id="floor-displacements">Floor displacements</h3>
+<div class="sourceCode" id="cb22"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>Un <span class="op">=</span> np.array([[gamma[n]<span class="op">*</span>Phi[i,n]<span class="op">*</span>D[n] <span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(N)]<span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(I)])</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>Un</span></code></pre></div>
+<pre><code>array([[ 5.74333174e-01,  3.10150642e-02,  1.68079666e-03],
+       [ 9.94774237e-01, -7.07253019e-18, -2.91122522e-03],
+       [ 1.14866635e+00, -3.10150642e-02,  3.36159333e-03]])</code></pre>
+<h3 id="story-shears">Story shears</h3>
+<div class="sourceCode" id="cb24"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>Vin <span class="op">=</span> np.array([[<span class="bu">sum</span>(s[j,n]<span class="op">*</span>A[n] <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(i, I)) <span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(N)] <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(I)])</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>Vin</span></code></pre></div>
+<pre><code>array([[133.87074037,   7.22927006,   0.3917752 ],
+       [ 98.0001836 ,  -7.22927006,  -1.07034975],
+       [ 35.87055677,  -7.22927006,   1.46212495]])</code></pre>
+<h3 id="floor-and-base-moments">Floor and base moments</h3>
+<div class="sourceCode" id="cb26"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>M_base <span class="op">=</span> np.array([<span class="bu">sum</span>(s[i,n]<span class="op">*</span>h<span class="op">*</span>(i<span class="op">+</span><span class="dv">1</span>)<span class="op">*</span>A[n]  <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(I)) <span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(N)])</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>M_base <span class="co"># kip-inch</span></span></code></pre></div>
+<pre><code>array([38554.77322731, -1041.01488801,   112.8312575 ])</code></pre>
+<div class="sourceCode" id="cb28"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>H <span class="op">=</span> [h<span class="op">*</span>(i<span class="op">+</span><span class="dv">1</span>) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(I)]</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>H</span></code></pre></div>
+<pre><code>[144, 288, 432]</code></pre>
+<div class="sourceCode" id="cb30"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>M_floor <span class="op">=</span> np.array([[<span class="bu">sum</span>((H[j]<span class="op">-</span>h<span class="op">*</span>(i<span class="op">+</span><span class="dv">1</span>))<span class="op">*</span>s[j,n]<span class="op">*</span>A[n] <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(i,N)) <span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(N)] <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(I)])</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>M_floor <span class="co"># kip-inch</span></span></code></pre></div>
+<pre><code>array([[19277.38661365, -2082.02977602,    56.41562875],
+       [ 5165.36017531, -1041.01488801,   210.54599284],
+       [    0.        ,     0.        ,     0.        ]])</code></pre>
+<h2 id="c-peak-modal-response-combination">c) Peak modal response combination</h2>
+<p>For well-seperated modal frequencies, the SRSS method is employed.</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> ro(rno):</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.sqrt(<span class="bu">sum</span>(rn<span class="op">**</span><span class="dv">2</span> <span class="cf">for</span> rn <span class="kw">in</span> rno))</span></code></pre></div>
+<h3 id="floor-displacements-1">Floor displacements</h3>
+<p>text</p>
+<div class="sourceCode" id="cb33"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>ro(Un.T)</span></code></pre></div>
+<pre><code>array([0.57517246, 0.9947785 , 1.14908991])</code></pre>
+<h3 id="story-shears-1">Story shears</h3>
+<div class="sourceCode" id="cb35"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>ro(Vin.T)</span></code></pre></div>
+<pre><code>array([134.06636775,  98.27229508,  36.62099122])</code></pre>
+<h3 id="floor-and-base-overturning-moments">Floor and base overturning moments</h3>
+<div class="sourceCode" id="cb37"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>ro(M_base)</span></code></pre></div>
+<pre><code>38568.98989471707</code></pre>
+<div class="sourceCode" id="cb39"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>ro(M_floor)</span></code></pre></div>
+<pre><code>array([19957.41918167,  2327.78005518,   217.97325126])</code></pre>
 
     
           </article>

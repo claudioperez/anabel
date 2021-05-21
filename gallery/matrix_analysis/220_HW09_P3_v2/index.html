@@ -151,6 +151,507 @@
           <article class="page col-md-9 p-3">
           
 
+<h1 id="stiffness-method---beam">Stiffness Method - Beam</h1>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ema <span class="im">as</span> em</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>config InlineBackend.figure_format <span class="op">=</span> <span class="st">&#39;svg&#39;</span> <span class="co"># used to make plots look nicer</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize model</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>dm <span class="op">=</span> em.Model(<span class="dv">2</span>,<span class="dv">3</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>nodes <span class="op">=</span> dm.nodes</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> dm.dnodes</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Define section properties</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>Iab <span class="op">=</span> <span class="dv">200000</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>Ic  <span class="op">=</span> <span class="dv">300000</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>xs1 <span class="op">=</span> dm.xsec(<span class="st">&#39;ab&#39;</span>, A, Iab)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>xs2 <span class="op">=</span> dm.xsec(<span class="st">&#39;c&#39;</span>, A, Ic)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>xsecs <span class="op">=</span> [xs1, xs1, xs2] </span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Define nodes</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>dm.node(<span class="st">&#39;1&#39;</span>, <span class="fl">0.0</span>, <span class="fl">0.0</span>)</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>dm.node(<span class="st">&#39;2&#39;</span>, <span class="fl">15.</span>, <span class="fl">0.0</span>)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>dm.node(<span class="st">&#39;3&#39;</span>, <span class="fl">35.</span>, <span class="fl">0.0</span>)</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>dm.node(<span class="st">&#39;4&#39;</span>, <span class="fl">50.</span>, <span class="fl">0.0</span>)</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Create beams</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>a, b, c <span class="op">=</span> dm.girder(nodes, xsecs<span class="op">=</span>xsecs)</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="co"># Establish fixities</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>dm.fix(n[<span class="st">&#39;1&#39;</span>], [<span class="st">&#39;x&#39;</span>,<span class="st">&#39;y&#39;</span>])</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>dm.fix(n[<span class="st">&#39;2&#39;</span>], [<span class="st">&#39;y&#39;</span>])</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>dm.fix(n[<span class="st">&#39;3&#39;</span>], [<span class="st">&#39;y&#39;</span>])</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>dm.fix(n[<span class="st">&#39;4&#39;</span>], [<span class="st">&#39;y&#39;</span>])</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="co"># uncomment line below to automatically print FEDEASLab input script</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="co"># em.utilities.export.FEDEAS(dm)</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>dm.numDOF() <span class="co"># automatically number dofs and print them as list</span></span></code></pre></div>
+<pre><code>[[8, 9, 1], [2, 10, 3], [4, 11, 5], [6, 12, 7]]</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>em.plot_beam(dm, ax)</span></code></pre></div>
+<figure>
+<img src="output_3_0.svg" style="margin:auto; display: block; max-width: 75%" alt="svg" /><figcaption aria-hidden="true">svg</figcaption>
+</figure>
+<h2 id="part-a-distributed-loading">Part a) Distributed Loading</h2>
+<h3 id="determine-displacements-of-the-free-dofs.">Determine displacements of the free dofs.</h3>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set element loads</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>a.w[<span class="st">&#39;y&#39;</span>] <span class="op">=</span> <span class="op">-</span><span class="dv">10</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>b.w[<span class="st">&#39;y&#39;</span>] <span class="op">=</span> <span class="op">-</span><span class="dv">10</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> em.A_matrix(dm)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>B <span class="op">=</span> em.B_matrix(dm)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>V0 <span class="op">=</span> em.V_vector(A).o</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Q0 <span class="op">=</span> em.Q_vector(B).o</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>Q0</span></code></pre></div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>$Q_{{}}$</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>$a_1$</th>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>$a_2$</th>
+      <td>187.500000</td>
+    </tr>
+    <tr>
+      <th>$a_3$</th>
+      <td>-187.500000</td>
+    </tr>
+    <tr>
+      <th>$b_1$</th>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>$b_2$</th>
+      <td>333.333333</td>
+    </tr>
+    <tr>
+      <th>$b_3$</th>
+      <td>-333.333333</td>
+    </tr>
+    <tr>
+      <th>$c_1$</th>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>$c_2$</th>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>$c_3$</th>
+      <td>0.000000</td>
+    </tr>
+  </tbody>
+</table>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>P0 <span class="op">=</span> B.f<span class="op">@</span>Q0</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>P0</span></code></pre></div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>$P_{{}}$</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>$1$</th>
+      <td>187.500000</td>
+    </tr>
+    <tr>
+      <th>$2$</th>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>$3$</th>
+      <td>145.833333</td>
+    </tr>
+    <tr>
+      <th>$4$</th>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>$5$</th>
+      <td>-333.333333</td>
+    </tr>
+    <tr>
+      <th>$6$</th>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>$7$</th>
+      <td>0.000000</td>
+    </tr>
+  </tbody>
+</table>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>K <span class="op">=</span> em.K_matrix(dm)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>K.f</span></code></pre></div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>$U_{{1}}$</th>
+      <th>$U_{{2}}$</th>
+      <th>$U_{{3}}$</th>
+      <th>$U_{{4}}$</th>
+      <th>$U_{{5}}$</th>
+      <th>$U_{{6}}$</th>
+      <th>$U_{{7}}$</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>$P_{{1}}$</th>
+      <td>53333.333333</td>
+      <td>0.000000</td>
+      <td>26666.666667</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>$P_{{2}}$</th>
+      <td>0.000000</td>
+      <td>0.116667</td>
+      <td>0.000000</td>
+      <td>-0.050000</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>$P_{{3}}$</th>
+      <td>26666.666667</td>
+      <td>0.000000</td>
+      <td>93333.333333</td>
+      <td>0.000000</td>
+      <td>20000.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>$P_{{4}}$</th>
+      <td>0.000000</td>
+      <td>-0.050000</td>
+      <td>0.000000</td>
+      <td>0.116667</td>
+      <td>0.0</td>
+      <td>-0.066667</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>$P_{{5}}$</th>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>20000.000000</td>
+      <td>0.000000</td>
+      <td>120000.0</td>
+      <td>0.000000</td>
+      <td>40000.0</td>
+    </tr>
+    <tr>
+      <th>$P_{{6}}$</th>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>-0.066667</td>
+      <td>0.0</td>
+      <td>0.066667</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>$P_{{7}}$</th>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>40000.0</td>
+      <td>0.000000</td>
+      <td>80000.0</td>
+    </tr>
+  </tbody>
+</table>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>Uf <span class="op">=</span> K.f.inv<span class="op">@</span>(<span class="op">-</span>P0)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>Uf</span></code></pre></div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>$U_{{}}$</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>$U_{{1}}$</th>
+      <td>-0.002734</td>
+    </tr>
+    <tr>
+      <th>$U_{{2}}$</th>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>$U_{{3}}$</th>
+      <td>-0.001562</td>
+    </tr>
+    <tr>
+      <th>$U_{{4}}$</th>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>$U_{{5}}$</th>
+      <td>0.003646</td>
+    </tr>
+    <tr>
+      <th>$U_{{6}}$</th>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>$U_{{7}}$</th>
+      <td>-0.001823</td>
+    </tr>
+  </tbody>
+</table>
+<h3 id="determine-element-basic-forces">Determine element basic forces</h3>
+<div class="sourceCode" id="cb11"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>V <span class="op">=</span> A.f<span class="op">@</span>Uf</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>V</span></code></pre></div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>$V_{{}}$</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>$a_1$</th>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>$a_2$</th>
+      <td>-0.002734</td>
+    </tr>
+    <tr>
+      <th>$a_3$</th>
+      <td>-0.001562</td>
+    </tr>
+    <tr>
+      <th>$b_1$</th>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>$b_2$</th>
+      <td>-0.001562</td>
+    </tr>
+    <tr>
+      <th>$b_3$</th>
+      <td>0.003646</td>
+    </tr>
+    <tr>
+      <th>$c_1$</th>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>$c_2$</th>
+      <td>0.003646</td>
+    </tr>
+    <tr>
+      <th>$c_3$</th>
+      <td>-0.001823</td>
+    </tr>
+  </tbody>
+</table>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>Q <span class="op">=</span> K.s<span class="op">@</span> V<span class="op">+</span>Q0</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>Q</span></code></pre></div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.000000e+00</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2.842171e-14</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>-3.437500e+02</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.000000e+00</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>3.437500e+02</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>-2.187500e+02</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>0.000000e+00</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>2.187500e+02</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>2.842171e-14</td>
+    </tr>
+  </tbody>
+</table>
+<h2 id="part-b-thermal-loading">Part b) Thermal Loading</h2>
+<div class="sourceCode" id="cb13"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>a.w[<span class="st">&#39;y&#39;</span>] <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>b.w[<span class="st">&#39;y&#39;</span>] <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>b.e0[<span class="st">&#39;2&#39;</span>] <span class="op">=</span> <span class="op">-</span><span class="fl">1e-3</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>b.e0[<span class="st">&#39;3&#39;</span>] <span class="op">=</span>  <span class="fl">1e-3</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>c.e0[<span class="st">&#39;2&#39;</span>] <span class="op">=</span> <span class="op">-</span><span class="fl">1e-3</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>c.e0[<span class="st">&#39;3&#39;</span>] <span class="op">=</span>  <span class="fl">1e-3</span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>V0 <span class="op">=</span> em.V_vector(A).o</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>V0</span></code></pre></div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>$V_{{0}}$</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>$a_1$</th>
+      <td>0.0000</td>
+    </tr>
+    <tr>
+      <th>$a_2$</th>
+      <td>0.0000</td>
+    </tr>
+    <tr>
+      <th>$a_3$</th>
+      <td>0.0000</td>
+    </tr>
+    <tr>
+      <th>$b_1$</th>
+      <td>0.0000</td>
+    </tr>
+    <tr>
+      <th>$b_2$</th>
+      <td>0.0100</td>
+    </tr>
+    <tr>
+      <th>$b_3$</th>
+      <td>-0.0100</td>
+    </tr>
+    <tr>
+      <th>$c_1$</th>
+      <td>0.0000</td>
+    </tr>
+    <tr>
+      <th>$c_2$</th>
+      <td>0.0075</td>
+    </tr>
+    <tr>
+      <th>$c_3$</th>
+      <td>-0.0075</td>
+    </tr>
+  </tbody>
+</table>
+<div class="sourceCode" id="cb15"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>Q0 <span class="op">=</span> em.Q_vector(B).o</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>Q0</span></code></pre></div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>$Q_{{}}$</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>$a_1$</th>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>$a_2$</th>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>$a_3$</th>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>$b_1$</th>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>$b_2$</th>
+      <td>-200.0</td>
+    </tr>
+    <tr>
+      <th>$b_3$</th>
+      <td>200.0</td>
+    </tr>
+    <tr>
+      <th>$c_1$</th>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>$c_2$</th>
+      <td>-300.0</td>
+    </tr>
+    <tr>
+      <th>$c_3$</th>
+      <td>300.0</td>
+    </tr>
+  </tbody>
+</table>
+<div class="sourceCode" id="cb16"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>c.f_matrix()</span></code></pre></div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>$q_1$</th>
+      <th>$q_2$</th>
+      <th>$q_3$</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>$v_1$</th>
+      <td>15.0</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <th>$v_2$</th>
+      <td>0.0</td>
+      <td>0.000017</td>
+      <td>-0.000008</td>
+    </tr>
+    <tr>
+      <th>$v_3$</th>
+      <td>0.0</td>
+      <td>-0.000008</td>
+      <td>0.000017</td>
+    </tr>
+  </tbody>
+</table>
+<div class="sourceCode" id="cb17"><pre class="sourceCode python"><code class="sourceCode python"></code></pre></div>
 
     
           </article>

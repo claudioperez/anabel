@@ -151,6 +151,488 @@
           <article class="page col-md-9 p-3">
           
 
+<h1 id="force-method---truss">Force Method - Truss</h1>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> ema <span class="im">as</span> em</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sympy <span class="im">as</span> sp</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>config InlineBackend.figure_format <span class="op">=</span> <span class="st">&#39;svg&#39;</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>dm <span class="op">=</span> em.Model(<span class="dv">2</span>,<span class="dv">2</span>) <span class="co"># create instance of model object</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>n <span class="op">=</span> dm.dnodes </span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>e <span class="op">=</span> dm.delems</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>A1 <span class="op">=</span> <span class="dv">10000</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>Ac <span class="op">=</span> <span class="dv">20000</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>I <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>dm.xsection(<span class="st">&#39;default&#39;</span>, A1, I)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>csec <span class="op">=</span> dm.xsection(<span class="st">&#39;section-c&#39;</span>, Ac, I)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>n1 <span class="op">=</span> dm.node(<span class="st">&#39;1&#39;</span>, <span class="fl">0.0</span>, <span class="fl">0.0</span>)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>n2 <span class="op">=</span> dm.node(<span class="st">&#39;2&#39;</span>, <span class="fl">16.</span>, <span class="fl">0.0</span>)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>n3 <span class="op">=</span> dm.node(<span class="st">&#39;3&#39;</span>, <span class="fl">8.0</span>, <span class="fl">6.0</span>)</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>n4 <span class="op">=</span> dm.node(<span class="st">&#39;4&#39;</span>, <span class="fl">0.0</span>, <span class="fl">6.0</span>)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> dm.truss(<span class="st">&#39;a&#39;</span>, n3, n4) <span class="co"># add truss element to model object</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> dm.truss(<span class="st">&#39;b&#39;</span>, n1, n3)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>c <span class="op">=</span> dm.truss(<span class="st">&#39;c&#39;</span>, n2, n3, xsec<span class="op">=</span>csec)</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>dm.pin(n1)</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>dm.pin(n4)</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>dm.pin(n2)</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>dm.numDOF() <span class="co"># Automatically number model dofs</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="co"># em.utilities.export.FEDEAS(dm)</span></span></code></pre></div>
+<pre><code>[[3, 4], [5, 6], [1, 2], [7, 8]]</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>prim <span class="op">=</span> em.Model(<span class="dv">2</span>,<span class="dv">2</span>) <span class="co"># create instance of model object</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>np <span class="op">=</span> prim.dnodes </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>ep <span class="op">=</span> prim.delems</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>A1 <span class="op">=</span> <span class="dv">10000</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>Ac <span class="op">=</span> <span class="dv">20000</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>I <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>prim.xsection(<span class="st">&#39;default&#39;</span>, A1, I)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>csec <span class="op">=</span> prim.xsection(<span class="st">&#39;section-c&#39;</span>, Ac, I)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>prim.node(<span class="st">&#39;1&#39;</span>, <span class="fl">0.0</span>, <span class="fl">0.0</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>prim.node(<span class="st">&#39;2&#39;</span>, <span class="fl">16.</span>, <span class="fl">0.0</span>)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>prim.node(<span class="st">&#39;3&#39;</span>, <span class="fl">8.0</span>, <span class="fl">6.0</span>)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>prim.node(<span class="st">&#39;4&#39;</span>, <span class="fl">0.0</span>, <span class="fl">6.0</span>)</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>prim.truss(<span class="st">&#39;a&#39;</span>, np[<span class="st">&#39;3&#39;</span>], np[<span class="st">&#39;4&#39;</span>]) <span class="co"># add truss element to model object</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>prim.truss(<span class="st">&#39;c&#39;</span>, np[<span class="st">&#39;2&#39;</span>], np[<span class="st">&#39;3&#39;</span>], xsec<span class="op">=</span>csec)</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>prim.pin(np[<span class="st">&#39;1&#39;</span>])</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>prim.pin(np[<span class="st">&#39;4&#39;</span>])</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>prim.pin(np[<span class="st">&#39;2&#39;</span>])</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>prim.numDOF() <span class="co"># Automatically number model dofs</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>np[<span class="st">&#39;3&#39;</span>].p[<span class="st">&#39;x&#39;</span>] <span class="op">=</span> <span class="dv">30</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>np[<span class="st">&#39;3&#39;</span>].p[<span class="st">&#39;y&#39;</span>] <span class="op">=</span> <span class="dv">50</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Establish redundant member force</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>dm.redundant(b, <span class="st">&#39;1&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>fig, ax <span class="op">=</span> plt.subplots()</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>em.plot_structure(dm, ax)</span></code></pre></div>
+<figure>
+<img src="output_5_0.svg" style="margin:auto; display: block; max-width: 75%" alt="svg" /><figcaption aria-hidden="true">svg</figcaption>
+</figure>
+<h2 id="part-1-nodal-loading">Part 1 : Nodal Loading</h2>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>Ufp <span class="op">=</span> em.analysis.SolveDispl(prim)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> em.A_matrix(dm)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>A.f<span class="op">@</span>Ufp</span></code></pre></div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>$V_{{fffffff}}$</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>$a_1$</th>
+      <td>0.077333</td>
+    </tr>
+    <tr>
+      <th>$b_1$</th>
+      <td>0.165400</td>
+    </tr>
+    <tr>
+      <th>$c_1$</th>
+      <td>0.041667</td>
+    </tr>
+  </tbody>
+</table>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>b.q0[<span class="st">&#39;1&#39;</span>] <span class="op">=</span> <span class="dv">1</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>Uf <span class="op">=</span> em.analysis.SolveDispl(dm)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> em.A_matrix(dm)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>A.f<span class="op">@</span>Uf</span></code></pre></div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>$V_{{fffffffff}}$</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>$a_1$</th>
+      <td>-0.000361</td>
+    </tr>
+    <tr>
+      <th>$b_1$</th>
+      <td>-0.000718</td>
+    </tr>
+    <tr>
+      <th>$c_1$</th>
+      <td>-0.000141</td>
+    </tr>
+  </tbody>
+</table>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create model matrices</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>B <span class="op">=</span> em.B_matrix(dm)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>P <span class="op">=</span> em.P_vector(B)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define nodal loading</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>n[<span class="st">&#39;3&#39;</span>].p[<span class="st">&#39;x&#39;</span>] <span class="op">=</span> <span class="dv">30</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>n[<span class="st">&#39;3&#39;</span>].p[<span class="st">&#39;y&#39;</span>] <span class="op">=</span> <span class="dv">50</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>P.set_item(<span class="st">&#39;1&#39;</span>, <span class="dv">50</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>P.set_item(<span class="st">&#39;2&#39;</span>, <span class="dv">30</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Show full B matrix</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>B</span></code></pre></div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>$a_1$</th>
+      <th>$b_1$</th>
+      <th>$c_1$</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>$1$</th>
+      <td>1.0</td>
+      <td>0.8</td>
+      <td>-0.8</td>
+    </tr>
+    <tr>
+      <th>$2$</th>
+      <td>-0.0</td>
+      <td>0.6</td>
+      <td>0.6</td>
+    </tr>
+    <tr>
+      <th>$3$</th>
+      <td>0.0</td>
+      <td>-0.8</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>$4$</th>
+      <td>0.0</td>
+      <td>-0.6</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>$5$</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.8</td>
+    </tr>
+    <tr>
+      <th>$6$</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>-0.6</td>
+    </tr>
+    <tr>
+      <th>$7$</th>
+      <td>-1.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>$8$</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+<div class="sourceCode" id="cb13"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Show portion of B matrix corresponding to free dofs</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>B.f</span></code></pre></div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>$a_1$</th>
+      <th>$b_1$</th>
+      <th>$c_1$</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>$1$</th>
+      <td>1.0</td>
+      <td>0.8</td>
+      <td>-0.8</td>
+    </tr>
+    <tr>
+      <th>$2$</th>
+      <td>-0.0</td>
+      <td>0.6</td>
+      <td>0.6</td>
+    </tr>
+  </tbody>
+</table>
+<div class="sourceCode" id="cb14"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Show portion of B matrix corresponding to primary system</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>B.i</span></code></pre></div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>$a_1$</th>
+      <th>$c_1$</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>$1$</th>
+      <td>1.0</td>
+      <td>-0.8</td>
+    </tr>
+    <tr>
+      <th>$2$</th>
+      <td>-0.0</td>
+      <td>0.6</td>
+    </tr>
+  </tbody>
+</table>
+<h3 id="find-q_p">Find <span class="math inline">\(Q_p\)</span></h3>
+<div class="sourceCode" id="cb15"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>Qp <span class="op">=</span> B.bari <span class="op">@</span> P.f</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>Qp</span></code></pre></div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>$Q_{{ffffff}}$</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>$a_1$</th>
+      <td>90.0</td>
+    </tr>
+    <tr>
+      <th>$c_1$</th>
+      <td>50.0</td>
+    </tr>
+  </tbody>
+</table>
+<div class="sourceCode" id="cb16"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create full 3x1 Qp vector from current 2x1 Qp vector</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>Qp <span class="op">=</span> em.Q_vector(B, Qp)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>Qp</span></code></pre></div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>$Q_{{0}}$</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>$a_1$</th>
+      <td>90.0</td>
+    </tr>
+    <tr>
+      <th>$b_1$</th>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>$c_1$</th>
+      <td>50.0</td>
+    </tr>
+  </tbody>
+</table>
+<h3 id="find-v_h_p">find <span class="math inline">\((V_h)_p\)</span></h3>
+<div class="sourceCode" id="cb17"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize structure matrices</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> em.A_matrix(dm)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>Fs <span class="op">=</span> em.Fs_matrix(dm) </span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>Fs</span></code></pre></div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>$a_1$</th>
+      <th>$b_1$</th>
+      <th>$c_1$</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>$a_1$</th>
+      <td>0.0008</td>
+      <td>0.000</td>
+      <td>0.0000</td>
+    </tr>
+    <tr>
+      <th>$b_1$</th>
+      <td>0.0000</td>
+      <td>0.001</td>
+      <td>0.0000</td>
+    </tr>
+    <tr>
+      <th>$c_1$</th>
+      <td>0.0000</td>
+      <td>0.000</td>
+      <td>0.0005</td>
+    </tr>
+  </tbody>
+</table>
+<div class="sourceCode" id="cb18"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>Ve <span class="op">=</span> Fs<span class="op">@</span>Qp</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>Vhp <span class="op">=</span> B.barx.T <span class="op">@</span> Ve</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>Vhp</span></code></pre></div>
+<pre><code>C:\Users\claud\Anaconda3\lib\site-packages\IPython\core\formatters.py:371: FormatterWarning: text/html formatter returned invalid type &lt;class &#39;ema.utilities.Structural_Vector&#39;&gt; (expected &lt;class &#39;str&#39;&gt;) for object: Structural_Vector([-0.1402])
+  FormatterWarning
+
+
+
+
+
+Structural_Vector([-0.1402])</code></pre>
+<h3 id="find-v_h_x">find <span class="math inline">\((V_{h})_x\)</span></h3>
+<div class="sourceCode" id="cb20"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>Ve_x <span class="op">=</span> Fs<span class="op">@</span>B.barx</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>Ve_x</span></code></pre></div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>$b_1$</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>$a_1$</th>
+      <td>-0.00128</td>
+    </tr>
+    <tr>
+      <th>$b_1$</th>
+      <td>0.00100</td>
+    </tr>
+    <tr>
+      <th>$c_1$</th>
+      <td>-0.00050</td>
+    </tr>
+  </tbody>
+</table>
+<div class="sourceCode" id="cb21"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>Vhx <span class="op">=</span> B.barx.T<span class="op">@</span>Ve_x</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>Vhx</span></code></pre></div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.003548</td>
+    </tr>
+  </tbody>
+</table>
+<div class="sourceCode" id="cb22"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>Qx <span class="op">=</span> <span class="op">-</span>Vhp<span class="op">/</span>Vhx</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>Qx</span></code></pre></div>
+<pre><code>C:\Users\claud\Anaconda3\lib\site-packages\IPython\core\formatters.py:371: FormatterWarning: text/html formatter returned invalid type &lt;class &#39;ema.utilities.Structural_Vector&#39;&gt; (expected &lt;class &#39;str&#39;&gt;) for object: Structural_Vector([[39.51521984]])
+  FormatterWarning
+
+
+
+
+
+Structural_Vector([[39.51521984]])</code></pre>
+<h2 id="part-2-thermal-loading">Part 2 : Thermal Loading</h2>
+<h3 id="find-v_h_p-1">Find <span class="math inline">\((V_h)_p\)</span></h3>
+<div class="sourceCode" id="cb24"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># e[&#39;a&#39;].e0[&#39;1&#39;] = 100*2e-5</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="co"># e[&#39;b&#39;].e0[&#39;1&#39;] = 100*2e-5</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co"># e[&#39;c&#39;].e0[&#39;1&#39;] = 100*2e-5</span></span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>A <span class="op">=</span> em.A_matrix(dm)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>A</span></code></pre></div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>$1$</th>
+      <th>$2$</th>
+      <th>$3$</th>
+      <th>$4$</th>
+      <th>$5$</th>
+      <th>$6$</th>
+      <th>$7$</th>
+      <th>$8$</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>$a_1$</th>
+      <td>1.0</td>
+      <td>-0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>-1.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>$b_1$</th>
+      <td>0.8</td>
+      <td>0.6</td>
+      <td>-0.8</td>
+      <td>-0.6</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>$c_1$</th>
+      <td>-0.8</td>
+      <td>0.6</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.8</td>
+      <td>-0.6</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+<div class="sourceCode" id="cb26"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>V0 <span class="op">=</span> em.V0_vector(dm)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>V0</span></code></pre></div>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>$V_{{ffffff}}$</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>$a_1$</th>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>$b_1$</th>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>$c_1$</th>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+<div class="sourceCode" id="cb27"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>Vhp <span class="op">=</span> B.barx.T<span class="op">@</span>V0</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>Vhp</span></code></pre></div>
+<pre><code>C:\Users\claud\Anaconda3\lib\site-packages\IPython\core\formatters.py:371: FormatterWarning: text/html formatter returned invalid type &lt;class &#39;ema.utilities.Structural_Vector&#39;&gt; (expected &lt;class &#39;str&#39;&gt;) for object: Structural_Vector([0.])
+  FormatterWarning
+
+
+
+
+
+Structural_Vector([0.])</code></pre>
+<h3 id="find-q_x">Find <span class="math inline">\(Q_x\)</span></h3>
+<div class="sourceCode" id="cb29"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>Qx <span class="op">=</span> <span class="op">-</span>Vhp<span class="op">/</span>Vhx</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>Qx</span></code></pre></div>
+<pre><code>C:\Users\claud\Anaconda3\lib\site-packages\IPython\core\formatters.py:371: FormatterWarning: text/html formatter returned invalid type &lt;class &#39;ema.utilities.Structural_Vector&#39;&gt; (expected &lt;class &#39;str&#39;&gt;) for object: Structural_Vector([[-0.]])
+  FormatterWarning
+
+
+
+
+
+Structural_Vector([[-0.]])</code></pre>
 
     
           </article>

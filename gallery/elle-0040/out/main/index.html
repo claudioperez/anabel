@@ -96,6 +96,465 @@
           <article class="page col-md-9 p-3">
           
 
+<h1 id="problem-1-mathbfu_t-a-mathbfu_x-mathbf0">Problem 1 (<span class="math inline">\(\mathbf{u}_t + A \mathbf{u}_x = \mathbf{0}\)</span>)</h1>
+<blockquote>
+<p>Consider the Riemann problem</p>
+<p><span class="math display">\[
+\begin{gathered}
+\begin{pmatrix} p \\ u \end{pmatrix}_t +
+\begin{pmatrix} 0 &amp; c_0^2\rho_0 \\ 1/\rho_0 &amp; 0 \end{pmatrix}
+\begin{pmatrix} p \\ u \end{pmatrix}_x =
+\begin{pmatrix} 0 \\ 0 \end{pmatrix}, \qquad (x\in\mathbb R\;,\; t&gt;0) \\[5pt]
+p(x,0)=\left\{ \begin{array}{cc} p_L &amp; x&lt;0 \\ p_R &amp; x&gt;0 \end{array}\right\}, \quad
+u(x,0)=\left\{ \begin{array}{cc} u_L &amp; x&lt;0 \\ u_R &amp; x&gt;0 \end{array}\right\}
+\end{gathered}
+\]</span></p>
+<p>describing linear acoustics. Compute the exact solution <span class="math inline">\(p(x,t)\)</span> and <span class="math inline">\(u(x,t)\)</span> for <span class="math inline">\(x\in\mathbb R\)</span>, <span class="math inline">\(t&gt;0\)</span>. Here <span class="math inline">\(c_0\)</span> and <span class="math inline">\(\rho_0\)</span> are positive constants while <span class="math inline">\(u_L\)</span>, <span class="math inline">\(u_R\)</span>, <span class="math inline">\(p_L\)</span> and <span class="math inline">\(p_R\)</span> are arbitrary real constants.</p>
+</blockquote>
+<p><span class="math display">\[
+A = Q\Lambda Q^{-1} = 
+\begin{pmatrix} 1 &amp; -c_0 \rho_0 \\ \frac{1}{c_0 \rho_0} &amp; 1 \end{pmatrix}
+\begin{pmatrix}c_0 &amp; 0 \\ 0 &amp; -c_0\end{pmatrix}
+\begin{pmatrix}1/2 &amp; c_0 \rho_0 /2 \\ \frac{-1}{2 c_0 \rho_0 } &amp; 1/2\end{pmatrix}
+\]</span></p>
+<p><span class="math display">\[
+\mathbf{w}(x,0)=\left\{ \begin{array}{cc} \mathbf{w}_L &amp; x&lt;0 \\ \mathbf{w}_R &amp; x&gt;0 \end{array}\right.
+\]</span></p>
+<p>Characteristics:</p>
+<p><span class="math display">\[
+x_i^0 = x - \lambda_i t \quad i=1,2
+\]</span></p>
+<p><span class="math display">\[
+w_i(x,t)=\left\{\begin{array}{cc} w_i^L &amp; x_0(x,t)&lt;0 \\ w_i^R &amp; x_0(x,t)&gt;0 \end{array}\right.
+\]</span></p>
+<p>Using <span class="math inline">\(\mathbf{w} = Q^{-1}\mathbf{u}\)</span></p>
+<p><span class="math display">\[
+w_1 = \frac{p + c_0 \rho_0 u}{2} \\
+\]</span></p>
+<p><span class="math display">\[
+w_2 = \frac{u}{2} - \frac{1}{ 2 c_0 \rho_0 }p
+\]</span></p>
+<p>where the superscript</p>
+<!-- jump conditions -->
+<!--
+$$
+\mathbf{u}(x,t)=\left\{\begin{array}{cc} 
+  \left\{\begin{array}{cc} 
+    \mathbf{q}_iw_i^L & x_0(x,t)<0\\
+    a
+  \end{array} \right. & x^0
+   \\ w_i^R & x_0(x,t)>0 \end{array}\right.
+$$
+-->
+<p>Decomposing <span class="math inline">\(Q\)</span> into column vectors <span class="math inline">\(\mathbf{q}_j\)</span>, and summing on <span class="math inline">\(j=1,2\)</span>:</p>
+<p><span class="math display">\[
+\mathbf{u}(x,t)= 
+  \left\{\begin{array}{cc} 
+   \mathbf{q}_jw_j^L &amp; x^0_i(x,t)&lt;0\\
+   \mathbf{q}_jw_j^R &amp; x^0_i(x,t)&gt;0
+  \end{array} \right.
+\]</span></p>
+<!-- For eigen values -->
+<p>Expanding for all regions yields</p>
+<p><span class="math display">\[
+\mathbf{u}(x,t)= 
+ \left\{\begin{array}{cc} 
+  \mathbf{q}_1w_1^L + \mathbf{q}_2w_2^L&amp; x^0_2(x,t)&lt;0\\
+  \mathbf{q}_1w_1^L + \mathbf{q}_2w_2^R&amp; x^0_1(x,t)&gt; 0 &gt; x^0_2(x,t)\\
+  \mathbf{q}_1w_1^R + \mathbf{q}_2w_2^L&amp; x^0_1(x,t)&lt; 0 &lt; x^0_2(x,t)\\
+  \mathbf{q}_1w_1^R + \mathbf{q}_2w_2^R&amp; x^0_1(x,t)&gt;0
+ \end{array} \right.
+\]</span></p>
+<p>The region <span class="math inline">\(x_1^0 &gt; 0 &gt; x_2^0\)</span> is not valid for the eigenvalues <span class="math inline">\(\lambda = (c_0, -c_0)^T\)</span> so that the only intermediate state is</p>
+<p><span class="math display">\[
+\mathbf{u}^M = \mathbf{q}_1w_1^R + \mathbf{q}_2 w_2^L , \quad x^0_1(x,t)&lt; 0 &lt; x^0_2(x,t)
+\]</span></p>
+<p><span class="math display">\[
+\boxed{
+\begin{gathered}
+p^M =  \frac{1}{2}\left(p^R+c_0 \rho_0 u^R\right) -\frac{1}{2} \left(c_0\rho_0 u^L - p^L\right) \\
+u^M = \frac{1}{2\rho_0 c_0} \left(p^R + \rho_0 c_0 u^R\right) + \frac{u^R}{2} - \frac{p^L}{2 \rho_0 c_0}  \\
+\mathbf{u}^M = \begin{pmatrix} p^M \\ u^M\end{pmatrix} \\
+\mathbf{u}(x,t)= 
+ \left\{\begin{array}{cc} 
+ \mathbf{u}^L &amp; x^0_2(x,t)&lt;0\\
+ \mathbf{u}^M &amp; x^0_1(x,t)&lt; 0 &lt; x^0_2(x,t)\\
+ \mathbf{u}^R &amp; x^0_1(x,t)&gt;0\\
+ \end{array} \right.\\
+\end{gathered}}
+\]</span></p>
+<p></p>
+<h1 id="problem-2.">Problem 2.</h1>
+<blockquote>
+<p>Consider the nonlinear isothermal equations of gas dynamics,</p>
+<p><span class="math display">\[
+\begin{pmatrix} \rho \\ m \end{pmatrix}_t +
+\begin{pmatrix} m \\ \frac{m^2}\rho + a^2\rho \end{pmatrix}_x =
+\begin{pmatrix} 0 \\ 0 \end{pmatrix}.
+\]</span></p>
+<p>Here <span class="math inline">\(m\)</span> is the momentum and the velocity of the gas is <span class="math inline">\(v=m/\rho\)</span>. Let <span class="math inline">\(a=1\)</span> and consider the Reimann problem <span class="math inline">\(\rho(x,0)=\left\{\begin{array}{cc} \rho_0 &amp; x&lt;0 \\ \rho_2 &amp; x&gt;0 \end{array}\right\}\)</span>, <span class="math inline">\(m(x,0)=\left\{\begin{array}{cc} m_0 &amp; x&lt;0 \\ m_2 &amp; x&gt;0 \end{array}\right\}\)</span>, where</p>
+<p><span class="math display">\[
+q_0 = \begin{pmatrix} \rho_0 \\ m_0 \end{pmatrix} = \begin{pmatrix} 1 \\ 3 \end{pmatrix}, \qquad
+q_2 = \begin{pmatrix} \rho_2 \\ m_2 \end{pmatrix} = \begin{pmatrix} 1 \\ 0 \end{pmatrix}.
+\]</span></p>
+<p>Find an intermediate state <span class="math inline">\(q_1=\begin{pmatrix} \rho_1 \\ m_1 \end{pmatrix}\)</span> and shock speeds <span class="math inline">\(\dot s_1\)</span> and <span class="math inline">\(\dot s_2\)</span> such that</p>
+<p><span class="math display">\[
+F(q_i)-F(q_{i-1}) = \dot s_i(q_i-q_{i-1}), \qquad (i=1,2), \qquad \dot s_2&gt;\dot s_1.
+\]</span></p>
+</blockquote>
+<!-- ## Shock -->
+<p>Following <span class="citation" data-cites="leveque1992numerical">[@leveque1992numerical]</span> and beginning at the Rankine-Hugoniot condition, the following system of equations is obtained:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\tilde{m}-\hat{m} &amp;=s(\tilde{\rho}-\hat{\rho}) \\
+\left(\tilde{m}^{2} / \tilde{\rho}+a^{2} \tilde{\rho}\right)-\left(\hat{m}^{2} / \hat{\rho}+a^{2} \hat{\rho}\right) &amp;=s(\tilde{m}-\hat{m})
+\end{aligned}
+\]</span></p>
+<figure>
+<img src="../img/p1-locus.png" style="margin:auto; display: block; max-width: 75%" alt="Graphical solution of the isothermal Riemann problem" /><figcaption aria-hidden="true">Graphical solution of the isothermal Riemann problem</figcaption>
+</figure>
+<p><span class="math display">\[
+\rho_{1} m_{0} / \rho_{0}-a \sqrt{\rho_{1} / \rho_{0}}\left(\rho_{1}-\rho_{0}\right)=\rho_{1} m_{2} / \rho_{2}+a \sqrt{\rho_{1} / \rho_{2}}\left(\rho_{1}-\rho_{2}\right)
+\]</span></p>
+<p><span class="math display">\[
+\left(\frac{a}{\sqrt{\rho_{2}}}+\frac{a}{\sqrt{\rho_{0}}}\right) z^{2}+\left(\frac{m_{2}}{\rho_{2}}-\frac{m_{0}}{\rho_{0}}\right) z-a\left(\sqrt{\rho_{2}}+\sqrt{\rho_{0}}\right)=0
+\]</span></p>
+<p>Plugging in the specified values for <span class="math inline">\(q_0\)</span> and <span class="math inline">\(q_2\)</span> yields the following coefficients:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\frac{a}{\sqrt{\rho_{2}}}+\frac{a}{\sqrt{\rho_{0}}} = 2\\
+\frac{m_{2}}{\rho_{2}}-\frac{m_{0}}{\rho_{0}} = -3\\
+a\left(\sqrt{\rho_{2}}+\sqrt{\rho_{0}}\right) = -2
+\end{aligned}
+\]</span></p>
+<p>This yields the following roots:</p>
+<p><span class="math display">\[
+\rho_1 = \left\{\frac{1}{4}, 4\right\} \\
+\]</span></p>
+<p><span class="math display">\[
+m_1 =\rho_{m} m_{r} / \rho_{r}+a \sqrt{\rho_{m} / \rho_{r}}\left(\rho_{m}-\rho_{r}\right) \\
+\]</span></p>
+<p><!-- = \left\{\frac{9}{8}, 6\right\} --></p>
+<p><span class="math display">\[
+\boxed{q_1 = \begin{pmatrix}4 \\ 6\end{pmatrix}}
+\]</span></p>
+<blockquote>
+<p>In each region <span class="math inline">\(i=0,1,2\)</span>, compute the characteristic speeds, which are the eigenvalues <span class="math inline">\(\lambda_{i1}\)</span> and <span class="math inline">\(\lambda_{i2}\)</span> of the Jacobian <span class="math inline">\(J_i=DF(q_i)\)</span>. Also compute the fluid velocities <span class="math inline">\(v_i\)</span>.</p>
+</blockquote>
+<p><span class="math display">\[
+DF(q_i)=\begin{pmatrix}
+0 &amp; 1 \\
+a^{2}-m_i^{2} / \rho_i^{2} &amp; 2 m_i / \rho_i
+\end{pmatrix}
+\]</span></p>
+<h3 id="state-i0">State <span class="math inline">\(i=0\)</span></h3>
+<p><span class="math display">\[
+DF(q_0) = \begin{pmatrix}0 &amp; 1\\ -8 &amp; 6\end{pmatrix}
+\]</span></p>
+<p><span class="math display">\[
+\lambda = \{2,4\}
+\]</span></p>
+<p><span class="math display">\[
+\mathbf{Q} = \begin{pmatrix}
+-0.4472136 &amp; -0.24253563\\
+-0.89442719 &amp; -0.9701425 
+\end{pmatrix}
+\]</span></p>
+<p><span class="math display">\[
+v_0 = 3
+\]</span></p>
+<h3 id="state-i1">State <span class="math inline">\(i=1\)</span></h3>
+<p><span class="math display">\[
+\lambda_1 = \{1/2, 5/2\}
+\]</span></p>
+<p><span class="math display">\[
+\mathbf{Q} = \begin{pmatrix}
+-0.89442719&amp; -0.37139068 \\
+-0.4472136 &amp; -0.92847669
+\end{pmatrix}
+\]</span></p>
+<p><span class="math display">\[
+v_1 = 3/2
+\]</span></p>
+<p><span class="math display">\[
+\dot s_1 = 1
+\]</span></p>
+<h3 id="state-i2">State <span class="math inline">\(i=2\)</span></h3>
+<p><span class="math display">\[
+DF(q_2) = \begin{pmatrix} 0 &amp; 1 \\ 1 &amp; 0 \end{pmatrix}
+\]</span></p>
+<p><span class="math display">\[
+\lambda_2 = (1,-1)
+\]</span></p>
+<p><span class="math display">\[
+\mathbf{Q} = \frac{1}{\sqrt{2}}\begin{pmatrix}1 &amp; -1 \\ 1 &amp; 1\end{pmatrix}
+\]</span></p>
+<p><span class="math display">\[
+v_2 = 0
+\]</span></p>
+<p><span class="math display">\[
+\dot s_2 = 2
+\]</span></p>
+<!-- ## Rarefaction -->
+<!-- (8.22) -->
+<!--
+$$
+\rho_{m}=\sqrt{\rho_{l} \rho_{r}} \exp \left(\frac{1}{2 a}\left(\frac{m_{l}}{\rho_{l}}-\frac{m_{r}}{\rho_{r}}\right)\right) .
+$$
+
+$$
+=\rho_{m} m_{r} / \rho_{r}+a \sqrt{\rho_{m} / \rho_{r}}\left(\rho_{m}-\rho_{r}\right)
+$$
+
+-->
+<blockquote>
+<p>Confirm that <span class="math inline">\(\lambda_{01}&gt;\dot s_1&gt;\lambda_{11}\)</span> and <span class="math inline">\(\lambda_{12}&gt;\dot s_2&gt;\lambda_{22}\)</span>, which are Lax’s entropy conditions for this system. Also confirm that <span class="math inline">\(v_0&gt;\dot s_1\)</span>, <span class="math inline">\(v_1&gt;\dot s_1\)</span>, <span class="math inline">\(\dot s_2&gt;v_1\)</span> and <span class="math inline">\(\dot s_2&gt;v_2\)</span>, which means fluid particles move from the original states <span class="math inline">\(q_0\)</span> and <span class="math inline">\(q_2\)</span> to the auxiliary state <span class="math inline">\(q_1\)</span> as the shocks propagate through space and time.</p>
+</blockquote>
+<p></p>
+<h1 id="problem-3--alpha-u_xx-au-f">Problem 3 (<span class="math inline">\(-\alpha u_{xx} + Au = f\)</span>)</h1>
+<blockquote>
+<p>Write a 1d finite element code to solve the modified Poisson equation <span class="math display">\[
+-\alpha u_{xx} + Au = f, \quad (0\le x\le 1), \qquad u(0)=0,\; u(1)=0,
+\]</span> where <span class="math inline">\(\alpha&gt;0\)</span> and <span class="math inline">\(A\ge0\)</span>. Use 4th order finite elments on a uniformly spaced grid,</p>
+<p><span class="math display">\[
+x_j = j/M, \qquad\quad 0\le j\le M
+\]</span></p>
+<p>where <span class="math inline">\(M\)</span> is divisible by 4 and the <span class="math inline">\(r\)</span>th element includes nodes <span class="math inline">\(x_{4r+i}\)</span> for <span class="math inline">\(0\le r&lt;M/4\)</span> and <span class="math inline">\(0\le i\le 4\)</span>.</p>
+</blockquote>
+<h2 id="part-a">Part A</h2>
+<p>Multiplying by a test function <span class="math inline">\(v\)</span> and integrating over the domain (applying integration by parts) yields:</p>
+<p><span class="math display">\[
+\int_\Omega -\alpha u_{xx} v + \gamma u v = \int_\Omega f v
+\]</span></p>
+<p><span class="math display">\[
+\int \alpha u_x v_x dx - \left. \alpha u_x v \right| + \gamma \int u v dx = \int f v dx
+\]</span></p>
+<p>For test functions which vanish on the boundary one obtains:</p>
+<p><span class="math display">\[
+\int_\Omega \alpha u_x v_x + \gamma u v = \int_\Omega f v
+\]</span></p>
+<p><span class="math display">\[
+a(\alpha u,v) + \langle Au,v \rangle = \langle f,v\rangle
+\]</span></p>
+<h3 id="fourth-order-element">Fourth-order element</h3>
+<p>A fourth order isoparametric 1D element is developed by applying Lagrange interpolation over 5 equally spaced sampling points.</p>
+<figure>
+<img src="../img/lagrange.png" style="margin:auto; display: block; max-width: 75%" alt="Shape functions" /><figcaption aria-hidden="true">Shape functions</figcaption>
+</figure>
+<h3 id="convergence">Convergence</h3>
+<blockquote>
+<ol type="a">
+<li>Do a convergence study for <span class="math inline">\(\alpha=1/100\)</span>, <span class="math inline">\(A=0\)</span> and <span class="math inline">\(f(x)=\frac{\pi^2}{100}\sum_{k=0}^4 \sin\big((2k+1)\pi x \big)\)</span>.</li>
+</ol>
+</blockquote>
+<p>The exact integral for this problem is as follows:</p>
+<p><span class="math display">\[
+\frac{1}{\alpha 100} \sum{\frac{1}{(2k+1)^2}\sin{\left((2k+1)\pi x\right)} }
+\]</span></p>
+<figure>
+<img src="../img/p3a-exact.png" style="margin:auto; display: block; max-width: 75%" alt="Source curve f and exact solution u" /><figcaption aria-hidden="true">Source curve <span class="math inline">\(f\)</span> and exact solution <span class="math inline">\(u\)</span></figcaption>
+</figure>
+<figure>
+<img src="../img/p3a-conv.png" style="margin:auto; display: block; max-width: 75%" alt="Convergence study for finite element solution of steady-state problem." /><figcaption aria-hidden="true">Convergence study for finite element solution of steady-state problem.</figcaption>
+</figure>
+<p></p>
+<h2 id="part-b-transient-analysis">Part B: Transient Analysis</h2>
+<blockquote>
+<ol start="2" type="a">
+<li>Solve <span class="math inline">\(u_t=\frac1{100}u_{xx}+f(x)\sin(\pi t)\)</span> from <span class="math inline">\(t=0\)</span> to <span class="math inline">\(t=1\)</span> with initial condition <span class="math inline">\(u(x,0)=0\)</span> and the same <span class="math inline">\(f\)</span> as in part (a). Use the 4th order implicit SDIRK timestepper with Butcher array given in problem 2 of HW 2. Use your finite element code above to solve the implicit equation for each stage of the timestepper. (I’ll explain this in class). Make a convergence plot for several values of <span class="math inline">\(M\)</span> and one choice of <span class="math inline">\(\nu=k/h\)</span> that you find works well.</li>
+</ol>
+</blockquote>
+<p>The exact solution of the transient problem was derrived using the <code>sympy</code> CAS library. A plot is shown below for various times.</p>
+<figure>
+<img src="../img/p3b-exact.png" style="margin:auto; display: block; max-width: 75%" alt="Analytic solution curves" /><figcaption aria-hidden="true">Analytic solution curves</figcaption>
+</figure>
+<figure>
+<img src="../img/p3b-fem-iso.png" style="margin:auto; display: block; max-width: 75%" alt="FEM solution" /><figcaption aria-hidden="true">FEM solution</figcaption>
+</figure>
+<h3 id="sdirk-implementation">SDIRK Implementation</h3>
+<p>In HW2 a Runge-Kutta algorithm was implemented for problems with the following form:</p>
+<p><span class="math display">\[
+\mathbf{u}_t + B\mathbf{u} = \mathbf{d}(t)
+\]</span></p>
+<p>Where <span class="math inline">\(B\)</span> is a linear operator . At stage <span class="math inline">\(i\)</span> of a diagonal Runge-Kutta method one has</p>
+<p><span class="math display">\[
+\ell_{i}=F\left(t_{n}+c_{i} k, \vec{u}_{n}+k \sum_{j=1}^{i-1} a_{i j} \ell_{j}+k a_{i j} \ell_{i}\right)
+\]</span></p>
+<p>where <span class="math inline">\(k=\Delta t\)</span>. For problems of the aforementioned form, this simplifies to</p>
+<p><span class="math display">\[
+\left(I - k a_{i i} B\right) \ell_{i} = B \left(\vec{u}_{n}+k \sum_{j=1}^{i-1} a_{i j} \ell_{j}\right) + d(t_n+c_i k) 
+\]</span></p>
+<p>The following data is required to set up a particular scheme for <span class="math inline">\(\mathbf{u}\in \mathbb{R}^n\)</span> with <span class="math inline">\(s\in\mathbf{Z^+}\)</span> stages:</p>
+<dl>
+<dt><span class="math inline">\(\mathcal{T}\)</span></dt>
+<dd>A Butcher tableau with zero entries above the diagonal.
+</dd>
+</dl>
+<p><span class="math inline">\(B, \mathbb{R}^n \rightarrow \mathbb{R}^n\)</span>: Discrete space operator</p>
+<dl>
+<dt><span class="math inline">\(\mathbf{d}, \mathbb{R} \rightarrow \mathbb{R}^n\)</span></dt>
+<dd>Source term.
+</dd>
+</dl>
+<p>The problem at hand is manipulated to fit the following form:</p>
+<p><span class="math display">\[\vec{u}_{t}=-\frac{1}{100} {M}^{-1} A \vec{u}+\vec{f} \sin \pi t\]</span></p>
+<p>so that</p>
+<p><span class="math display">\[
+\begin{gathered}
+B=\frac{-1}{100}M^{-1}A \\
+\mathbf{d}=M^{-1}b\sin{\pi t}
+\end{gathered}
+\]</span></p>
+<p>where <span class="math inline">\(A\)</span>, <span class="math inline">\(M\)</span>, and <span class="math inline">\(b\)</span> are the stiffness, mass and load vectors as readily produced by the implementation for Part B.</p>
+<p><span class="math display">\[
+\left(M+\frac{k a_{i i}}{100} A\right) l_{i} = -\frac{1}{100} A\left(\vec{u}_{n}+k \sum_{j=1}^{i-1} a_{i j} \ell_{j}\right) + M \vec{f} \sin \pi\left(t_{n}+c_{i} k\right)
+\]</span></p>
+<p>The tableau <span class="math inline">\(\mathcal{T}\)</span> is given as</p>
+<p><span class="math display">\[
+\begin{array}{c|ccccc}
+  1/4 &amp; 1/4 \\
+  3/4 &amp; 1/2 &amp; 1/4 \\
+  11/20 &amp; 17/50 &amp; -1/25 &amp; 1/4 \\
+  1/2 &amp; 371/1360 &amp; -137/2720 &amp; 15/544 &amp; 1/4 \\
+  1 &amp; 25/24 &amp; -49/48 &amp; 125/16 &amp; -85/12 &amp; 1/4 \\
+  \hline
+  &amp; 25/24 &amp; -49/48 &amp; 125/16 &amp; -85/12 &amp; 1/4
+\end{array}
+\]</span></p>
+<hr />
+<p><span class="math inline">\(u(x,t) = \sum_j u_j(t)\phi_j(x)\)</span></p>
+<p><span class="math display">\[u_{t}=\frac{1}{100} u_{x x}+f(x) \sin \pi t\]</span></p>
+<p>let <span class="math inline">\(u_t = \sum_ju_{j,t}\phi_j\)</span>, and <span class="math inline">\(v=\phi_i\)</span></p>
+<p><span class="math display">\[
+\langle u_{t}, v\rangle = -\frac{1}{100} a(u, v)+\langle f, v\rangle \sin \pi t
+\]</span></p>
+<p><span class="math display">\[
+M \vec{u}_{t}=-\frac{1}{100} A \vec{u} + M \vec{f} \sin \pi t
+\]</span></p>
+<p><span class="math display">\[
+\vec{u}_{t}=-\frac{1}{100} {M}^{-1} A \vec{u}+\vec{f} \sin \pi t
+\]</span></p>
+<!-- where $M^{-1}A$ is a FE approximation to $-\Delta()$. -->
+<h3 id="convergence-1">Convergence</h3>
+<p>Convergence studies are presented below for time discretizations using both the SDIRK scheme provided and the Crank-Nicolson scheme.</p>
+<figure>
+<img src="../img/p3b-conv.png" style="margin:auto; display: block; max-width: 75%" alt="Convergence study." /><figcaption aria-hidden="true">Convergence study.</figcaption>
+</figure>
+<figure>
+<img src="../img/p3b-conv-cn.png" style="margin:auto; display: block; max-width: 75%" alt="Convergence study for Crank-Nicolson tableau." /><figcaption aria-hidden="true">Convergence study for Crank-Nicolson tableau.</figcaption>
+</figure>
+<p></p>
+<h1 id="appendix">Appendix</h1>
+<p>Key source code excerpts are provided below. The Python libraries <code>elle</code>, <code>emme</code>, <code>anon</code> and <code>m228</code> which have been used throughout are self written and available either from <a href="PyPi.org">PyPi.org</a> via <code>pip</code> or on Github.</p>
+<h2 id="source-code">Source Code</h2>
+<h3 id="fourth-order-lagrange-element">Fourth-order Lagrange element</h3>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># external imports</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> jax</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># internal imports</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> anon</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> anon.atom <span class="im">as</span> anp</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> anon <span class="im">import</span> quad</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="at">@anon.dual.generator</span>(<span class="dv">5</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> elem_0001(f<span class="op">=</span><span class="va">None</span>,a1<span class="op">=</span><span class="fl">1.0</span>, a2<span class="op">=</span><span class="fl">0.0</span>,order<span class="op">=</span><span class="dv">4</span>):</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">    Fourth order 1D Lagrange finite element with uniformly spaced nodes.</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">    Parameters</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">    ----------</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">    f: Callable</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">        element loading.</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co">    a1: float</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co">        Stiffness coefficient</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co">    a2: float</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="co">        Mass coefficient</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    state <span class="op">=</span> {}</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> f <span class="kw">is</span> <span class="va">None</span>: f <span class="op">=</span> <span class="kw">lambda</span> x: <span class="fl">0.0</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> transf(xi: <span class="bu">float</span>,x_nodes)<span class="op">-&gt;</span><span class="bu">float</span>:</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> ( x_nodes[<span class="dv">0</span>]<span class="op">*</span>( <span class="op">+</span> xi<span class="op">/</span><span class="dv">6</span>) </span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>               <span class="op">+</span> x_nodes[<span class="dv">1</span>]<span class="op">*</span>( <span class="op">-</span> <span class="dv">4</span><span class="op">*</span>xi<span class="op">/</span><span class="dv">3</span>) </span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>               <span class="op">+</span> x_nodes[<span class="dv">2</span>]<span class="op">*</span>( <span class="op">+</span> <span class="dv">1</span>) </span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>               <span class="op">+</span> x_nodes[<span class="dv">3</span>]<span class="op">*</span>( <span class="op">+</span> <span class="dv">4</span><span class="op">*</span>xi<span class="op">/</span><span class="dv">3</span>) </span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>               <span class="op">+</span> x_nodes[<span class="dv">4</span>]<span class="op">*</span>( <span class="op">-</span> xi<span class="op">/</span><span class="dv">6</span>)</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> grad_transf(xi,x_nodes):</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="bu">abs</span>(x_nodes[<span class="op">-</span><span class="dv">1</span>] <span class="op">-</span> x_nodes[<span class="dv">0</span>])<span class="op">/</span><span class="dv">2</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>    quad_points <span class="op">=</span> quad.quad_points(n<span class="op">=</span>order<span class="op">+</span><span class="dv">1</span>,rule<span class="op">=</span><span class="st">&quot;gauss-legendre&quot;</span>)</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">@jax.jit</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> jacx(u<span class="op">=</span><span class="va">None</span>,y<span class="op">=</span><span class="va">None</span>,state<span class="op">=</span><span class="va">None</span>,xyz<span class="op">=</span><span class="va">None</span>, a1<span class="op">=</span>a1, a2<span class="op">=</span>a2):</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>        x_nodes <span class="op">=</span> anp.linspace(xyz[<span class="dv">0</span>][<span class="dv">0</span>],xyz[<span class="op">-</span><span class="dv">1</span>][<span class="dv">0</span>],<span class="dv">5</span>)</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>        grad <span class="op">=</span> grad_transf(<span class="dv">0</span>,x_nodes)</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> a1<span class="op">*</span>anp.array([</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>            [<span class="dv">985</span><span class="op">/</span><span class="dv">378</span>, <span class="op">-</span><span class="dv">3424</span><span class="op">/</span><span class="dv">945</span>, <span class="dv">508</span><span class="op">/</span><span class="dv">315</span>, <span class="op">-</span><span class="dv">736</span><span class="op">/</span><span class="dv">945</span>, <span class="dv">347</span><span class="op">/</span><span class="dv">1890</span>],</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>            [<span class="op">-</span><span class="dv">3424</span><span class="op">/</span><span class="dv">945</span>, <span class="dv">1664</span><span class="op">/</span><span class="dv">189</span>, <span class="op">-</span><span class="dv">2368</span><span class="op">/</span><span class="dv">315</span>, <span class="dv">2944</span><span class="op">/</span><span class="dv">945</span>, <span class="op">-</span><span class="dv">736</span><span class="op">/</span><span class="dv">945</span>],</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>            [<span class="dv">508</span><span class="op">/</span><span class="dv">315</span>, <span class="op">-</span><span class="dv">2368</span><span class="op">/</span><span class="dv">315</span>, <span class="dv">248</span><span class="op">/</span><span class="dv">21</span>, <span class="op">-</span><span class="dv">2368</span><span class="op">/</span><span class="dv">315</span>, <span class="dv">508</span><span class="op">/</span><span class="dv">315</span>],</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>            [<span class="op">-</span><span class="dv">736</span><span class="op">/</span><span class="dv">945</span>, <span class="dv">2944</span><span class="op">/</span><span class="dv">945</span>, <span class="op">-</span><span class="dv">2368</span><span class="op">/</span><span class="dv">315</span>, <span class="dv">1664</span><span class="op">/</span><span class="dv">189</span>, <span class="op">-</span><span class="dv">3424</span><span class="op">/</span><span class="dv">945</span>],</span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>            [<span class="dv">347</span><span class="op">/</span><span class="dv">1890</span>, <span class="op">-</span><span class="dv">736</span><span class="op">/</span><span class="dv">945</span>, <span class="dv">508</span><span class="op">/</span><span class="dv">315</span>, <span class="op">-</span><span class="dv">3424</span><span class="op">/</span><span class="dv">945</span>, <span class="dv">985</span><span class="op">/</span><span class="dv">378</span>],</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>        ]) <span class="op">/</span> grad <span class="op">+</span> a2<span class="op">*</span>anp.array([</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>            [<span class="dv">292</span><span class="op">/</span><span class="dv">2835</span>, <span class="dv">296</span><span class="op">/</span><span class="dv">2835</span>, <span class="op">-</span><span class="dv">58</span><span class="op">/</span><span class="dv">945</span>, <span class="dv">8</span><span class="op">/</span><span class="dv">405</span>, <span class="op">-</span><span class="dv">29</span><span class="op">/</span><span class="dv">2835</span>],</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>            [<span class="dv">296</span><span class="op">/</span><span class="dv">2835</span>, <span class="dv">256</span><span class="op">/</span><span class="dv">405</span>, <span class="op">-</span><span class="dv">128</span><span class="op">/</span><span class="dv">945</span>, <span class="dv">256</span><span class="op">/</span><span class="dv">2835</span>, <span class="dv">8</span><span class="op">/</span><span class="dv">405</span>],</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>            [<span class="op">-</span><span class="dv">58</span><span class="op">/</span><span class="dv">945</span>, <span class="op">-</span><span class="dv">128</span><span class="op">/</span><span class="dv">945</span>, <span class="dv">208</span><span class="op">/</span><span class="dv">315</span>, <span class="op">-</span><span class="dv">128</span><span class="op">/</span><span class="dv">945</span>, <span class="op">-</span><span class="dv">58</span><span class="op">/</span><span class="dv">945</span>],</span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>            [<span class="dv">8</span><span class="op">/</span><span class="dv">405</span>, <span class="dv">256</span><span class="op">/</span><span class="dv">2835</span>, <span class="op">-</span><span class="dv">128</span><span class="op">/</span><span class="dv">945</span>, <span class="dv">256</span><span class="op">/</span><span class="dv">405</span>, <span class="dv">296</span><span class="op">/</span><span class="dv">2835</span>],</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>            [<span class="op">-</span><span class="dv">29</span><span class="op">/</span><span class="dv">2835</span>, <span class="dv">8</span><span class="op">/</span><span class="dv">405</span>, <span class="op">-</span><span class="dv">58</span><span class="op">/</span><span class="dv">945</span>, <span class="dv">296</span><span class="op">/</span><span class="dv">2835</span>, <span class="dv">292</span><span class="op">/</span><span class="dv">2835</span>],</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>        ])<span class="op">*</span>grad</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>    <span class="at">@jax.jit</span></span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> main(u,_,state,xyz,a1<span class="op">=</span>a1,a2<span class="op">=</span>a2):</span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>        x_nodes <span class="op">=</span> anp.linspace(xyz[<span class="dv">0</span>][<span class="dv">0</span>],xyz[<span class="op">-</span><span class="dv">1</span>][<span class="dv">0</span>],<span class="dv">5</span>)</span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>        external_term <span class="op">=</span> <span class="bu">sum</span>(</span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>              anp.array([</span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>                [f(transf(xi,x_nodes))<span class="op">*</span>(<span class="dv">2</span><span class="op">*</span>xi<span class="op">**</span><span class="dv">4</span><span class="op">/</span><span class="dv">3</span> <span class="op">-</span> <span class="dv">2</span><span class="op">*</span>xi<span class="op">**</span><span class="dv">3</span><span class="op">/</span><span class="dv">3</span> <span class="op">-</span> xi<span class="op">**</span><span class="dv">2</span><span class="op">/</span><span class="dv">6</span> <span class="op">+</span> xi<span class="op">/</span><span class="dv">6</span>)],</span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>                [f(transf(xi,x_nodes))<span class="op">*</span>(<span class="op">-</span><span class="dv">8</span><span class="op">*</span>xi<span class="op">**</span><span class="dv">4</span><span class="op">/</span><span class="dv">3</span> <span class="op">+</span> <span class="dv">4</span><span class="op">*</span>xi<span class="op">**</span><span class="dv">3</span><span class="op">/</span><span class="dv">3</span> <span class="op">+</span> <span class="dv">8</span><span class="op">*</span>xi<span class="op">**</span><span class="dv">2</span><span class="op">/</span><span class="dv">3</span> <span class="op">-</span> <span class="dv">4</span><span class="op">*</span>xi<span class="op">/</span><span class="dv">3</span>)],</span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>                [f(transf(xi,x_nodes))<span class="op">*</span>(<span class="dv">4</span><span class="op">*</span>xi<span class="op">**</span><span class="dv">4</span> <span class="op">-</span> <span class="dv">5</span><span class="op">*</span>xi<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> <span class="dv">1</span>)],</span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>                [f(transf(xi,x_nodes))<span class="op">*</span>(<span class="op">-</span><span class="dv">8</span><span class="op">*</span>xi<span class="op">**</span><span class="dv">4</span><span class="op">/</span><span class="dv">3</span> <span class="op">-</span> <span class="dv">4</span><span class="op">*</span>xi<span class="op">**</span><span class="dv">3</span><span class="op">/</span><span class="dv">3</span> <span class="op">+</span> <span class="dv">8</span><span class="op">*</span>xi<span class="op">**</span><span class="dv">2</span><span class="op">/</span><span class="dv">3</span> <span class="op">+</span> <span class="dv">4</span><span class="op">*</span>xi<span class="op">/</span><span class="dv">3</span>)],</span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>                [f(transf(xi,x_nodes))<span class="op">*</span>(<span class="dv">2</span><span class="op">*</span>xi<span class="op">**</span><span class="dv">4</span><span class="op">/</span><span class="dv">3</span> <span class="op">+</span> <span class="dv">2</span><span class="op">*</span>xi<span class="op">**</span><span class="dv">3</span><span class="op">/</span><span class="dv">3</span> <span class="op">-</span> xi<span class="op">**</span><span class="dv">2</span><span class="op">/</span><span class="dv">6</span> <span class="op">-</span> xi<span class="op">/</span><span class="dv">6</span>)],</span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>              ]</span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>            )<span class="op">*</span>weight <span class="op">*</span> grad_transf(xi,x_nodes) <span class="cf">for</span> xi, weight <span class="kw">in</span> <span class="bu">zip</span>(<span class="op">*</span>quad_points)</span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>        resp <span class="op">=</span> jacx(u,_,state,xyz,a1<span class="op">=</span>a1,a2<span class="op">=</span>a2)<span class="op">@</span>u <span class="op">+</span> external_term</span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> u, resp, state</span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">locals</span>()</span></code></pre></div>
+<p></p>
+<h3 id="analytic-transient-solution">Analytic Transient Solution</h3>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>pi <span class="op">=</span> anp.pi</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>sin <span class="op">=</span> anp.sin</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>cos <span class="op">=</span> anp.cos</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>exp <span class="op">=</span> anp.exp</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> cn(t):</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> [</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        pi<span class="op">**</span><span class="dv">2</span><span class="op">*</span>(pi<span class="op">*</span>alpha<span class="op">*</span>sin(pi<span class="op">*</span>t)<span class="op">/</span>(pi<span class="op">**</span><span class="dv">3</span><span class="op">*</span>alpha<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> pi) </span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>            <span class="op">-</span> cos(pi<span class="op">*</span>t)<span class="op">/</span>(pi<span class="op">**</span><span class="dv">3</span><span class="op">*</span>alpha<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> pi))<span class="op">/</span><span class="dv">100</span> </span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>            <span class="op">+</span> pi<span class="op">**</span><span class="dv">2</span><span class="op">/</span>(<span class="dv">100</span><span class="op">*</span>(pi<span class="op">**</span><span class="dv">3</span><span class="op">*</span>alpha<span class="op">**</span><span class="dv">2</span><span class="op">*</span>exp(pi<span class="op">**</span><span class="dv">2</span><span class="op">*</span>alpha<span class="op">*</span>t) </span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>            <span class="op">+</span> pi<span class="op">*</span>exp(pi<span class="op">**</span><span class="dv">2</span><span class="op">*</span>alpha<span class="op">*</span>t))), </span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        pi<span class="op">**</span><span class="dv">2</span><span class="op">*</span>(<span class="dv">9</span><span class="op">*</span>pi<span class="op">*</span>alpha<span class="op">*</span>sin(pi<span class="op">*</span>t)<span class="op">/</span>(<span class="dv">81</span><span class="op">*</span>pi<span class="op">**</span><span class="dv">3</span><span class="op">*</span>alpha<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> pi) </span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>            <span class="op">-</span> cos(pi<span class="op">*</span>t)<span class="op">/</span>(<span class="dv">81</span><span class="op">*</span>pi<span class="op">**</span><span class="dv">3</span><span class="op">*</span>alpha<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> pi))<span class="op">/</span><span class="dv">100</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>            <span class="op">+</span> pi<span class="op">**</span><span class="dv">2</span><span class="op">/</span>(<span class="dv">100</span><span class="op">*</span>(<span class="dv">81</span><span class="op">*</span>pi<span class="op">**</span><span class="dv">3</span><span class="op">*</span>alpha<span class="op">**</span><span class="dv">2</span><span class="op">*</span>exp(<span class="dv">9</span><span class="op">*</span>pi<span class="op">**</span><span class="dv">2</span><span class="op">*</span>alpha<span class="op">*</span>t) </span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>            <span class="op">+</span> pi<span class="op">*</span>exp(<span class="dv">9</span><span class="op">*</span>pi<span class="op">**</span><span class="dv">2</span><span class="op">*</span>alpha<span class="op">*</span>t))), </span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>        pi<span class="op">**</span><span class="dv">2</span><span class="op">*</span>(<span class="dv">25</span><span class="op">*</span>pi<span class="op">*</span>alpha<span class="op">*</span>sin(pi<span class="op">*</span>t)<span class="op">/</span>(<span class="dv">625</span><span class="op">*</span>pi<span class="op">**</span><span class="dv">3</span><span class="op">*</span>alpha<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> pi) </span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>            <span class="op">-</span> cos(pi<span class="op">*</span>t)<span class="op">/</span>(<span class="dv">625</span><span class="op">*</span>pi<span class="op">**</span><span class="dv">3</span><span class="op">*</span>alpha<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> pi))<span class="op">/</span><span class="dv">100</span> </span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>            <span class="op">+</span> pi<span class="op">**</span><span class="dv">2</span><span class="op">/</span>(<span class="dv">100</span><span class="op">*</span>(<span class="dv">625</span><span class="op">*</span>pi<span class="op">**</span><span class="dv">3</span><span class="op">*</span>alpha<span class="op">**</span><span class="dv">2</span><span class="op">*</span>exp(<span class="dv">25</span><span class="op">*</span>pi<span class="op">**</span><span class="dv">2</span><span class="op">*</span>alpha<span class="op">*</span>t) </span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>            <span class="op">+</span> pi<span class="op">*</span>exp(<span class="dv">25</span><span class="op">*</span>pi<span class="op">**</span><span class="dv">2</span><span class="op">*</span>alpha<span class="op">*</span>t))), </span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>        pi<span class="op">**</span><span class="dv">2</span><span class="op">*</span>(<span class="dv">49</span><span class="op">*</span>pi<span class="op">*</span>alpha<span class="op">*</span>sin(pi<span class="op">*</span>t)<span class="op">/</span>(<span class="dv">2401</span><span class="op">*</span>pi<span class="op">**</span><span class="dv">3</span><span class="op">*</span>alpha<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> pi) </span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>            <span class="op">-</span> cos(pi<span class="op">*</span>t)<span class="op">/</span>(<span class="dv">2401</span><span class="op">*</span>pi<span class="op">**</span><span class="dv">3</span><span class="op">*</span>alpha<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> pi))<span class="op">/</span><span class="dv">100</span> </span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>            <span class="op">+</span> pi<span class="op">**</span><span class="dv">2</span><span class="op">/</span>(<span class="dv">100</span><span class="op">*</span>(<span class="dv">2401</span><span class="op">*</span>pi<span class="op">**</span><span class="dv">3</span><span class="op">*</span>alpha<span class="op">**</span><span class="dv">2</span><span class="op">*</span>exp(<span class="dv">49</span><span class="op">*</span>pi<span class="op">**</span><span class="dv">2</span><span class="op">*</span>alpha<span class="op">*</span>t) </span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>            <span class="op">+</span> pi<span class="op">*</span>exp(<span class="dv">49</span><span class="op">*</span>pi<span class="op">**</span><span class="dv">2</span><span class="op">*</span>alpha<span class="op">*</span>t))), </span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>        pi<span class="op">**</span><span class="dv">2</span><span class="op">*</span>(<span class="dv">81</span><span class="op">*</span>pi<span class="op">*</span>alpha<span class="op">*</span>sin(pi<span class="op">*</span>t)<span class="op">/</span>(<span class="dv">6561</span><span class="op">*</span>pi<span class="op">**</span><span class="dv">3</span><span class="op">*</span>alpha<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> pi) </span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>            <span class="op">-</span> cos(pi<span class="op">*</span>t)<span class="op">/</span>(<span class="dv">6561</span><span class="op">*</span>pi<span class="op">**</span><span class="dv">3</span><span class="op">*</span>alpha<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> pi))<span class="op">/</span><span class="dv">100</span> </span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>            <span class="op">+</span> pi<span class="op">**</span><span class="dv">2</span><span class="op">/</span>(<span class="dv">100</span><span class="op">*</span>(<span class="dv">6561</span><span class="op">*</span>pi<span class="op">**</span><span class="dv">3</span><span class="op">*</span>alpha<span class="op">**</span><span class="dv">2</span><span class="op">*</span>exp(<span class="dv">81</span><span class="op">*</span>pi<span class="op">**</span><span class="dv">2</span><span class="op">*</span>alpha<span class="op">*</span>t) </span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>            <span class="op">+</span> pi<span class="op">*</span>exp(<span class="dv">81</span><span class="op">*</span>pi<span class="op">**</span><span class="dv">2</span><span class="op">*</span>alpha<span class="op">*</span>t)))</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>     ]</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> u(x,t):</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    c <span class="op">=</span> cn(t)</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">sum</span>( </span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>        c[n] <span class="op">*</span> anp.sin(xi<span class="op">*</span>x)</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> n,xi <span class="kw">in</span> <span class="bu">enumerate</span>([(<span class="dv">2</span><span class="op">*</span>k<span class="op">+</span><span class="dv">1</span>)<span class="op">*</span>anp.pi <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">5</span>)])</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    ) </span></code></pre></div>
 
     
           </article>

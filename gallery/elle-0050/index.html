@@ -190,6 +190,106 @@
           <article class="page col-md-9 p-3">
           
 
+<h1 id="part-1-base-case">Part 1: Base case</h1>
+<blockquote>
+<p>Consider the Dirichlet problem</p>
+<p><span class="math display">\[
+ \begin{aligned}
+   -\Delta u &amp;= 4, &amp; \quad &amp;\text{in $\Omega$} \\
+           u &amp;= 0, &amp; &amp;\text{on $\partial\Omega$}
+ \end{aligned}
+\]</span></p>
+<p>on the unit disk <span class="math inline">\(\Omega=\{(x,y)\;:\; x^2+y^2\le 1\}\)</span></p>
+</blockquote>
+<p>The exact solution to this problem is</p>
+<p><span class="math display">\[
+\boxed{u = 1 - x^2 - y^2}
+\]</span></p>
+<p>A function implementing quadratic Lagrange interpolation over a reference triangle is implemented in the file <a href="src/interpolate.py"><code>interpolate.py</code></a> which is used by the function <code>poisson2</code> from <code>poisson.py</code> to create a finite element that locally evaluates the following variational Poisson problem</p>
+<p><span class="math display">\[
+\sum_{j=1}^{n} \mathbf{u}_{j} \int_{\Omega} \nabla \phi_{j} \cdot \nabla \phi_{i}=\int_{\Omega} \phi_{i} f+\int_{\partial \Omega_{N}} \phi_{i} g_{N}-\sum_{j=n+1}^{n+n_{\partial}} \mathbf{u}_{j} \int_{\Omega} \nabla \phi_{j} \cdot \nabla \phi_{i}
+\]</span></p>
+<p>A model is constructed by loading a pre-defined mesh from the file <code>mesh.m228</code> as follows:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span>  anabel.MeshGroup.read(<span class="ss">f&quot;../dat/circle_iso/mesh.m228&quot;</span>, cell<span class="op">=</span><span class="st">&quot;triangle6&quot;</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>elem <span class="op">=</span> poisson(<span class="op">*</span>[lagrange_t6()]<span class="op">*</span><span class="dv">3</span>, f<span class="op">=</span>f)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>U <span class="op">=</span> model.compose(elem<span class="op">=</span>elem, solver<span class="op">=</span><span class="st">&quot;sparse&quot;</span>, verbose<span class="op">=</span><span class="va">True</span>)</span></code></pre></div>
+<p>This builds a function <code>U</code> which accepts quadrature locations and weights as input. Given a particular quadrature rule, a solution may be computed and plotted as follows:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>quad <span class="op">=</span> anon.quad.simplex.Simplex.load(<span class="ss">f&quot;../dat/quadrature/gauss</span><span class="sc">{g:02}</span><span class="ss">.m&quot;</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>model.plot(U(quad.points, quad.weights))</span></code></pre></div>
+<!--
+Element stiffness matrix:
+
+$$
+\begin{aligned}
+a_{i j}^{(k)}=& \int_{\Delta *}\left(b_{2} \frac{\partial \psi_{*, i}}{\partial \xi}+b_{3} \frac{\partial \psi_{*, i}}{\partial \eta}\right)\left(b_{2} \frac{\partial \psi_{*, j}}{\partial \xi}+b_{3} \frac{\partial \psi_{*, j}}{\partial \eta}\right) \frac{1}{\left|J_{k}\right|} \mathrm{d} \xi \mathrm{d} \eta \\
+&+\int_{\triangle *}\left(c_{2} \frac{\partial \psi_{*, i}}{\partial \xi}+c_{3} \frac{\partial \psi_{*, i}}{\partial \eta}\right)\left(c_{2} \frac{\partial \psi_{*, j}}{\partial \xi}+c_{3} \frac{\partial \psi_{*, j}}{\partial \eta}\right) \frac{1}{\left|J_{k}\right|} \mathrm{d} \xi \mathrm{d} \eta
+\end{aligned}
+$$
+
+$$
+\begin{aligned}
+a_{i j}^{(k)} &=\int_{\Delta_{k}} \frac{\partial \psi_{k, i}}{\partial x} \frac{\partial \psi_{k, j}}{\partial x}+\frac{\partial \psi_{k, i}}{\partial y} \frac{\partial \psi_{k, j}}{\partial y} \mathrm{~d} x \mathrm{~d} y \quad i, j=1, \ldots, n_{k} \\
+&=\int_{\Delta *}\left\{\frac{\partial \psi_{*, i}}{\partial x} \frac{\partial \psi_{*, j}}{\partial x}+\frac{\partial \psi_{*, i}}{\partial y} \frac{\partial \psi_{*, j}}{\partial y}\right\}\left|J_{k}\right| \mathrm{d} \xi \mathrm{d} \eta
+\end{aligned}
+$$
+-->
+<figure>
+<img src="img/mesh5-gauss02.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution using order-2 Gaussian quadrature" /><figcaption aria-hidden="true">Finite element solution using order-2 Gaussian quadrature</figcaption>
+</figure>
+<figure>
+<img src="img/analytic-a.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Closed-form solution to the stated Poisson problem." /><figcaption aria-hidden="true">Closed-form solution to the stated Poisson problem.</figcaption>
+</figure>
+<p><img src="img/mesh5-gauss02-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="img/mesh5-gauss02-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<figure>
+<img src="img/conv-3.png" style="margin:auto; display: block; max-width: 75%" alt="Convergence study." /><figcaption aria-hidden="true">Convergence study.</figcaption>
+</figure>
+<!--
+Find $u$ such that
+
+$$
+\begin{array}{c}
+-\nabla^{2} u=f \quad \text { in } \Omega \\
+u=g_{D} \text { on } \partial \Omega_{D} \quad \text { and } \quad \frac{\partial u}{\partial n}=g_{N} \text { on } \partial \Omega_{N},
+\end{array}
+$$
+where $\partial \Omega_{D} \cup \partial \Omega_{N}=\partial \Omega$ and $\partial \Omega_{D}$ and $\partial \Omega_{N}$ are distinct.
+-->
+<!-- Weak form
+Find $u \in \mathcal{H}_{E}^{1}$ such that
+
+$$
+\int_{\Omega} \nabla u \cdot \nabla v=\int_{\Omega} v f+\int_{\partial \Omega_{N}} v g_{N} \quad \text { for all } v \in \mathcal{H}_{E_{0}}^{1}
+$$
+-->
+<h1 id="nonlinear-source">Nonlinear Source</h1>
+<blockquote>
+<p><span class="math display">\[
+ \begin{aligned}
+   -\Delta u &amp;= \frac{\pi^2}{4}\left(\cos\frac{\pi r}{2} +
+   \operatorname{sinc} \frac{\pi r}{2}\right), &amp; \quad &amp;\text{in $\Omega$} \\
+           u &amp;= 0, &amp; &amp;\text{on $\partial\Omega$}
+ \end{aligned}
+\]</span></p>
+<p>where <span class="math inline">\(\Omega\)</span> is again the unit disk. The exact solution is <span class="math inline">\(u(x,y)=\cos \frac{\pi r}{2}\)</span>, where <span class="math inline">\(r=\sqrt{x^2+y^2}\)</span>.</p>
+</blockquote>
+<figure>
+<img src="img/analytic-b.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Plot of the given closed-form solution." /><figcaption aria-hidden="true">Plot of the given closed-form solution.</figcaption>
+</figure>
+<h1 id="contributions-from-errors">Contributions from Errors</h1>
+<blockquote>
+<p><span class="math display">\[
+\iint_T \nabla(u_{FE} - u_{exact}) \cdot
+\nabla(u_{FE} - u_{exact})\,dx \, dy, \qquad
+(T\in\mathcal{T})
+\]</span></p>
+</blockquote>
+<blockquote>
+<p>The <span class="math inline">\(H^1\)</span> semi-norm error in the finite element solution is the square root of the sum of all the errors shown here.</p>
+</blockquote>
+<p><img src="img/mesh5-gauss02-b-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="img/mesh5-gauss02-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<h1 id="appendix">Appendix</h1>
+<h2 id="source-code-of-interest">Source Code of Interest</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"></code></pre></div>
 
     
           </article>

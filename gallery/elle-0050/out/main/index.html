@@ -96,6 +96,678 @@
           <article class="page col-md-9 p-3">
           
 
+<!--
+Download `hw7.zip`. It will create a directory called \emph{hw7} with 5
+quadrutre scheme files and 3 matlab routines (\emph{get\_mesh.m},
+  \emph{plot\_errors.m} and \emph{plot\_soln.m}).  There is also a
+directory called \emph{circles\_iso} that contains 5 mesh files for
+isoparametric elements, and another 5 with the same nodes but
+connected together as linear triangular elements. The latter are for
+plotting your solution.  (See the \emph{plot\_soln.m} file for an
+ example of how to use the \emph{mesh?lin} files.)  There is a
+\emph{notes} file in \emph{circles\_iso} that explains the data layout
+of each mesh file.
+-->
+<h1 id="problem-1.">Problem 1.</h1>
+<blockquote>
+<p>(12 points) Solve the Dirichlet problem</p>
+<p><span class="math display">\[
+ \begin{aligned}
+   -\Delta u &amp;= 4, &amp; \quad &amp;\text{in $\Omega$} \\
+           u &amp;= 0, &amp; &amp;\text{on $\partial\Omega$}
+ \end{aligned}
+\]</span></p>
+<p>on the unit disk <span class="math inline">\(\Omega=\{(x,y)\;:\; x^2+y^2\le 1\}\)</span> using quadratic isoparametric elements.</p>
+</blockquote>
+<p>A function implementing quadratic Lagrange interpolation over a reference triangle is implemented in the file <code>interpolate.py</code> which is used by the function <code>poisson2</code> from <code>poisson.py</code> to create a finite element that locally evaluates the following variational Poisson problem</p>
+<p><span class="math display">\[
+\sum_{j=1}^{n} \mathbf{u}_{j} \int_{\Omega} \nabla \phi_{j} \cdot \nabla \phi_{i}=\int_{\Omega} \phi_{i} f+\int_{\partial \Omega_{N}} \phi_{i} g_{N}-\sum_{j=n+1}^{n+n_{\partial}} \mathbf{u}_{j} \int_{\Omega} \nabla \phi_{j} \cdot \nabla \phi_{i}
+\]</span></p>
+<p>This is then integrated over the domain using a self-implemented system optimization package called <code>anabel</code> which leverages the JAX library to vectorize element state determination in a manner that can be accelerated on specialized hardware.</p>
+<!--
+Element stiffness matrix:
+
+$$
+\begin{aligned}
+a_{i j}^{(k)}=& \int_{\Delta *}\left(b_{2} \frac{\partial \psi_{*, i}}{\partial \xi}+b_{3} \frac{\partial \psi_{*, i}}{\partial \eta}\right)\left(b_{2} \frac{\partial \psi_{*, j}}{\partial \xi}+b_{3} \frac{\partial \psi_{*, j}}{\partial \eta}\right) \frac{1}{\left|J_{k}\right|} \mathrm{d} \xi \mathrm{d} \eta \\
+&+\int_{\triangle *}\left(c_{2} \frac{\partial \psi_{*, i}}{\partial \xi}+c_{3} \frac{\partial \psi_{*, i}}{\partial \eta}\right)\left(c_{2} \frac{\partial \psi_{*, j}}{\partial \xi}+c_{3} \frac{\partial \psi_{*, j}}{\partial \eta}\right) \frac{1}{\left|J_{k}\right|} \mathrm{d} \xi \mathrm{d} \eta
+\end{aligned}
+$$
+
+$$
+\begin{aligned}
+a_{i j}^{(k)} &=\int_{\Delta_{k}} \frac{\partial \psi_{k, i}}{\partial x} \frac{\partial \psi_{k, j}}{\partial x}+\frac{\partial \psi_{k, i}}{\partial y} \frac{\partial \psi_{k, j}}{\partial y} \mathrm{~d} x \mathrm{~d} y \quad i, j=1, \ldots, n_{k} \\
+&=\int_{\Delta *}\left\{\frac{\partial \psi_{*, i}}{\partial x} \frac{\partial \psi_{*, j}}{\partial x}+\frac{\partial \psi_{*, i}}{\partial y} \frac{\partial \psi_{*, j}}{\partial y}\right\}\left|J_{k}\right| \mathrm{d} \xi \mathrm{d} \eta
+\end{aligned}
+$$
+-->
+<figure>
+<img src="../img/mesh5-gauss02.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution using order-2 Gaussian quadrature" /><figcaption aria-hidden="true">Finite element solution using order-2 Gaussian quadrature</figcaption>
+</figure>
+<blockquote>
+<p>What is the exact solution?</p>
+</blockquote>
+<p>The exact solution is</p>
+<p><span class="math display">\[
+\boxed{u = 1 - x^2 - y^2}
+\]</span></p>
+<figure>
+<img src="../img/analytic-a.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Closed-form solution to the stated Poisson problem." /><figcaption aria-hidden="true">Closed-form solution to the stated Poisson problem.</figcaption>
+</figure>
+<blockquote>
+<p>Compute the <span class="math inline">\(H^1\)</span> seminorm and <span class="math inline">\(L^2\)</span> norm of the error for each of the meshes. Ignore the fringe error due to the piecewise parabolic mesh boundary not quite aligning with the circular domain.</p>
+</blockquote>
+<p><img src="../img/mesh5-gauss02-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh5-gauss02-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p></p>
+<blockquote>
+<p>Turn in a table of your errors and <span class="math inline">\(\log\)</span>-<span class="math inline">\(\log\)</span> plots of the error vs.~the mesh parameter, <span class="math inline">\(h\)</span>.</p>
+</blockquote>
+<p><img src="../img/conv-3.png" style="margin:auto; display: block; max-width: 75%" /></p>
+<p>Table of errors in the L2 norm for problem 1</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;"><span class="math inline">\(h\)</span></th>
+<th style="text-align: left;">2</th>
+<th style="text-align: left;">5</th>
+<th style="text-align: left;">13</th>
+<th style="text-align: left;">19</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">0.5</td>
+<td style="text-align: left;">0.0024764578</td>
+<td style="text-align: left;">0.0030141854</td>
+<td style="text-align: left;">0.0029849953</td>
+<td style="text-align: left;">0.0029849953</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">0.25</td>
+<td style="text-align: left;">0.0002258162</td>
+<td style="text-align: left;">0.00027375659</td>
+<td style="text-align: left;">0.00027090969</td>
+<td style="text-align: left;">0.00027090969</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">0.125</td>
+<td style="text-align: left;">2.1527457e-05</td>
+<td style="text-align: left;">2.5708536e-05</td>
+<td style="text-align: left;">2.5448945e-05</td>
+<td style="text-align: left;">2.5448945e-05</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">0.0625</td>
+<td style="text-align: left;">1.9830323e-06</td>
+<td style="text-align: left;">2.3460163e-06</td>
+<td style="text-align: left;">2.3228069e-06</td>
+<td style="text-align: left;">2.3228069e-06</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">0.03125</td>
+<td style="text-align: left;">1.7587735e-07</td>
+<td style="text-align: left;">2.0760524e-07</td>
+<td style="text-align: left;">2.0555351e-07</td>
+<td style="text-align: left;">2.0555351e-07</td>
+</tr>
+</tbody>
+</table>
+<p>Table of errors in the L2 norm for problem 2</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;"><span class="math inline">\(h\)</span></th>
+<th style="text-align: left;">2</th>
+<th style="text-align: left;">5</th>
+<th style="text-align: left;">13</th>
+<th style="text-align: left;">19</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">0.5</td>
+<td style="text-align: left;">0.0099611923</td>
+<td style="text-align: left;">0.0064076596</td>
+<td style="text-align: left;">0.0071412137</td>
+<td style="text-align: left;">0.0071412137</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">0.25</td>
+<td style="text-align: left;">0.0013051996</td>
+<td style="text-align: left;">0.00083984741</td>
+<td style="text-align: left;">0.0009471105</td>
+<td style="text-align: left;">0.0009471105</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">0.125</td>
+<td style="text-align: left;">0.00016874334</td>
+<td style="text-align: left;">0.00010830203</td>
+<td style="text-align: left;">0.00012249798</td>
+<td style="text-align: left;">0.00012249798</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">0.0625</td>
+<td style="text-align: left;">2.1626624e-05</td>
+<td style="text-align: left;">1.3882073e-05</td>
+<td style="text-align: left;">1.5691434e-05</td>
+<td style="text-align: left;">1.5691434e-05</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">0.03125</td>
+<td style="text-align: left;">2.7380054e-06</td>
+<td style="text-align: left;">1.756023e-06</td>
+<td style="text-align: left;">1.9850051e-06</td>
+<td style="text-align: left;">1.9850051e-06</td>
+</tr>
+</tbody>
+</table>
+<p>Table of errors in the H1 norm for problem 1</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;"><span class="math inline">\(h\)</span></th>
+<th style="text-align: left;">2</th>
+<th style="text-align: left;">5</th>
+<th style="text-align: left;">13</th>
+<th style="text-align: left;">19</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">0.5</td>
+<td style="text-align: left;">0.033040555</td>
+<td style="text-align: left;">0.05344312</td>
+<td style="text-align: left;">0.053451002</td>
+<td style="text-align: left;">0.053451002</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">0.25</td>
+<td style="text-align: left;">0.0057268302</td>
+<td style="text-align: left;">0.0091748492</td>
+<td style="text-align: left;">0.0091751946</td>
+<td style="text-align: left;">0.0091751946</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">0.125</td>
+<td style="text-align: left;">0.0010299012</td>
+<td style="text-align: left;">0.0016399388</td>
+<td style="text-align: left;">0.0016399544</td>
+<td style="text-align: left;">0.0016399544</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">0.0625</td>
+<td style="text-align: left;">0.00018443725</td>
+<td style="text-align: left;">0.00029237375</td>
+<td style="text-align: left;">0.00029237444</td>
+<td style="text-align: left;">0.00029237444</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">0.03125</td>
+<td style="text-align: left;">3.254096e-05</td>
+<td style="text-align: left;">5.152993e-05</td>
+<td style="text-align: left;">5.1529961e-05</td>
+<td style="text-align: left;">5.1529961e-05</td>
+</tr>
+</tbody>
+</table>
+<p>Table of errors in the H1 norm for problem 2</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: left;"><span class="math inline">\(h\)</span></th>
+<th style="text-align: left;">2</th>
+<th style="text-align: left;">5</th>
+<th style="text-align: left;">13</th>
+<th style="text-align: left;">19</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">0.5</td>
+<td style="text-align: left;">0.050321736</td>
+<td style="text-align: left;">0.087419539</td>
+<td style="text-align: left;">0.087364004</td>
+<td style="text-align: left;">0.087364004</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">0.25</td>
+<td style="text-align: left;">0.013576873</td>
+<td style="text-align: left;">0.024424342</td>
+<td style="text-align: left;">0.024421502</td>
+<td style="text-align: left;">0.024421502</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">0.125</td>
+<td style="text-align: left;">0.0036081315</td>
+<td style="text-align: left;">0.0065157661</td>
+<td style="text-align: left;">0.006515551</td>
+<td style="text-align: left;">0.006515551</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">0.0625</td>
+<td style="text-align: left;">0.00093741811</td>
+<td style="text-align: left;">0.0016853971</td>
+<td style="text-align: left;">0.0016853811</td>
+<td style="text-align: left;">0.0016853811</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">0.03125</td>
+<td style="text-align: left;">0.00023986093</td>
+<td style="text-align: left;">0.00042915864</td>
+<td style="text-align: left;">0.00042915753</td>
+<td style="text-align: left;">0.00042915753</td>
+</tr>
+</tbody>
+</table>
+<!--
+Find $u$ such that
+
+$$
+\begin{array}{c}
+-\nabla^{2} u=f \quad \text { in } \Omega \\
+u=g_{D} \text { on } \partial \Omega_{D} \quad \text { and } \quad \frac{\partial u}{\partial n}=g_{N} \text { on } \partial \Omega_{N},
+\end{array}
+$$
+where $\partial \Omega_{D} \cup \partial \Omega_{N}=\partial \Omega$ and $\partial \Omega_{D}$ and $\partial \Omega_{N}$ are distinct.
+-->
+<!-- Weak form
+Find $u \in \mathcal{H}_{E}^{1}$ such that
+
+$$
+\int_{\Omega} \nabla u \cdot \nabla v=\int_{\Omega} v f+\int_{\partial \Omega_{N}} v g_{N} \quad \text { for all } v \in \mathcal{H}_{E_{0}}^{1}
+$$
+-->
+<p></p>
+<h1 id="problem-2">Problem 2</h1>
+<blockquote>
+<p>Repeat (1) for the problem</p>
+<p><span class="math display">\[
+ \begin{aligned}
+   -\Delta u &amp;= \frac{\pi^2}{4}\left(\cos\frac{\pi r}{2} +
+   \operatorname{sinc} \frac{\pi r}{2}\right), &amp; \quad &amp;\text{in $\Omega$} \\
+           u &amp;= 0, &amp; &amp;\text{on $\partial\Omega$}
+ \end{aligned}
+\]</span></p>
+<p>where <span class="math inline">\(\Omega\)</span> is again the unit disk. The exact solution is <span class="math inline">\(u(x,y)=\cos \frac{\pi r}{2}\)</span>, where <span class="math inline">\(r=\sqrt{x^2+y^2}\)</span>.</p>
+</blockquote>
+<figure>
+<img src="../img/analytic-b.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Plot of the given closed-form solution." /><figcaption aria-hidden="true">Plot of the given closed-form solution.</figcaption>
+</figure>
+<p></p>
+<h1 id="problem-3">Problem 3</h1>
+<blockquote>
+<p>(6 points) Explain why the convergence rate for problem (1) is half an order higher than for problem (2). To understand what’s going on, it may be helpful to plot the contribution to the <span class="math inline">\(H^1\)</span> and <span class="math inline">\(L^2\)</span> errors element by element. (see the sample file <code>plot_errors.m</code>). For example, in problem 2, I got the following values when I integrated</p>
+<p><span class="math display">\[
+\iint_T \nabla(u_{FE} - u_{exact}) \cdot
+\nabla(u_{FE} - u_{exact})\,dx \, dy, \qquad
+(T\in\mathcal{T})
+\]</span></p>
+<p>over the triangles in <code>circle_iso/mesh3</code>:</p>
+</blockquote>
+<blockquote>
+<p>The <span class="math inline">\(H^1\)</span> semi-norm error in the finite element solution is the square root of the sum of all the errors shown here. (I got <span class="math inline">\(0.00400512\)</span> for the <span class="math inline">\(H^1\)</span> error and <span class="math inline">\(7.5355\times10^{-5}\)</span> for the <span class="math inline">\(L^2\)</span> error on this mesh).</p>
+</blockquote>
+<p><img src="../img/mesh5-gauss02-b-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh5-gauss02-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p></p>
+<h1 id="appendix">Appendix</h1>
+<h2 id="solution-plots">Solution plots</h2>
+<h3 id="plots-of-finite-element-solutions">Plots of Finite Element Solutions</h3>
+<figure>
+<img src="../img/mesh1-gauss02.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 1 and order-2 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 1 and order-2 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh1-gauss05.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 1 and order-5 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 1 and order-5 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh1-gauss08.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 1 and order-8 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 1 and order-8 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh1-gauss13.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 1 and order-13 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 1 and order-13 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh1-gauss19.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 1 and order-19 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 1 and order-19 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh2-gauss02.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 2 and order-2 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 2 and order-2 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh2-gauss05.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 2 and order-5 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 2 and order-5 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh2-gauss08.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 2 and order-8 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 2 and order-8 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh2-gauss13.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 2 and order-13 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 2 and order-13 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh2-gauss19.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 2 and order-19 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 2 and order-19 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh3-gauss02.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 3 and order-2 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 3 and order-2 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh3-gauss05.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 3 and order-5 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 3 and order-5 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh3-gauss08.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 3 and order-8 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 3 and order-8 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh3-gauss13.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 3 and order-13 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 3 and order-13 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh3-gauss19.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 3 and order-19 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 3 and order-19 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh4-gauss02.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 4 and order-2 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 4 and order-2 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh4-gauss05.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 4 and order-5 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 4 and order-5 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh4-gauss08.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 4 and order-8 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 4 and order-8 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh4-gauss13.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 4 and order-13 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 4 and order-13 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh4-gauss19.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 4 and order-19 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 4 and order-19 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh5-gauss02.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 5 and order-2 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 5 and order-2 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh5-gauss05.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 5 and order-5 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 5 and order-5 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh5-gauss08.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 5 and order-8 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 5 and order-8 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh5-gauss13.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 5 and order-13 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 5 and order-13 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh5-gauss19.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 5 and order-19 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 5 and order-19 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh1-gauss02-b.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 1 and order-2 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 1 and order-2 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh1-gauss05-b.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 1 and order-5 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 1 and order-5 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh1-gauss08-b.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 1 and order-8 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 1 and order-8 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh1-gauss13-b.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 1 and order-13 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 1 and order-13 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh1-gauss19-b.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 1 and order-19 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 1 and order-19 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh2-gauss02-b.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 2 and order-2 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 2 and order-2 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh2-gauss05-b.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 2 and order-5 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 2 and order-5 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh2-gauss08-b.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 2 and order-8 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 2 and order-8 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh2-gauss13-b.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 2 and order-13 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 2 and order-13 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh2-gauss19-b.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 2 and order-19 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 2 and order-19 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh3-gauss02-b.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 3 and order-2 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 3 and order-2 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh3-gauss05-b.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 3 and order-5 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 3 and order-5 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh3-gauss08-b.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 3 and order-8 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 3 and order-8 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh3-gauss13-b.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 3 and order-13 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 3 and order-13 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh3-gauss19-b.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 3 and order-19 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 3 and order-19 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh4-gauss02-b.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 4 and order-2 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 4 and order-2 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh4-gauss05-b.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 4 and order-5 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 4 and order-5 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh4-gauss08-b.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 4 and order-8 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 4 and order-8 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh4-gauss13-b.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 4 and order-13 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 4 and order-13 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh4-gauss19-b.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 4 and order-19 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 4 and order-19 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh5-gauss02-b.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 5 and order-2 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 5 and order-2 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh5-gauss05-b.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 5 and order-5 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 5 and order-5 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh5-gauss08-b.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 5 and order-8 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 5 and order-8 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh5-gauss13-b.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 5 and order-13 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 5 and order-13 numerical integration.</figcaption>
+</figure>
+<figure>
+<img src="../img/mesh5-gauss19-b.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" alt="Finite element solution for problem 1 over mesh number 5 and order-19 numerical integration." /><figcaption aria-hidden="true">Finite element solution for problem 1 over mesh number 5 and order-19 numerical integration.</figcaption>
+</figure>
+<h3 id="errors-in-the-h1-and-l2-norms">Errors in the <span class="math inline">\(H^1\)</span> and <span class="math inline">\(L2\)</span> norms</h3>
+<p><img src="../img/mesh1-gauss02-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh1-gauss02-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh1-gauss05-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh1-gauss05-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh1-gauss08-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh1-gauss08-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh1-gauss13-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh1-gauss13-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh1-gauss19-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh1-gauss19-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh2-gauss02-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh2-gauss02-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh2-gauss05-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh2-gauss05-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh2-gauss08-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh2-gauss08-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh2-gauss13-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh2-gauss13-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh2-gauss19-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh2-gauss19-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh3-gauss02-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh3-gauss02-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh3-gauss05-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh3-gauss05-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh3-gauss08-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh3-gauss08-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh3-gauss13-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh3-gauss13-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh3-gauss19-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh3-gauss19-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh4-gauss02-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh4-gauss02-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh4-gauss05-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh4-gauss05-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh4-gauss08-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh4-gauss08-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh4-gauss13-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh4-gauss13-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh4-gauss19-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh4-gauss19-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh5-gauss02-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh5-gauss02-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh5-gauss05-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh5-gauss05-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh5-gauss08-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh5-gauss08-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh5-gauss13-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh5-gauss13-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh5-gauss19-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh5-gauss19-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh1-gauss02-b-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh1-gauss02-b-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh1-gauss05-b-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh1-gauss05-b-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh1-gauss08-b-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh1-gauss08-b-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh1-gauss13-b-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh1-gauss13-b-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh1-gauss19-b-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh1-gauss19-b-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh2-gauss02-b-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh2-gauss02-b-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh2-gauss05-b-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh2-gauss05-b-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh2-gauss08-b-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh2-gauss08-b-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh2-gauss13-b-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh2-gauss13-b-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh2-gauss19-b-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh2-gauss19-b-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh3-gauss02-b-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh3-gauss02-b-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh3-gauss05-b-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh3-gauss05-b-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh3-gauss08-b-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh3-gauss08-b-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh3-gauss13-b-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh3-gauss13-b-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh3-gauss19-b-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh3-gauss19-b-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh4-gauss02-b-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh4-gauss02-b-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh4-gauss05-b-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh4-gauss05-b-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh4-gauss08-b-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh4-gauss08-b-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh4-gauss13-b-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh4-gauss13-b-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh4-gauss19-b-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh4-gauss19-b-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh5-gauss02-b-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh5-gauss02-b-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh5-gauss05-b-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh5-gauss05-b-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh5-gauss08-b-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh5-gauss08-b-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh5-gauss13-b-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh5-gauss13-b-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p><img src="../img/mesh5-gauss19-b-L2.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /> <img src="../img/mesh5-gauss19-b-H1.png" style="margin:auto; display: block; max-width: 75%" style="width:50.0%" /></p>
+<p></p>
+<h2 id="source-code-of-interest">Source Code of Interest</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Claudio Perez</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># May 2021</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> jax</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> anon.diff <span class="im">as</span> diff</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> anabel.template <span class="im">import</span> template</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> anabel.backend <span class="im">as</span> anp</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="at">@template</span>(<span class="dv">6</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> poisson2(transf, test, trial, f<span class="op">=</span><span class="kw">lambda</span> x: <span class="fl">0.0</span>, ndim<span class="op">=</span><span class="dv">2</span>, points<span class="op">=</span><span class="va">None</span>, weights<span class="op">=</span><span class="va">None</span>, thickness<span class="op">=</span><span class="fl">1.0</span>, <span class="op">**</span>kwds):</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">    Parameters</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">    ----------</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co">    test, trial : Callable</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co">        test and trial interpolants over the reference element.</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">    thickness : float</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co">    http://people.inf.ethz.ch/arbenz/FEM17/pdfs/0-19-852868-X.pdf</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    state <span class="op">=</span> {}</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    det <span class="op">=</span> anp.linalg.det</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    slv <span class="op">=</span> anp.linalg.solve</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    jacn_test <span class="op">=</span> diff.jacx(test)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    jacn_trial <span class="op">=</span> diff.jacx(trial)</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> transf(xi, xyz):</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> test(xi)<span class="op">@</span>xyz</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> jacn_transf(xi,xyz):</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> jacn_test(xi)<span class="op">@</span>xyz</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> jacx_test(xi,xyz): </span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> slv(jacn_transf(xi,xyz), jacn_test(xi))</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> dvol(xi, xyz): </span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="fl">0.5</span><span class="op">*</span>thickness<span class="op">*</span>(<span class="bu">abs</span>(det(jacn_transf(xi,xyz))))</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> stif(u,xyz,xi,wght,<span class="op">**</span>kwds):</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>        dNdx <span class="op">=</span> jacx_test(xi,xyz)</span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> (dNdx.T<span class="op">@</span>dNdx)<span class="op">*</span>dvol(xi,xyz)<span class="op">*</span>wght</span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>    fj <span class="op">=</span> jax.vmap(f,<span class="dv">0</span>)</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> resp(u,xyz,xi,wght,<span class="op">**</span>kwds):</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>        dNdx <span class="op">=</span> jacx_test(xi,xyz)</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>        N <span class="op">=</span> test(xi)[:,<span class="va">None</span>]</span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>        p <span class="op">=</span> (dNdx.T<span class="op">@</span>dNdx)<span class="op">@</span>u<span class="op">*</span>dvol(xi,xyz)<span class="op">*</span>wght <span class="op">-</span> (N<span class="op">@</span>N.T)<span class="op">@</span>fj(xyz)[:,<span class="va">None</span>]<span class="op">*</span>dvol(xi,xyz)<span class="op">*</span>wght</span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> p</span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>    integral <span class="op">=</span> jax.vmap(resp,(<span class="va">None</span>,<span class="va">None</span>,<span class="dv">0</span>,<span class="dv">0</span>))</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>    jac_integral <span class="op">=</span> jax.vmap(stif,(<span class="va">None</span>, <span class="va">None</span>, <span class="dv">0</span>, <span class="dv">0</span>))</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> jacx(u,__,___,xyz,points,weights):</span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="bu">sum</span>(jac_integral(u,xyz,points,weights))</span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> main(u,__,___,xyz,points,weights):</span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="bu">sum</span>(integral(u,xyz,points,weights))</span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">locals</span>()</span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a><span class="at">@template</span>(<span class="dv">1</span>)</span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> L2(transf,test,trial,u,quad_point<span class="op">=</span><span class="va">None</span>, thickness<span class="op">=</span><span class="fl">1.0</span>):</span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>    state <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>    det <span class="op">=</span> anp.linalg.det</span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>    slv <span class="op">=</span> anp.linalg.solve</span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>    du <span class="op">=</span> <span class="kw">lambda</span> x: diff.jacfwd(u)(x)[:,<span class="va">None</span>]</span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>    jacn_test <span class="op">=</span> diff.jacx(test)</span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>    jacn_trial <span class="op">=</span> diff.jacx(trial)</span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> transf(xi, xyz):</span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> test(xi)<span class="op">@</span>xyz</span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> jacn_transf(xi,xyz):</span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> jacn_test(xi)<span class="op">@</span>xyz</span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a>    dvol <span class="op">=</span> <span class="kw">lambda</span> xi, xyz: <span class="fl">0.5</span><span class="op">*</span>thickness<span class="op">*</span><span class="bu">abs</span>(det(jacn_transf(xi,xyz)))</span>
+<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a>     </span>
+<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> resp(U,xyz,xi, wght):</span>
+<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a>        N <span class="op">=</span> test(xi)[:,<span class="va">None</span>]</span>
+<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a>        tmp <span class="op">=</span> u(transf(xi,xyz)) <span class="op">-</span> N.T<span class="op">@</span>U</span>
+<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a>        q <span class="op">=</span>  tmp.T<span class="op">@</span>tmp <span class="op">*</span> dvol(xi,xyz) <span class="op">*</span> wght</span>
+<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> q</span>
+<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a>    integral <span class="op">=</span> jax.vmap(resp,(<span class="va">None</span>,<span class="va">None</span>,<span class="dv">0</span>,<span class="dv">0</span>))</span>
+<span id="cb1-86"><a href="#cb1-86" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-87"><a href="#cb1-87" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> main(u,__,___,xyz,points,weights):</span>
+<span id="cb1-88"><a href="#cb1-88" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="bu">sum</span>(integral(u,xyz,points,weights))</span>
+<span id="cb1-89"><a href="#cb1-89" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-90"><a href="#cb1-90" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">locals</span>()</span>
+<span id="cb1-91"><a href="#cb1-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-92"><a href="#cb1-92" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-93"><a href="#cb1-93" aria-hidden="true" tabindex="-1"></a><span class="at">@template</span>(<span class="dv">1</span>)</span>
+<span id="cb1-94"><a href="#cb1-94" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> H1_v1(transf,test,trial,u,quad_point<span class="op">=</span><span class="va">None</span>, thickness<span class="op">=</span><span class="fl">1.0</span>):</span>
+<span id="cb1-95"><a href="#cb1-95" aria-hidden="true" tabindex="-1"></a>    state <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb1-96"><a href="#cb1-96" aria-hidden="true" tabindex="-1"></a>    det <span class="op">=</span> anp.linalg.det</span>
+<span id="cb1-97"><a href="#cb1-97" aria-hidden="true" tabindex="-1"></a>    slv <span class="op">=</span> anp.linalg.solve</span>
+<span id="cb1-98"><a href="#cb1-98" aria-hidden="true" tabindex="-1"></a>    du <span class="op">=</span> <span class="kw">lambda</span> x: diff.jacfwd(u)(x)[:,<span class="va">None</span>]</span>
+<span id="cb1-99"><a href="#cb1-99" aria-hidden="true" tabindex="-1"></a>    jacn_test <span class="op">=</span> diff.jacx(test)</span>
+<span id="cb1-100"><a href="#cb1-100" aria-hidden="true" tabindex="-1"></a>    jacn_trial <span class="op">=</span> diff.jacx(trial)</span>
+<span id="cb1-101"><a href="#cb1-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-102"><a href="#cb1-102" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> transf(xi, xyz):</span>
+<span id="cb1-103"><a href="#cb1-103" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> test(xi)<span class="op">@</span>xyz</span>
+<span id="cb1-104"><a href="#cb1-104" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-105"><a href="#cb1-105" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> jacn_transf(xi,xyz):</span>
+<span id="cb1-106"><a href="#cb1-106" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> jacn_test(xi)<span class="op">@</span>xyz</span>
+<span id="cb1-107"><a href="#cb1-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-108"><a href="#cb1-108" aria-hidden="true" tabindex="-1"></a>    jacx_test <span class="op">=</span> <span class="kw">lambda</span> xi,xyz: slv(jacn_transf(xi,xyz), jacn_test(xi))</span>
+<span id="cb1-109"><a href="#cb1-109" aria-hidden="true" tabindex="-1"></a>    dvol <span class="op">=</span> <span class="kw">lambda</span> xi, xyz: <span class="fl">0.5</span><span class="op">*</span>thickness<span class="op">*</span><span class="bu">abs</span>(det(jacn_transf(xi,xyz)))</span>
+<span id="cb1-110"><a href="#cb1-110" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-111"><a href="#cb1-111" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-112"><a href="#cb1-112" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> resp(U,xyz,xi, wght):</span>
+<span id="cb1-113"><a href="#cb1-113" aria-hidden="true" tabindex="-1"></a>        tmp <span class="op">=</span> du(transf(xi,xyz)) <span class="op">-</span> jacx_test(xi,xyz)<span class="op">@</span>U</span>
+<span id="cb1-114"><a href="#cb1-114" aria-hidden="true" tabindex="-1"></a>        q <span class="op">=</span> tmp.T<span class="op">@</span>tmp <span class="op">*</span> dvol(xi,xyz) <span class="op">*</span> wght</span>
+<span id="cb1-115"><a href="#cb1-115" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> q</span>
+<span id="cb1-116"><a href="#cb1-116" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-117"><a href="#cb1-117" aria-hidden="true" tabindex="-1"></a>    integral <span class="op">=</span> jax.vmap(resp,(<span class="va">None</span>,<span class="va">None</span>,<span class="dv">0</span>,<span class="dv">0</span>))</span>
+<span id="cb1-118"><a href="#cb1-118" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-119"><a href="#cb1-119" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> main(u,__,___,xyz,points,weights):</span>
+<span id="cb1-120"><a href="#cb1-120" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="bu">sum</span>(integral(u,xyz,points,weights))</span>
+<span id="cb1-121"><a href="#cb1-121" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-122"><a href="#cb1-122" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">locals</span>()</span>
+<span id="cb1-123"><a href="#cb1-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-124"><a href="#cb1-124" aria-hidden="true" tabindex="-1"></a><span class="at">@template</span>(<span class="dv">1</span>)</span>
+<span id="cb1-125"><a href="#cb1-125" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> H1(transf,test,trial,u,quad_point<span class="op">=</span><span class="va">None</span>, thickness<span class="op">=</span><span class="fl">1.0</span>):</span>
+<span id="cb1-126"><a href="#cb1-126" aria-hidden="true" tabindex="-1"></a>    state <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb1-127"><a href="#cb1-127" aria-hidden="true" tabindex="-1"></a>    det <span class="op">=</span> anp.linalg.det</span>
+<span id="cb1-128"><a href="#cb1-128" aria-hidden="true" tabindex="-1"></a>    slv <span class="op">=</span> anp.linalg.solve</span>
+<span id="cb1-129"><a href="#cb1-129" aria-hidden="true" tabindex="-1"></a>    du <span class="op">=</span> <span class="kw">lambda</span> x: diff.jacfwd(u)(x)[:,<span class="va">None</span>]</span>
+<span id="cb1-130"><a href="#cb1-130" aria-hidden="true" tabindex="-1"></a>    jacn_test <span class="op">=</span> diff.jacx(test)</span>
+<span id="cb1-131"><a href="#cb1-131" aria-hidden="true" tabindex="-1"></a>    jacn_trial <span class="op">=</span> diff.jacx(trial)</span>
+<span id="cb1-132"><a href="#cb1-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-133"><a href="#cb1-133" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> transf(xi, xyz):</span>
+<span id="cb1-134"><a href="#cb1-134" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> test(xi)<span class="op">@</span>xyz</span>
+<span id="cb1-135"><a href="#cb1-135" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-136"><a href="#cb1-136" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> jacn_transf(xi,xyz):</span>
+<span id="cb1-137"><a href="#cb1-137" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> jacn_test(xi)<span class="op">@</span>xyz</span>
+<span id="cb1-138"><a href="#cb1-138" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-139"><a href="#cb1-139" aria-hidden="true" tabindex="-1"></a>    jacx_test <span class="op">=</span> <span class="kw">lambda</span> xi,xyz: slv(jacn_transf(xi,xyz), jacn_test(xi))</span>
+<span id="cb1-140"><a href="#cb1-140" aria-hidden="true" tabindex="-1"></a>    dvol <span class="op">=</span> <span class="kw">lambda</span> xi, xyz: <span class="fl">0.5</span><span class="op">*</span>thickness<span class="op">*</span><span class="bu">abs</span>(det(jacn_transf(xi,xyz)))</span>
+<span id="cb1-141"><a href="#cb1-141" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-142"><a href="#cb1-142" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> resp(U,xyz,xi, wght):</span>
+<span id="cb1-143"><a href="#cb1-143" aria-hidden="true" tabindex="-1"></a>        tmp <span class="op">=</span> jacx_test(xi,xyz)<span class="op">@</span>(U <span class="op">-</span> u(transf(xi,xyz)))</span>
+<span id="cb1-144"><a href="#cb1-144" aria-hidden="true" tabindex="-1"></a>        q <span class="op">=</span> tmp.T<span class="op">@</span>tmp <span class="op">*</span> dvol(xi,xyz) <span class="op">*</span> wght</span>
+<span id="cb1-145"><a href="#cb1-145" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> q</span>
+<span id="cb1-146"><a href="#cb1-146" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-147"><a href="#cb1-147" aria-hidden="true" tabindex="-1"></a>    integral <span class="op">=</span> jax.vmap(resp,(<span class="va">None</span>,<span class="va">None</span>,<span class="dv">0</span>,<span class="dv">0</span>))</span>
+<span id="cb1-148"><a href="#cb1-148" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-149"><a href="#cb1-149" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> main(u,__,___,xyz,points,weights):</span>
+<span id="cb1-150"><a href="#cb1-150" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="bu">sum</span>(integral(u,xyz,points,weights))</span>
+<span id="cb1-151"><a href="#cb1-151" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb1-152"><a href="#cb1-152" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">locals</span>()</span>
+<span id="cb1-153"><a href="#cb1-153" aria-hidden="true" tabindex="-1"></a></span></code></pre></div>
 
     
           </article>
