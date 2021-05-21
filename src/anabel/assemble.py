@@ -317,21 +317,36 @@ class MeshGroup(UniformAssembler):
     def dofs(self):
         """Plain DOF numbering scheme.
 
+        Returns
+        -------
+        dofs: Sequence (`nn`, `ndf`)
+            A sequence with shape `nn` by `ndf` where:
+            [`ndf`]
+            [`nn`]
+
         2021-05-07
         """
         if self._numberer is None:
             free_dofs = iter(range(self.nf))
             fixed_dofs = iter(range(self.nf, self.nt))
-            
             return [
                 [
                     next(fixed_dofs) if fixity else next(free_dofs)
-                    for fixity in node 
+                    for fixity in node
                 ] for node in self.fixities
             ]
 
     def plot(self,values=None,func=None,scale=1.0,interact=False,savefig:str=None,**kwds):
         """
+        Parameters
+        ----------
+        u: Union[ Callable, Sequence ]
+            Values to plot over domain.
+
+        savefig: str
+            File path to save image to.
+
+
         Plot mesh using `pyvista` interface to VTK.
 
         Pure numpy is used for generality.

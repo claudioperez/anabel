@@ -15,6 +15,7 @@ theme:
 
 nav:
   - Guides: guides/
+  - Design: design/
   - API: api/latest/
   - Gallery: gallery/
 
