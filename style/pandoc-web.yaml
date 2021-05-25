@@ -4,7 +4,7 @@ from: markdown+raw_html-markdown_in_html_blocks+raw_attribute+inline_code_attrib
 to: 'html'
 bibliography: 
   - 'docs/elle.bib'
-  - 'style/foundations.bib'
+#  - 'style/foundations.bib'
 
 cite-method: citeproc
 citeproc: true
