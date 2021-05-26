@@ -408,12 +408,6 @@ section.has-dark-background, section.has-dark-background h1, section.has-dark-ba
 <section id="survey" class="slide level2">
 <h2>Survey</h2>
 <ul>
-<li>Operating Familiarity (command-line, scripting, programming)
-<ul>
-<li>Linux</li>
-<li>Win</li>
-<li>MacOS</li>
-</ul></li>
 <li>Favorite data serialization? (e.g. <code>.mat</code>, <code>.json</code>, etc)</li>
 <li>Preferred scripting environment</li>
 <li>Preferred computing environment</li>
@@ -421,25 +415,32 @@ section.has-dark-background, section.has-dark-background h1, section.has-dark-ba
 </section>
 <section id="neural-networks" class="slide level2">
 <h2>Neural Networks</h2>
+<p><img data-src="img/neural_network.svg" /></p>
 </section>
 <section id="operations" class="slide level2">
 <h2>Operations</h2>
+<p><img data-src="img/operation.svg" /></p>
+<ul>
+<li><p>In the eyes of a model, a node is an arrow with parameters</p></li>
+<li><p>What would this be in a structural model?</p></li>
+</ul>
+</section>
+<section id="first-pass-elements-are-nodes" class="slide level2">
+<h2>First Pass: Elements are Nodes</h2>
+<ul>
+<li>What about sections?</li>
+<li>Geometric transformations? Materials?</li>
+</ul>
+</section>
+<section id="final-pass-elements-are-templates" class="slide level2">
+<h2>Final Pass: Elements are Templates</h2>
+<ul>
+<li>A FEM framework provides <em>templates</em> of operations.</li>
+</ul>
 </section>
 <section id="an-example-binder" class="slide level2">
 <h2>An Example <a href="https://mybinder.org/v2/gh/claudioperez/elle-gallery/master"><img data-src="https://mybinder.org/badge_logo.svg" alt="Binder" /></a></h2>
-<p><img data-src="img/frame.svg" style="width:50.0%" /> <img data-src="img/tee.svg" style="width:50.0%" /></p>
-</section>
-<section id="current-tools-available" class="slide level2">
-<h2>Current tools available</h2>
-<ul>
-<li>OpenSees: build a map <span class="math inline"><em>Φ</em> : <em>P</em> → <em>U</em></span></li>
-</ul>
-</section>
-<section id="new-questions" class="slide level2">
-<h2>New Questions</h2>
-<ul>
-<li>What does <span class="math inline"><em>X</em></span> - space look like?</li>
-</ul>
+<p><img data-src="img/frame.svg" style="width:40.0%" /> <img data-src="img/tee.svg" style="width:40.0%" /></p>
 </section>
 <section id="requirements-for-composition" class="slide level2">
 <h2>Requirements for Composition</h2>
@@ -473,6 +474,7 @@ section.has-dark-background, section.has-dark-background h1, section.has-dark-ba
 </section>
 <section id="anabel.operation" class="slide level2">
 <h2><code>anabel.Operation</code></h2>
+<p><span class="math display"><em>f</em> : <em>X</em>, <em>Θ</em>, 𝒮 → <em>Y</em>, 𝒮</span></p>
 <h3 id="requires">Requires:</h3>
 <ul>
 <li><code>shape</code></li>
@@ -484,11 +486,9 @@ section.has-dark-background, section.has-dark-background h1, section.has-dark-ba
 <li><code>tangents</code></li>
 </ul>
 </section>
-<section id="core-api" class="slide level2">
-<h2>Core API</h2>
-<ul>
-<li><code>bind</code>: Create an operation by binding a function to the input of an operation</li>
-</ul>
+<section id="anabel.template" class="slide level2">
+<h2><code>anabel.Template</code></h2>
+<p><span class="math display"><em>F</em> : <em>f</em> ↦ <em>g</em></span></p>
 </section></section>
 <section>
 <section id="part-iii-reliability-revisited" class="title-slide slide level1">
@@ -512,6 +512,26 @@ section.has-dark-background, section.has-dark-background h1, section.has-dark-ba
 <span id="lst:beam-no1-13"><a href="#lst:beam-no1-13" aria-hidden="true" tabindex="-1"></a>        k <span class="op">=</span> anp.array([[E<span class="op">*</span>A<span class="op">/</span>L,<span class="fl">0.0</span>,<span class="fl">0.0</span>],[<span class="fl">0.0</span>,C1,C2],[<span class="fl">0.0</span>,C2,C1]])</span>
 <span id="lst:beam-no1-14"><a href="#lst:beam-no1-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> v, k<span class="op">@</span>v, state</span>
 <span id="lst:beam-no1-15"><a href="#lst:beam-no1-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">locals</span>()</span></code></pre></div>
+</section>
+<section id="fiber-frame-template" class="slide level2">
+<h2>Fiber Frame Template</h2>
+<div class="sourceCode" id="lst:beam-no6" data-caption="Expression template for fiber frame element."><pre class="sourceCode python"><code class="sourceCode python"><span id="lst:beam-no6-1"><a href="#lst:beam-no6-1" aria-hidden="true" tabindex="-1"></a><span class="at">@anabel.template</span>(<span class="dv">3</span>)</span>
+<span id="lst:beam-no6-2"><a href="#lst:beam-no6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fiber_template(<span class="op">*</span>sections, L<span class="op">=</span><span class="va">None</span>, quad<span class="op">=</span><span class="va">None</span>):</span>
+<span id="lst:beam-no6-3"><a href="#lst:beam-no6-3" aria-hidden="true" tabindex="-1"></a>    state <span class="op">=</span> [s.origin[<span class="dv">2</span>] <span class="cf">for</span> s <span class="kw">in</span> sections]</span>
+<span id="lst:beam-no6-4"><a href="#lst:beam-no6-4" aria-hidden="true" tabindex="-1"></a>    params <span class="op">=</span> {...: [anon.dual.get_unspecified_parameters(s) <span class="cf">for</span> s <span class="kw">in</span> sections]}</span>
+<span id="lst:beam-no6-5"><a href="#lst:beam-no6-5" aria-hidden="true" tabindex="-1"></a>    locs, weights <span class="op">=</span> quad_points(<span class="op">**</span>quad)</span>
+<span id="lst:beam-no6-6"><a href="#lst:beam-no6-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> _B(xi,L):</span>
+<span id="lst:beam-no6-7"><a href="#lst:beam-no6-7" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> L<span class="op">/</span><span class="fl">2.0</span><span class="op">*</span>(<span class="fl">1.0</span><span class="op">+</span>xi)</span>
+<span id="lst:beam-no6-8"><a href="#lst:beam-no6-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> anp.array([[<span class="dv">1</span><span class="op">/</span>L,<span class="fl">0.</span>,<span class="fl">0.</span>], [<span class="fl">0.0</span>, (<span class="dv">6</span><span class="op">*</span>x<span class="op">/</span>L<span class="op">-</span><span class="dv">4</span>)<span class="op">/</span>L, (<span class="dv">6</span><span class="op">*</span>x<span class="op">/</span>L<span class="op">-</span><span class="dv">2</span>)<span class="op">/</span>L]])</span>
+<span id="lst:beam-no6-9"><a href="#lst:beam-no6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="lst:beam-no6-10"><a href="#lst:beam-no6-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> main(v, q<span class="op">=</span><span class="va">None</span>,state<span class="op">=</span>state,L<span class="op">=</span>L,params<span class="op">=</span>params):</span>
+<span id="lst:beam-no6-11"><a href="#lst:beam-no6-11" aria-hidden="true" tabindex="-1"></a>        B <span class="op">=</span> [_B(xi,L) <span class="cf">for</span> xi <span class="kw">in</span> locs]</span>
+<span id="lst:beam-no6-12"><a href="#lst:beam-no6-12" aria-hidden="true" tabindex="-1"></a>        S <span class="op">=</span> [s(b<span class="op">@</span>v, <span class="va">None</span>, state<span class="op">=</span>state[i], <span class="op">**</span>params[...][i]) </span>
+<span id="lst:beam-no6-13"><a href="#lst:beam-no6-13" aria-hidden="true" tabindex="-1"></a>             <span class="cf">for</span> i,(b,s) <span class="kw">in</span> <span class="bu">enumerate</span>(<span class="bu">zip</span>(B, sections))]</span>
+<span id="lst:beam-no6-14"><a href="#lst:beam-no6-14" aria-hidden="true" tabindex="-1"></a>        q <span class="op">=</span> <span class="bu">sum</span>(L<span class="op">/</span><span class="fl">2.0</span><span class="op">*</span>w<span class="op">*</span>b.T<span class="op">@</span>s[<span class="dv">1</span>] <span class="cf">for</span> b,w,s <span class="kw">in</span> <span class="bu">zip</span>(B,weights,S))</span>
+<span id="lst:beam-no6-15"><a href="#lst:beam-no6-15" aria-hidden="true" tabindex="-1"></a>        state <span class="op">=</span> [s[<span class="dv">2</span>] <span class="cf">for</span> s <span class="kw">in</span> S]</span>
+<span id="lst:beam-no6-16"><a href="#lst:beam-no6-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> v, q, state</span>
+<span id="lst:beam-no6-17"><a href="#lst:beam-no6-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">locals</span>()</span></code></pre></div>
 </section>
 <section id="parameterization" class="slide level2">
 <h2>Parameterization</h2>
@@ -538,6 +558,10 @@ section.has-dark-background, section.has-dark-background h1, section.has-dark-ba
 </section>
 <section id="model-composition" class="slide level2">
 <h2>Model Composition</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> g(tf, bf):</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fl">1.6</span> <span class="op">-</span> f(tf,bf)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>dg <span class="op">=</span> anabel.autodiff.jacfwd(F)</span></code></pre></div>
 </section>
 <section id="results" class="slide level2">
 <h2>Results</h2>
