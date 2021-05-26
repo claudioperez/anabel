@@ -1,4 +1,4 @@
-__version__ = "0.0.9"
+__version__ = "0.0.10"
 
 try:
     import anabel.aisc
@@ -8,6 +8,7 @@ except:
 import anabel.sections
 
 from . import transient as transient
+from . import autodiff as autodiff
 from anabel.matrices import *
 from anabel.assemble import *
 

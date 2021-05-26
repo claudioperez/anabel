@@ -77,7 +77,7 @@ The exact solution of the transient problem was derrived using the `sympy` CAS l
 
 ### SDIRK Implementation
 
-In HW2 a Runge-Kutta algorithm was implemented for problems with the following form:
+The [`elle/transient/rklin`](elle/transient/rklin) function implements a Runge-Kutta algorithm for problems with the following form:
 
 $$
 \mathbf{u}_t + B\mathbf{u} = \mathbf{d}(t)

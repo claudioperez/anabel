@@ -75,7 +75,7 @@ setup(
     keywords=[],
     python_requires=">=3.7",
     install_requires=[
-        "jax", "jaxlib", "numpy", "pandoc", "matplotlib", "scipy", "anon", "meshio"
+        "jax", "jaxlib", "numpy", "pandoc", "matplotlib", "scipy", "anon", "meshio", "pandas"
     ],
     extras_require=extras_require,
 )

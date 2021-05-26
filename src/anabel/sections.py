@@ -16,6 +16,14 @@ import matplotlib.pyplot as plt
 import anon.quad
 quad_points = anon.quad.quad_points
 
+__pdoc__ = {
+    "Tee": True,
+    "Rectangle":True,
+    "CompositeSection": True,
+    "epsi": False,
+    "section2d": False,
+    "T_sect": False,
+}
 
 def epsi(y,epsa,kappa):  return epsa - y*kappa;
 
