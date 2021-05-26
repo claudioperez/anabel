@@ -260,7 +260,9 @@ class Tee(CompositeSection,VerticalSection):
         self.y_centroid = y_c = 1/(2*area) * (tw*d**2 + (bf-tw)*tf**2)
         self.y_plastic = d - area/(2*tw) if tf < area/(2.0*bf) else area/(2.0*bf)
         # Moment of inertia
-        self.moi = bf*tf**3/12.0 + (bf*tf)*(tf*0.5*y_c)**2 + tw*(d-tf)**3/12 + tw*(d-tf)*((d+tf)*0.5-y_c)**2
+        #self.moi = bf*tf**3/12.0 + (bf*tf)*(tf*0.5*y_c)**2 + tw*(d-tf)**3/12 + tw*(d-tf)*((d+tf)*0.5-y_c)**2
+        dw = d - tf
+        self.moi =  tw*(dw+tf)**3/3 + (bf - tw)*tf**3/3 - area*y_c**2
 
         if yref is None:
             yref = (d-tf)/2 + tf - self.y_centroid
