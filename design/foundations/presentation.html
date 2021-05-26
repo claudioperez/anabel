@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <title>Title</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reset.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/theme/simple.css" id="theme">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Title</h1>
+</section>
+
+<section>
+<section id="introduction" class="title-slide slide level1">
+<h1>Introduction</h1>
+
+</section>
+<section id="survey" class="slide level2">
+<h2>Survey</h2>
+<ul>
+<li>Operating Familiarity (command-line, scripting, programming)
+<ul>
+<li>Linux</li>
+<li>Win</li>
+<li>MacOS</li>
+</ul></li>
+<li>Favorite data serialization? (e.g. <code>.mat</code>, <code>.json</code>, etc)</li>
+<li>Preferred scripting environment</li>
+<li>Preferred computing environment</li>
+</ul>
+</section>
+<section id="neural-networks" class="slide level2">
+<h2>Neural Networks</h2>
+</section>
+<section id="operations" class="slide level2">
+<h2>Operations</h2>
+</section>
+<section id="an-example" class="slide level2">
+<h2>An Example</h2>
+<p><img data-src="img/frame.svg" data-with="40%" /> <img data-src="img/tee.svg" data-with="40%" /></p>
+</section>
+<section id="current-tools-available" class="slide level2">
+<h2>Current tools available</h2>
+<ul>
+<li>OpenSees: build a map <span class="math inline"><em>Φ</em> : <em>P</em> → <em>U</em></span></li>
+</ul>
+</section>
+<section id="new-questions" class="slide level2">
+<h2>New Questions</h2>
+<ul>
+<li>What does <span class="math inline"><em>X</em></span> - space look like?</li>
+</ul>
+</section>
+<section id="requirements-for-composition" class="slide level2">
+<h2>Requirements for Composition</h2>
+<ul>
+<li><p>Define an operation as a primitive that is closed under</p>
+<ul>
+<li>Linear Algebra</li>
+<li>Differentiation</li>
+</ul></li>
+<li><p><em>Stage</em> computations</p></li>
+</ul>
+</section></section>
+<section>
+<section id="anabel" class="title-slide slide level1">
+<h1><img data-src="img/anabel.svg" /> Anabel</h1>
+
+</section>
+<section id="purpose" class="slide level2">
+<h2>Purpose</h2>
+<ul>
+<li>Explore/demonstrate the utility of a neural-like framework for structural modeling</li>
+</ul>
+</section>
+<section id="core-data-types" class="slide level2">
+<h2>Core Data Types</h2>
+<ul>
+<li><code>anabel.Operation</code></li>
+<li><code>anabel.Assembler</code></li>
+<li><code>anabel.Template</code></li>
+</ul>
+</section>
+<section id="anabel.operation" class="slide level2">
+<h2><code>anabel.Operation</code></h2>
+<p>Requires:</p>
+<ul>
+<li><code>shape</code></li>
+<li><code>parameters</code> (<code>ElemData</code> schema)</li>
+<li><code>origin</code> (<code>ElemState</code>)</li>
+</ul>
+<p>Optional:</p>
+<ul>
+<li><code>tangents</code></li>
+</ul>
+</section>
+<section id="core-api" class="slide level2">
+<h2>Core API</h2>
+<ul>
+<li><code>bind</code>: Create an operation by binding a function to the input of an operation</li>
+</ul>
+</section></section>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/plugin/notes/notes.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/plugin/search/search.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@4.1.0/plugin/zoom/zoom.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+      
+        // Push each slide change to the browser history
+        history: true,
+
+        // reveal.js plugins
+        plugins: [
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    </body>
+</html>
