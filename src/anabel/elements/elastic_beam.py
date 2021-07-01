@@ -24,8 +24,8 @@ except:
     from anabel.matrices import Structural_Matrix, Structural_Vector
 
 
-def _unpack(obj,props,default):
-    return map(lambda x: getattr(obj, x, default), props)
+def _unpack(props,obj,fallback=None,default=None):
+    return map(lambda x: obj[x] if x in obj else getattr(fallback, x, default), props)
 
 
 class ElasticBeam(Element): 
@@ -56,10 +56,8 @@ class ElasticBeam(Element):
             ndm,
             nodes=None,
             section=None,
+            material=None,
             tag=None,
-            E:  float=None,
-            A:  float=None,
-            Iz: float=None,
             properties=None,
             **kwds
     ):
@@ -68,13 +66,10 @@ class ElasticBeam(Element):
         if nodes is None:
             nodes = [None]*2
 
-        if Iz is None and "I" in kwds:
-            Iz = kwds["I"]
-
         super().__init__(self.ndf, self.ndm, self.force_dict, nodes, tag=tag, **kwds)
 
         if section:
-            E, A, Iz, Iy, J = _unpack(section, ["E","area","Ix","Iy","J"], None)
+            E, A, Iz, Iy, J = _unpack(["E","area","Ix","Iy","J"], kwds, section, default=None)
 
         self.E:  float = E
         self.A:  float = A

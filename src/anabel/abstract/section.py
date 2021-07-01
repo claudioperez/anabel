@@ -1,5 +1,6 @@
 import abc
 
+from elle.units.types import DimensionType
 from anabel.utilities import take_keywords
 from anabel.abstract import ModelComponent
 
@@ -47,7 +48,8 @@ class SectionPatch(FrameSection):
 
     @property
     @abc.abstractmethod
-    def Ix(self): pass
+    def Ix(self) -> DimensionType("length", 4):
+        pass
 
     @property
     @abc.abstractmethod
