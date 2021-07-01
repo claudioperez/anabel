@@ -55,6 +55,13 @@ class ModelComponent:
             return None
 
     @property
+    def name(self):
+        if hasattr(self,"_name"):
+            return self._name
+        else:
+            return self.tag
+
+    @property
     def color(self):
         if hasattr(self,"_color"):
             if self._color is not None:

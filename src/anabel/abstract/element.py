@@ -5,6 +5,7 @@ from typing import Union
 from functools import partial
 from abc import abstractmethod
 
+from anabel.abstract.component import ModelComponent
 import numpy as np
 from numpy.polynomial import Polynomial
 from scipy.integrate import quad
@@ -167,7 +168,7 @@ class BasicLink():
         return Rz
 
 
-class Element(BasicLink):
+class Element(BasicLink,ModelComponent):
     """Element parent class"""
     _tag: Union[int,None]
 

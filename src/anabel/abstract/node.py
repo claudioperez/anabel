@@ -10,22 +10,10 @@ class Node(ModelComponent):
         self.xyz = self.coords = np.array([xi for xi in xyz if xi is not None])
 
         self._tag = name if isinstance(name, int) else None
-        self.xyz0 = self.xyz # coordinates in base configuration (unstrained, not necessarily unstressed).
-        self.xyzi = self.xyz # coordinates in reference configuration.  
-
-        self.x0: float = xyz[0] # x-coordinate in base configuration (unstrained, not necessarily unstressed).  
-        self.y0: float = xyz[1] # y-coordinate in base configuration (unstrained, not necessarily unstressed).  
-        # z-coordinate in base configuration (unstrained, not necessarily unstressed).  
-        self.z0: float = xyz[2] if len(xyz) > 2 else None
-
-        # Attributes for nonlinear analysis
-        # self.xi: float = x # x-coordinate in reference configuration.  
-        # self.yi: float = y # y-coordinate in reference configuration.  
-        # self.zi: float = z # z-coordinate in reference configuration.  
-        
-        self.x: float = xyz[0]
-        self.y: float = xyz[1]
-        self.z: float = xyz[2] if len(xyz) > 2 else None
+ 
+        #self.x: float = xyz[0]
+        #self.y: float = xyz[1]
+        #self.z: float = xyz[2] if len(xyz) > 2 else None
 
         
         self.rxns = [0]*ndf
@@ -34,6 +22,14 @@ class Node(ModelComponent):
         self.elems = []
 
         self.p = {dof:0.0 for dof in model.ddof}
+
+    x, y, z = (
+        property(lambda self, i=i: self.coords[i]) for i in range(3)
+    )
+
+    @property
+    def constraints(self):
+        return self.rxns
 
     @property
     def tag(self):

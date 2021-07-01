@@ -1,12 +1,14 @@
 # Claudio Perez
 # anabel
 """
-# Assemblers(`2`)
+# Skeletal Model Builder
 
-Core model building classes.
+This page contains the `SkeletalModel` class. This class
+provides a high level API for constructing skeletal structural
+models which can be exported to an effecient backend implementation.
+
 """
 # Standard library
-import gc
 import copy
 import inspect
 import functools
@@ -15,21 +17,21 @@ from functools import partial
 from typing import Callable, List, Union
 
 import jax
-import meshio
 import numpy as np
 import scipy.sparse
 from mpl_toolkits.mplot3d import Axes3D
 
 from anabel.abstract import DomainBuilder, Material, FrameSection, Node, Element
+from anabel.constraints import SP_Constraint as Rxn
 from anabel.template import get_unspecified_parameters, template
-from anabel.elements import *
+#from anabel.elements import *
 
 try:
     import anon.atom as anp
 except:
     anp = np
 
-__all__ = ["MeshGroup", "Model", "rModel", "SkeletalModel"]
+__all__ = ["SkeletalModel"]
 
 def _is_sequence(obj):
     return hasattr(type(obj), '__iter__')
@@ -59,12 +61,6 @@ class SkeletalModel(DomainBuilder):
         import elle.units
         return elle.units.UnitHandler(self._units)
 
-    def dump_opensees(self, **kwds):
-        ndm, ndf = self.ndm, self.ndf
-        cmds  = f"# Create ModelBuilder (with {ndm} dimensions and {ndf} DOF/node)"
-        cmds += f"\nmodel BasicBuilder -ndm {ndm} -ndf {ndf}" 
-        rxns = "\n".join([f"{r.dump_opensees()}" for r in self.rxns])
-        return "\n\n".join([cmds, super().dump_opensees(**kwds), rxns])
     
     def clean(self,keep=None):
         if keep is None:
@@ -78,10 +74,10 @@ class SkeletalModel(DomainBuilder):
         if "params" not in keep:
             self.params: dict = {}
             """2021-03-31"""
-        self.rxns:  list = []
-        self.hinges: list = []
+        self.rxns:    list = []
+        self.hinges:  list = []
         self.iforces: list = []
-        self.states: list = []
+        self.states:  list = []
         self.redundants: list = []
         # model inventory dictionaries
         self.delems: dict = {}
@@ -111,295 +107,7 @@ class SkeletalModel(DomainBuilder):
                     for fixity in node.rxns 
                 ] for node in self.nodes
             ]
-
-
-
-    def compose(self,resp="d",jit=True,verbose=False,**kwds):
-        return self.compose_param(jit_force=jit,verbose=verbose,**kwds)
-
-    def compose_param(self,f=None,jit_force=True,verbose=False,**kwds):
-        if f is None:
-            f = self.compose_displ(jit_force=jit_force,**kwds,verbose=verbose,_expose_closure=True)
-        cnl = ',\n'
-        u0 = anp.zeros((self.nf,1))
-        model_map = f.closure["model_map"]
-        param_map = f.closure["param_map"]
-        params = self.params
-        parameterized_loads = {
-            dof: p.name if isinstance(p,inspect.Parameter) else p for node in self.nodes for dof,p in zip(node.dofs,node.p.values())
-        }
-        #params.update({
-        #    p.name: p for el in param_map.values() for p in el.values()
-        #})
-        expressions = self.expressions
-        local_scope = locals()
-        #-------------------
-        def _unpack(el):
-            params = get_unspecified_parameters(el,recurse=True)
-            ls = ",".join(
-                f"'{p.name}': {p.default.name}" 
-                    for p in params.values()
-                        if isinstance(p,inspect.Parameter) and p.default
-                )
-            if "params" in params and params["params"]:
-                subparams = "'params': {" + ",".join(
-                            f"'{k}': {v.default.name}" if "expr" not in v.default.name 
-                            else f"'{k}': expressions['{v.default.name}']['expression']({','.join(expressions[v.default.name]['params'])})" 
-                    for k,v in params["params"].items() if v.default
-                ) + "}"
-                if ls:
-                    return  ",".join((ls, subparams))
-                else:
-                    return subparams
-
-            else:
-                return ls
-        exec(
-            f"def collect_params({','.join(p for p in self.params if 'expr' not in p )}):\n"
-             "  return {'params': {\n"
-            f"""    {cnl.join(f'"{tag}": {{ {_unpack(el)} }}' for tag,el in model_map.items()) }\n"""
-             "  }}",
-             local_scope
-        )
-        collect_params = local_scope["collect_params"]
-
-        #-------------------
-        exec(
-        f"def collect_loads({','.join(p for p in parameterized_loads.values() if isinstance(p,str) )}):\n"
-         "  return anp.array([\n"
-        f"""    {','.join("["+p.name+"]" if isinstance(p,inspect.Parameter) else f'[{p}]' for node in self.nodes for dof,fixity,p in zip(node.dofs,node.rxns,node.p.values()) if not fixity ) }\n"""
-         "  ])",
-         dict(anp=anp),local_scope,
-        )
-        collect_loads = local_scope["collect_loads"]
-
-        #-------------------
-        exec(
-            f"def displ({','.join(p for p in self.params if 'expr' not in p)}): \n"
-          f"""   params = collect_params({','.join(p for p in self.params if 'expr' not in p)})\n"""
-            f"   return f(collect_loads({','.join(p for p in parameterized_loads.values() if isinstance(p,str) )}), f.origin[1], f.origin[2], params)[1]",
-            local_scope
-        )
-        main = local_scope["displ"]
-        origin = tuple(anp.zeros(p.shape) if hasattr(p,"shape") else 0.0 for p in self.params)
-
-        # Evaluate once with zeros to JIT-compile
-        return main
-    
-    def compose_force(self,jit=True,**kwds):
-        f = self.assemble_force(jit=jit,**kwds,_expose_closure=True)
-        f_jacx = diff.jacx(f)
-        cnl = ',\n'
-        u0 = anp.zeros((self.nf,1))
-        model_map = f.closure["model_map"]
-        param_map = f.closure["param_map"]
-        params = self.params
-        local_scope = locals()
-        #-------------------
-        def _unpack(el):
-            params = get_unspecified_parameters(el,recurse=True)
-            ls = ",".join(
-                f"'{p.name}': {p.default.name}"
-                    for p in params.values()
-                        if isinstance(p,inspect.Parameter) and p.default
-                )
-            if "params" in params and params["params"]:
-                subparams = "'params': {" + ",".join(
-                        f"'{k}': {v.default.name}" for k,v in params["params"].items() if v.default
-                ) + "}"
-                if ls:
-                    return  ",".join((ls, subparams))
-                else:
-                    return subparams
-
-            else:
-                return ls
-        exec(
-            f"def collect_params({','.join(p for p in self.params )}):\n"
-             "  return {'params': {\n"
-            f"""    {cnl.join(f'"{tag}": {{ {_unpack(el)} }}' for tag,el in model_map.items()) }\n"""
-             "  }}",
-             local_scope
-        )
-        collect_params = local_scope["collect_params"]
-
-        #-------------------
-        #exec(
-        #    f"def collect_loads({','.join(p for p in parameterized_loads.values() if isinstance(p,str) )}):\n"
-        #     "  return anp.array([\n"
-        #    f"""    {','.join("["+p.name+"]" if isinstance(p,inspect.Parameter) else f'[{p}]' for node in self.nodes for dof,fixity,p in zip(node.dofs,node.rxns,node.p.values()) if not fixity ) }\n"""
-        #     "  ])",
-        # dict(anp=anp),local_scope,
-        #)
-        #collect_loads = local_scope["collect_loads"]
-
-        #-------------------
-        exec(
-            f"def force({','.join(p for p in self.params)}): \n"
-          f"""   params = collect_params({','.join(p for p in self.params)})\n"""
-            f"   return f(f.origin[0], f.origin[1], f.origin[2], None, params['params'])[1]\n"
-
-            f"def jacx({','.join(p for p in self.params)}): \n"
-          f"""   params = collect_params({','.join(p for p in self.params)})\n"""
-            f"   return f_jacx(f.origin[0], f.origin[1], f.origin[2], None, params['params'])",
-            local_scope
-        )
-        main = local_scope["force"]
-        main.jacx = local_scope["jacx"]
-        main.collect_params = collect_params
-        main.origin = tuple(anp.zeros(p.shape) if hasattr(p,"shape") else 0.0 for p in self.params)
-        return main
-    
-
-    @template(dim="shape")
-    def compose_displ(self, solver=None, solver_opts={}, elem=None, jit_force=True, **kwds):
-        """
-        dynamically creates functions `collect_loads` and `collect_coord`.
-        """
-        if solver is None:
-            import elle.numeric
-            solver = elle.numeric.inverse.inv_no1
-        if not solver_opts:
-            solver_opts = {
-                    "tol": 1e-10,
-                    "maxiter": 10
-            }
-        if "steps" in kwds:
-            solver_opts.update({"steps": kwds["steps"]})
-        f = self.assemble_force(_jit=jit_force,**kwds,_expose_closure=True)
-        model_map = f.closure["model_map"]
-        state = {...:f.origin[2]}
-        #state = f.origin[2]
-        nf = self.nf
-        shape = ((nf,1),(nf,1))
-        u0 = anp.zeros((self.nf,1))
-
-        #local_scope = locals()
-
-        jacx = diff.jacx(f)
-        #jacx = f.jacx
-        model_map = f.closure["model_map"]
-        param_map = f.closure["param_map"]
-        main = solver(f,jacx=jacx,**solver_opts)
-        return locals()
-
-    @template(dim="shape",main="force")
-    def assemble_force(self, elem=None,**kwds)->Callable:
-        """A simple force composer for skeletal structures."""
-        ndf = self.ndf
-        nr = self.nr
-        nn = self.nn
-        nf = self.nf
-        nr = self.nr
-        nodes = set(self.dnodes.keys())
-        shape = ((nf,1),(nf,1))
-        
-        _unpack_coords = lambda xyz: f"[{','.join(str(x) for x in xyz)}]"
-        local_scope = locals()
-        exec(
-        f"def collect_coords(*coords):\n"
-         "  return {\n"
-        f"""    {f",".join(f"'{el.tag}': anp.array([{','.join(_unpack_coords(node.xyz) for node in el.nodes) }])" for el in self.delems.values() ) }\n"""
-         "  }",
-         dict(anp=anp),local_scope,
-        )
-        collect_coords = local_scope["collect_coords"]
-
-        if self.DOF is None:
-            self.numDOF()
-
-        if elem is not None:
-            """When an `elem` argument is passed, use it for all
-            elements in the model"""
-            model_map = {
-                el.tag: elem for el in self.delems.values()
-            }
-        else:
-            model_map = {
-                tag: el.compose(L=el.L) for tag,el in self.delems.items()
-            }
-        param_map = {
-            tag: anon.dual.get_unspecified_parameters(el) for tag,el in model_map.items()
-        }
-        param_arg = {
-            tag: {} for tag,el in model_map.items()
-        }
-
-        params = self.params
-
-        DOF = {node_tag: dofs for node_tag, dofs in zip(self.dnodes.keys(),self.DOF)}
-
-        el_DOF  = { elem.tag: elem.dofs for elem in self.delems.values() }
-
-        Be = anp.concatenate([
-             anp.array([[1.0 if j==i else 0.0 for j in range(1,nf+1)] for i in el.dofs ]).T
-             for el in self.delems.values()], axis=1)
-
-        state = {
-            ... : {
-                tag: m.origin[2] for tag, m, in model_map.items()
-            }
-        }
-        _p0 = anp.zeros((nf,1))
-        xyz = eval(f"""{{ { ','.join(f'"{tag}": [{",".join(str(x) for x in node.xyz)}]' for tag, node in self.dnodes.items() )} }}""")
-        def force(u,p=_p0,state=state, xyz=None, params=param_arg):
-            U = anp.concatenate([u,anp.zeros((nr,1))],axis=0)
-            coords = collect_coords(xyz)
-            responses = [
-                el(
-                    anp.take(U, anp.array(el_DOF[tag], dtype='int32')-1)[:,None],
-                    None,
-                    xyz = coords[tag],
-                    state = state[...][tag],
-                    **params[tag]
-                )
-                for tag,el in model_map.items()
-            ]
-            F = anp.concatenate([r[1] for r in responses],axis=0)
-            state = {
-                ...: {
-                    tag: r[2] for tag,r in zip(model_map.keys(),responses)
-                }
-            }
-            return u, (Be @ F), state
-
-        eljac_map = {tag: diff.jacx(el) for tag,el in model_map.items()}
-        DOF_el_jac = {
-            dof_i : {
-                dof_j: [
-                    (tag, i, j)
-                    for tag,el in self.delems.items()
-                        for j, _dof_j in enumerate(el.dofs) if _dof_j == dof_j
-                            for i, _dof_i in enumerate(el.dofs) if _dof_i == dof_i
-               ]
-               for dof_j in range(1,nf+1)
-            }
-            for dof_i in range(1,nf+1)
-        }
-
-        def jac_x(u,p,state,xyz=None,params=param_arg):
-            coords = collect_coords(xyz)
-            U = anp.concatenate([u,anp.zeros((nr,1))],axis=0)
-            el_jacs = {
-                tag: jac(
-                    anp.take(U, anp.array(el_DOF[tag], dtype='int32')-1)[:,None],
-                    None,
-                    xyz = coords[tag],
-                    state = state[...][tag],
-                    **params[tag]
-                ).squeeze()
-              for tag,jac in eljac_map.items()
-            }
-            jac = anp.array([
-                [
-                    sum(el_jacs[tag][i,j]
-                        for tag, i, j  in DOF_el_jac[dof_i][dof_j]
-                    ) for dof_j in range(1,nf+1)
-                ] for dof_i in range(1,nf+1)
-            ])
-            return jac
-        return locals()
-
+ 
 
     @property
     def rel(self):
@@ -557,50 +265,9 @@ class SkeletalModel(DomainBuilder):
             node.p[kwds["dof"]] = load
         pass
 
-    def state(self, method="Linear"):
-        if self.DOF is None:
-            self.numDOF()
-        newState = State(self, method)
 
-        ElemTypes = {type(elem) for elem in self.elems}
-        StateVars = {key for elem in ElemTypes for key in elem.stateVars.keys() }
 
-        stateDict = {var : {elem.tag : copy.deepcopy(elem.stateVars[var]) for elem in self.elems if var in elem.stateVars.keys()} for var in StateVars}
-        self.states.append(stateDict)
-        return stateDict
-
-    def numDOF(self):
-        crxns = self.ndf*len(self.nodes) - len(self.rxns)+1
-        df = 1
-        temp = []
-        for node in self.nodes:
-            DOFs = []
-            for rxn in node.rxns:
-                if not(rxn):
-                    DOFs.append(df)
-                    df += 1
-                else:
-                    DOFs.append(crxns)
-                    crxns += 1
-            temp.append(DOFs)
-        self.DOF = temp
-        return self.DOF
-
-    def update(self,U_vector):
-        for node in self.nodes:
-            delta = [0.,0.]
-            for i,dof in enumerate(node.dofs[0:2]):
-                if not node.rxns[i]:
-                    try: delta[i] = U_vector[U_vector.row_data.index(str(dof))]
-                    except: pass
-
-            node.xi= node.x
-            node.x = delta[0] + node.xi
-            node.yi= node.y
-            node.y = delta[1] + node.yi
-        pass
-
-    def fix(self, node, dirn=["x","y","rz"]): # for dirn enter string (e.g. "x", 'y', 'rz')
+    def fix(self, node, *dirn): # for dirn enter string (e.g. "x", 'y', 'rz')
         """Define a fixed boundary condition at specified 
         degrees of freedom of the supplied node
 
@@ -608,32 +275,82 @@ class SkeletalModel(DomainBuilder):
         ----------
         node: anabel.Node
 
-        dirn: Sequence[String]
+        dirn: Union[Sequence[String], String]
+        
+        ### Example
+
+        ```py
+        # Fix all dofs at node named "abut"
+        model.fix("abut")
+
+        # Create a pinned reaction at node 2
+        model.fix(2, "y")
+
+        # Create a node and impose a roller reaction
+        a = model.node("a", 0.0, 0.0)
+        model.fix(a, "y", "x")
+
+        # Fix the rotational dof in a node a 3-dof model
+        model.fix("n1", 0, 0, 1)
+        ```
+        """
+        if not dirn:
+            dirn = ["x","y","rz"]
+
+        if isinstance(node,str):
+            node = self.dnodes[node]
+
+        rxns = []
+        for dfs in dirn:
+            if isinstance(dfs,list):
+                for df in dirn:
+                    if isinstance(df, str):
+                        dof_name = self.ddof[df]
+                    newRxn = Rxn(node, df, self.ddof[df])
+                    self.rxns.append(newRxn)
+                    rxns.append(newRxn)
+                    node.rxns[self.ddof[df]] = 1
+            else:
+                newRxn = Rxn(node, dfs, self.ddof[dfs])
+                self.rxns.append(newRxn)
+                rxns.append(newRxn)
+                node.rxns[self.ddof[dfs]] = 1
+        if len(rxns) > 1:
+            return rxns
+        else:
+            return rxns[0]
+
+    def _fix_str_flags(self, node, flags):
+        pass
+
+    def _fix_int_flags(self, node, flags):
+        pass
+
+    def boun(self, node, flags: list):
+        """
+        Impose single-point constraints at the specified node. This 
+        function is provided to give a familiar interface for users
+        of platforms like FEAP and FEDEAS.
+
+        Parameters
+        ----------
+        node: Union[anabel.abstract.Node, anabel.abstract.TagType]
+            Node identifier
+
+        flags: List[int]
+
+        ### Example
+
+        ```py
+        model.boun(1, [0, 0, 1])
+        ```
 
         """
         if isinstance(node,str):
             node = self.dnodes[node]
 
-        if isinstance(dirn,list):
-            rxns = []
-            for df in dirn:
-                newRxn = Rxn(node, df, self.ddof[df])
-                self.rxns.append(newRxn)
-                rxns.append(newRxn)
-                node.rxns[self.ddof[df]] = 1
-            return rxns
-        else:
-            newRxn = Rxn(node, dirn, self.ddof[df])
-            self.rxns.append(newRxn)
-            node.rxns[self.ddof[dirn]] = 1
-            return newRxn
-
-    def boun(self, node, ones: list):
-        if isinstance(node,str):
-            node = self.dnodes[node]
-
         for i, dof in enumerate(self.ddof):
-            if ones[i]:
+            if flags[i]:
                 self.fix(node, dof)
 
     def pin(self, *nodes):
@@ -673,6 +390,15 @@ class SkeletalModel(DomainBuilder):
 
  # Elements
     def elem(self, elem, nodes, tag):
+        """Add an arbitrary element to the structural model.
+
+        Parameters
+        ==========
+        elem: Union[object, str]
+
+        nodes: List[Node]
+
+        """
         if isinstance(tag, (list, tuple)):
             nodes, tag = tag, nodes
 
@@ -689,7 +415,9 @@ class SkeletalModel(DomainBuilder):
             ndf = elem.shape[0][0]
             element = Element(ndf, self.ndm, nodes=nodes, elem=elem)
         
-        element.domain = self
+        element._domain = self
+        element._name = tag
+
         self.elems.append(element)
         self.delems.update({tag: element})
         return element
@@ -865,23 +593,6 @@ class SkeletalModel(DomainBuilder):
             newElem.Qp['+']['1'] = newElem.Qp['-']['1'] = Qpl[0]
         return newElem
     
-    # def tensor_truss(self, tag: str, iNode, jNode, mat=None, xsec=None, Qpl=None,A=None,E=None):
-    #     if mat is None: mat = self.materials['default']
-    #     if E is None: E = mat.E
-    #     # cross section
-    #     if xsec is None: xsec = self.xsecs['default']
-    #     if A is None: A = xsec.A
-
-    #     newElem = TensorTruss(tag, iNode, jNode, E, A)
-    #     self.delems.update({newElem.tag:newElem})
-    #     self.elems.append(newElem)
-    #     iNode.elems.append(newElem)
-    #     jNode.elems.append(newElem)
-
-    #     if Qpl is not None:
-    #         newElem.Np = [Qpl[0], Qpl[0]]
-    #         newElem.Qp['+']['1'] = newElem.Qp['-']['1'] = Qpl[0]
-    #     return newElem
 
     def taprod(self, tag: str, iNode, jNode, mat=None, xsec=None, Qpl=None,A=None,E=None):
         """Construct a tapered rod element with variable E and A values."""
@@ -918,7 +629,10 @@ class SkeletalModel(DomainBuilder):
         jNode.elems.append(newElem)
         return newElem
 
-    def hinge(self, elem, node): # pin a beam end.
+    def hinge(self, elem, node):
+        """
+        Add a hinge to the structural model.
+        """
         newHinge = Hinge(elem, node)
         self.hinges.append(newHinge)
         if node == elem.nodes[0]:
@@ -935,9 +649,8 @@ class SkeletalModel(DomainBuilder):
 
     def redundant(self, elem: object, nature):
         """
-        nature:
+        Identify an element unknown as redundant.
         """
-
         newq = IntForce(elem, nature, nature)
         elem.red[nature] = True
         self.redundants.append(newq)

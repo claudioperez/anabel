@@ -1,4 +1,4 @@
-from .base import VerticalSection
+from .basic import VerticalSection
 from .composite import CompositeSection
 
 

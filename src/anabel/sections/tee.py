@@ -1,4 +1,6 @@
-from anabel.abstract import CompositeSection, VerticalSection
+
+from .patched_builder import PatchedSection
+from .basic import CompositeSection, VerticalSection
 from .patches import RectangularPatch
 
 class Tee(PatchedSection, VerticalSection):

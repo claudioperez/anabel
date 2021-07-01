@@ -6,12 +6,9 @@
 Core model building classes.
 """
 # Standard library
-import gc
-import copy
 import inspect
 import functools
 from inspect import signature
-from functools import partial
 from typing import Callable, List, Union
 
 import jax
@@ -22,6 +19,7 @@ from mpl_toolkits.mplot3d import Axes3D
 
 #from anon import diff
 from anabel.template import get_unspecified_parameters, template
+
 
 try:
     import anon.atom as anp
@@ -159,15 +157,9 @@ class DomainBuilder:
         "Number of free degrees of freedom."
         return  self.nt - self.nr
 
-    def dump(self, fmt="opensees"):
+    def dump(self, writer):
+        return writer(self).dump()
 
-        pass
-
-    def dump_opensees(self, **kwds):
-        head  = f"# Units: {self.units}"
-        nodes = "\n".join([f"{n.dump_opensees()}" for n in self.nodes])
-        elems = "\n".join([f"{e.dump_opensees()}" for e in self.elems])
-        return "\n\n".join([head, nodes, elems])
 
 
     def cycle(self, tag, 

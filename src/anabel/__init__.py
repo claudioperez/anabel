@@ -6,8 +6,6 @@ __version__ = "0.0.11"
 #except:
 #    pass
 
-import anabel.sections
-import anabel.elements
 #import anabel.opensees
 
 from . import transient as transient
@@ -16,7 +14,12 @@ from . import autodiff as autodiff
 #from anabel.matrices import *
 #from .assemble import SkeletalModel, MeshGroup, rModel
 from .builders import SkeletalModel, MeshGroup #rModel
+
 from . import graphics
+import anabel.sections
+import anabel.elements
+import anabel.writers
+
 #from anabel.graphics import *
 #from anabel.solvers import *
 
@@ -29,4 +32,8 @@ from . import graphics
 settings = {
     "DATAFRAME_LATEX": True,
 }
+
+def dump(model, writer):
+    pass
+
 

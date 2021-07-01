@@ -50,7 +50,7 @@ setup(
     #url="https://github.com/claudioperez/anabel",
     url="https://claudioperez.github.io/anabel",
     project_urls={
-        "Documentation": "https://claudioperez.github.io/anabel"
+        "Documentation": "https://claudioperez.github.io/anabel",
         "Changelog": "https://github.com/claudioperez/anabel/blob/master/CHANGELOG.md",
         "Issue Tracker": "https://github.com/claudioperez/anabel/issues",
     },
@@ -75,7 +75,7 @@ setup(
     keywords=[],
     python_requires=">=3.7",
     install_requires=[
-        "jax", "jaxlib", "numpy", "pandoc", "matplotlib", "scipy", "anon", "meshio", "pandas"
+        "jax", "jaxlib", "numpy", "pandoc", "matplotlib", "scipy", "anon", "meshio", "pandas", "quakeio"
     ],
     extras_require=extras_require,
 )
