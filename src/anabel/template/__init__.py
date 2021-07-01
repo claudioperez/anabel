@@ -248,6 +248,11 @@ def wrap(f, *args, **kwds):
         }
     )(**kwds)
 
+def grad(f, *args, **kwds):
+    return wrap(lambda *args,**kwds: f(*args), dim=1)
+def expr(f, *args, **kwds):
+    return wrap(lambda *args,**kwds: (args[0], f(*args), {}), dim=1)
+
 # def reform(func:Callable, form:str, newform:str):
 #     old_args, old_out = form.split("->")
 

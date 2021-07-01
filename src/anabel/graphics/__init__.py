@@ -491,11 +491,16 @@ def plot_beam(Model, ax=None, label=False):
 
 plot_structure = plot_skeletal
 
-def plot_skeletal3d(Model, ax):
+def plot_skeletal3d(Model, ax=None):
     n = 3
+    if ax is None:
+        _, ax = plt.subplots(1, 1, subplot_kw={
+            "projection": "3d",
+            })
+        ax.set_autoscale_on(True)
 
-    ax.spines["right"].set_color("none")
-    ax.spines["top"].set_color("none")
+        ax.spines["right"].set_color("none")
+        ax.spines["top"].set_color("none")
 
     ###< Plot Elements
     f = 0.9  # parameter controling element label distance from element
@@ -510,21 +515,27 @@ def plot_skeletal3d(Model, ax):
         #         ax.annotate(elem.tag, xyz = (xl, yl, zl))
         ax.text(xl, yl, zl, elem.tag, color="red")
         # plot nodes
+
     f = 0.4  # factor to tweak annotation distance
     for node in Model.nodes:
         ax.scatter(node.x, node.y, node.z, color="black", marker="s")
-    #             if sum(node.rxns) == 0:
 
-    #                 ax.annotate(node.tag, xy=(f+node.x, 0.5*f+node.y), zorder = 3, color = 'blue')
-    #             else:
-    #                 tag = node.tag + " "+ str(node.rxns)
-    #                 ax.annotate(tag, xy=(f+node.x, 0.5*f+node.y), zorder = 3, color = 'blue')
+    # Make axes limits 
+    aspect = [ub - lb for lb, ub in (getattr(ax, f'get_{a}lim')() for a in 'xyz')]
+    aspect = [max(a,max(aspect)/8) for a in aspect]
+    ax.set_box_aspect(aspect)
     return ax
 
 
 def plot_2dshape(xyz, N, node=1, ax=None):
     if ax is None:
-        _, ax = plt.subplots(1, 1, subplot_kw={"projection": "3d"})
+        _, ax = plt.subplots(1, 1, subplot_kw={
+            "projection": "3d",
+            "aspect": "equal"
+            })
+        aspect = [ub - lb for lb, ub in (getattr(ax, f'get_{a}lim')() for a in 'xyz')]
+        aspect = [max(a,max(aspect)/8) for a in aspect]
+        ax.set_box_aspect(aspect)
 
     xx, yy = np.meshgrid(xyz[:, 0], xyz[:, 1])
     z = N[(i - 1) * 2, 0](xx, yy)

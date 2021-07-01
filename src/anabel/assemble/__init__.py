@@ -5,6 +5,7 @@
 
 Core model building classes.
 """
+# Standard library
 import gc
 import copy
 import inspect
@@ -19,9 +20,10 @@ import numpy as np
 import scipy.sparse
 from mpl_toolkits.mplot3d import Axes3D
 
-from anon import diff
+#from anon import diff
 from anabel.template import get_unspecified_parameters, template
 from anabel.elements import *
+
 try:
     import anon.atom as anp
 except:
@@ -157,6 +159,16 @@ class Assembler:
     def nf(self) -> int:
         "Number of free degrees of freedom."
         return  self.nt - self.nr
+
+    def dump(self, fmt="opensees"):
+
+        pass
+
+    def dump_opensees(self, **kwds):
+        head  = f"# Units: {self.units}"
+        nodes = "\n".join([f"{n.dump_opensees()}" for n in self.nodes])
+        elems = "\n".join([f"{e.dump_opensees()}" for e in self.elems])
+        return "\n\n".join([head, nodes, elems])
 
 
     def cycle(self, tag, 
@@ -775,7 +787,7 @@ class MeshGroup(UniformAssembler):
 
 
 class Model(Assembler):
-    def __init__(self, ndm:int, ndf:int):
+    def __init__(self, ndm:int, ndf:int, units="metric"):
         """Basic structural model class
 
         Parameters
@@ -789,11 +801,22 @@ class Model(Assembler):
         super().__init__(ndm=ndm, ndf=ndf)
         self.ndf: int = ndf
         self.ndm: int = ndm
-        #self.DOF: list = None
-        self.dtype='float32'
-
+        self.dtype    ='float32'
+        self._units   = units
 
         self.clean()
+
+    @property
+    def units(self):
+        import elle.units
+        return elle.units.UnitHandler(self._units)
+
+    def dump_opensees(self, **kwds):
+        ndm, ndf = self.ndm, self.ndf
+        cmds  = f"# Create ModelBuilder (with {ndm} dimensions and {ndf} DOF/node)"
+        cmds += f"\nmodel BasicBuilder -ndm {ndm} -ndf {ndf}" 
+        rxns = "\n".join([f"{r.dump_opensees()}" for r in self.rxns])
+        return "\n\n".join([cmds, super().dump_opensees(**kwds), rxns])
     
     def clean(self,keep=None):
         if keep is None:
@@ -1245,7 +1268,7 @@ class Model(Assembler):
         idx_x = np.where(np.isin(forces, rdts))[0]
         return idx_x
 
-    def node(self, tag: str, x: float, y=None, z=None, mass: float=None):
+    def node(self, tag: str, x: float, y=None, z=None, mass: float=None, n: int = 1):
         """Add a new emme.Node object to the model
 
         Parameters
@@ -1255,7 +1278,12 @@ class Model(Assembler):
         """
         newNode = Node(self, tag, self.ndf, [x, y, z], mass)
         self.nodes.append(newNode)
-        self.dnodes.update({newNode.tag : newNode})
+        self.dnodes.update({tag: newNode})
+
+        for i in range(n-1):
+            self.dnodes.update({f"{tag}-{i}": newNode})
+            self.nodes.append(copy.copy(newNode))
+
         return newNode
 
     def displ(self,val):
@@ -1327,7 +1355,8 @@ class Model(Assembler):
         pass
 
     def fix(self, node, dirn=["x","y","rz"]): # for dirn enter string (e.g. "x", 'y', 'rz')
-        """Define a fixed boundary condition at specified degrees of freedom of the supplied node
+        """Define a fixed boundary condition at specified 
+        degrees of freedom of the supplied node
 
         Parameters
         ----------
@@ -1338,23 +1367,25 @@ class Model(Assembler):
         """
         if isinstance(node,str):
             node = self.dnodes[node]
+
         if isinstance(dirn,list):
             rxns = []
             for df in dirn:
-                newRxn = Rxn(node, df)
+                newRxn = Rxn(node, df, self.ddof[df])
                 self.rxns.append(newRxn)
                 rxns.append(newRxn)
                 node.rxns[self.ddof[df]] = 1
             return rxns
         else:
-            newRxn = Rxn(node, dirn)
+            newRxn = Rxn(node, dirn, self.ddof[df])
             self.rxns.append(newRxn)
             node.rxns[self.ddof[dirn]] = 1
             return newRxn
 
-    def boun(self, node, ones):
+    def boun(self, node, ones: list):
         if isinstance(node,str):
             node = self.dnodes[node]
+
         for i, dof in enumerate(self.ddof):
             if ones[i]:
                 self.fix(node, dof)
@@ -1367,7 +1398,6 @@ class Model(Assembler):
         Parameters
         ----------
         node: anabel.Node
-
         """
         for node in nodes:
             if isinstance(node, str):
@@ -1396,13 +1426,26 @@ class Model(Assembler):
         return newXSect
 
  # Elements
-    def elem(self,elem,nodes,tag):
-        if isinstance(nodes[0],str):
+    def elem(self, elem, nodes, tag):
+        if isinstance(tag, (list, tuple)):
+            nodes, tag = tag, nodes
+
+        if isinstance(nodes[0], str):
             nodes = [self.dnodes[node_tag] for node_tag in nodes]
-        element = Element(elem.shape[0][0],self.ndm,nodes=nodes,elem=elem)
-        element.tag = tag
+
+
+        if isinstance(elem, Element):
+            ndf = elem.ndf
+            element = copy.copy(elem)
+            element.nodes = nodes
+
+        else:
+            ndf = elem.shape[0][0]
+            element = Element(ndf, self.ndm, nodes=nodes, elem=elem)
+        
+        element.domain = self
         self.elems.append(element)
-        self.delems.update({tag:element})
+        self.delems.update({tag: element})
         return element
 
 
@@ -1919,12 +1962,12 @@ class State():
 #******************************************************************************
 class Node():
     """Model node object"""
-    def __init__(self, model, tag: str, ndf, xyz, mass=None):
+    def __init__(self, model, name: str, ndf, xyz, mass=None):
         if mass is None: mass=0.0
 
         self.xyz = np.array([xi for xi in xyz if xi is not None])
 
-        self.tag = tag
+        self._tag = name if isinstance(name, int) else None
         self.xyz0 = self.xyz # coordinates in base configuration (unstrained, not necessarily unstressed).
         self.xyzi = self.xyz # coordinates in reference configuration.  
 
@@ -1944,12 +1987,18 @@ class Node():
 
         
         self.rxns = [0]*ndf
-        self.model = model
+        self.model = self.domain = model
         self.mass = mass
         self.elems = []
 
         self.p = {dof:0.0 for dof in model.ddof}
-        
+    @property
+    def tag(self):
+        if self._tag is not None:
+            return self._tag
+        else:
+            return self.domain.nodes.index(self)
+
     def __repr__(self):
         return 'nd-{}'.format(self.tag)
 
@@ -1963,15 +2012,24 @@ class Node():
         # if self.model.DOF == None: self.model.numDOF()
         idx = self.model.nodes.index(self)
         return np.asarray(self.model.DOF[idx],dtype=int)
+    
+    def dump_opensees(self):
+        coords = " ".join(f"{x:10.8}" for x in self.xyz)
+        return f"node {self.tag} {coords}"
+
 
 
 class Rxn():
-    def __init__(self, node, dirn):
+    def __init__(self, node, dirn, dof=None):
         self.node = node
         self.dirn = dirn
+        self.dof  = dof
 
     def __repr__(self):
         return 'rxn-{}'.format(self.dirn)
+
+    def dump_opensees(self, **kwds):
+        return f"fix {self.node.tag} {self.dof}"
 
 
 class Hinge():

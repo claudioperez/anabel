@@ -1,6 +1,7 @@
 """Element library
 """
 import inspect
+from typing import Union
 from functools import partial
 from abc import abstractmethod
 
@@ -8,7 +9,6 @@ import numpy as np
 from numpy.polynomial import Polynomial
 from scipy.integrate import quad
 import scipy.integrate
-# import tensorflow as tf
 
 import anon
 try:
@@ -171,17 +171,23 @@ class BasicLink():
 
 class Element(BasicLink):
     """Element parent class"""
+    _tag: Union[int,None]
 
-    def __init__(self,  ndf, ndm, force_dict=None, nodes=None, elem=None, resp=None, proto=None, tag=None):
+    def __init__(self,  ndf, ndm, force_dict=None, nodes=None, elem=None, resp=None, proto=None, name=None, tag=None, transformation=None):
         super().__init__(ndf, ndm, nodes)
+        self._transformation = transformation
         self._resp = resp
         self.elem = elem
+        if name is None and tag is not None:
+            name = tag
+
+        self._name = name
+        self._tag = name if isinstance(name, int) else None
+
         self.history = {}
         self.current = {}
         if force_dict is None:
             force_dict = {str(i+1): 0 for i in range(ndf)}
-        if tag is not None:
-            self.tag = tag
 
         nq = len(force_dict)
         self.rel = {str(i): False for i in range(1, nq+1)}
@@ -193,9 +199,18 @@ class Element(BasicLink):
 
         self.basic_forces = np.array([IntForce(self, i, nature=str(i)) for i in range(1, nq+1)])
         self.basic_deformations = self.basic_forces
-
     @property
     def nn(self): return len(self.nodes)
+
+    @property
+    def tag(self):
+        if self._tag is None:
+            self._tag = self.domain.elems.index(self)
+        return self._tag
+
+    @property
+    def transform(self):
+        pass
 
     @property
     def resp(self):
@@ -245,9 +260,8 @@ class PolyRod(Element):
     ndf = 1 # number of dofs at each node
     force_dict = {'1':0}
 
-    def __init__(self,tag, nodes, E, A):
-        super().__init__(self.ndf, self.ndm, self.force_dict, nodes)
-        self.tag:str = tag
+    def __init__(self, name, nodes, E, A):
+        super().__init__(self.ndf, self.ndm, self.force_dict, nodes, name=name)
         self.E:float = E
         """Young's modulus of elasticity"""
         self.A:float = A
@@ -328,9 +342,9 @@ class PolyRod(Element):
         return P
 
 class MeshCell(Element):
-    def __init__(self, tag, nn, ndf, ndm, nodes):
+    def __init__(self, name, nn, ndf, ndm, nodes):
         node_map = {}
-        super().__init__(ndf, ndm, nodes=nodes, tag=tag)
+        super().__init__(ndf, ndm, nodes=nodes, name=name)
     
     @property
     def dofs(self):
@@ -351,11 +365,10 @@ class Truss(Element):
     Qpl = np.zeros((2,nq))
 
     def __init__(self, tag, iNode, jNode, E=None, A=None, geo='lin',properties=None,**kwds):
-        super().__init__(self.ndf, self.ndm, self.force_dict, [iNode, jNode],**kwds)
+        super().__init__(self.ndf, self.ndm, self.force_dict, [iNode, jNode], tag=tag, **kwds)
         if isinstance(properties,dict):
             E, A = properties['E'], properties['A']
         self.type = '2D truss'
-        self.tag = tag
         self.E = E
         self.A = A
         self.geo=geo
@@ -537,9 +550,8 @@ class Truss3D(Element):
     ndm = 3
     force_dict = {'1':0}
     def __init__(self, tag, iNode, jNode, A, E):
-        super().__init__(self.ndf, self.ndm, self.force_dict, [iNode,jNode])
+        super().__init__(self.ndf, self.ndm, self.force_dict, [iNode,jNode], tag=tag)
         self.type = '2D truss'
-        self.tag = tag
         self.A = A
         self.E = E
 
@@ -561,6 +573,55 @@ class Truss3D(Element):
                        [ sn],
                        [ cz]])
         return bg
+
+def unpack(obj,props,default):
+
+    return map(lambda x: getattr(obj, x, default), props)
+
+class ElasticBeam(Element): 
+    """linear 2D/3D Euler-Bernouli frame element"""
+    nv = 3
+    nn = 2
+    nq = 3
+    ndm = 2
+    #ndf = 3
+    force_dict = {'1':0, '2':0, '3': 0}
+    Qpl = np.zeros((2,nq))
+    opensees_command = "element elasticBeamColumn {tag} {nodes:10}"
+    section_properties = {
+        "A":  "area",
+        "Iy": "Iy",
+        "Iz": "Ix"
+    }
+
+    def __init__(self, ndm, nodes=None, section=None, tag=None, E: float=None, A: float=None, I=None, properties=None, **kwds):
+        self.ndf = {2: 3, 3: 6}[ndm]
+
+        if nodes is None:
+            nodes = [None]*2
+
+        super().__init__(self.ndf, self.ndm, self.force_dict, nodes, tag=tag, **kwds)
+
+        #if isinstance(properties,dict):
+        #    E, A, I = properties['E'], properties['A'], properties['I']
+        if section:
+            E, A, Iz = unpack(section, ["E","area","Ix"], None)
+
+        self.E:  float = E
+        self.A:  float = A
+        self.G:  float = None
+        self.I:  float = I
+        self.J:  float = None
+        self.Iz: float = None
+        self.Iy: float = None
+
+    def dump_opensees(self, transfTag=None, **kwds):
+        nodes = " ".join(f"{n.tag:5}" for n in self.nodes)
+        props = " ".join(
+                f"{getattr(self,p)}" \
+                    for p in ["A", "E", "G", "J", "Iy", "Iz"]
+        )
+        return f"element elasticBeamColumn {self.tag} {nodes} {props} {transfTag}"
 
 
 class Beam(Element): 
@@ -628,6 +689,7 @@ class Beam(Element):
         
         if self.dofs[0] == self.dofs[3] or self.dofs[1] == self.dofs[4]:
             ag[0,:] = [0.0]*ag.shape[1]
+
         return ag
 
     def ah(self):
@@ -951,8 +1013,6 @@ class Beam_Column2D(Beam):
         # for col in cols:
         #     f[:, col] = [0.0]*6
         # k = np.linalg.inv(f)
-
-
 
         # Matrix metadata
         k = Structural_Matrix(eltk)

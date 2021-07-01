@@ -211,6 +211,9 @@ def Composite_Section(Y, DY, DZ, quad, y_shift = 0.0, mat=None):
     return SectData
 
 class VerticalSection:
+    """
+    A section with a single top and bottom patch
+    """
     def plot_limit(self, fy=1.0, **kwds):
         pass
 
