@@ -8,26 +8,28 @@ provides a high level API for constructing skeletal structural
 models which can be exported to an effecient backend implementation.
 
 """
+
 # Standard library
 import copy
 import inspect
+import fnmatch
 import functools
-from inspect import signature
-from functools import partial
-from typing import Callable, List, Union
+from typing import Callable, List, Union, Final
 
-import jax
 import numpy as np
-import scipy.sparse
-from mpl_toolkits.mplot3d import Axes3D
 
 from anabel.abstract import DomainBuilder, Material, FrameSection, Node, Element
 from anabel.constraints import SP_Constraint as Rxn
-from anabel.template import get_unspecified_parameters, template
-#from anabel.elements import *
+from anabel.materials import (
+    ElasticSpring,
+)
+from anabel.elements import (
+    ElasticBeam,
+    ZeroLength
+)
 
 try:
-    import anon.atom as anp
+    import anabel.backend as anp
 except:
     anp = np
 
@@ -36,7 +38,21 @@ __all__ = ["SkeletalModel"]
 def _is_sequence(obj):
     return hasattr(type(obj), '__iter__')
 
+def _filter_nodes_by_coords(x, y, z):
+    def f(node):
+        match = True
+        if x is not None:
+            match = match and np.isclose(node.x, x)
+        if y is not None:
+            match = match and np.isclose(node.y, y)
+        if z is not None:
+            match = match and np.isclose(node.z, z)
+        return match
+    return f
+
 class SkeletalModel(DomainBuilder):
+    dof_names: Final[dict]
+    dof_nums: Final[dict]
     def __init__(self, ndm:int, ndf:int, units="metric"):
         """Basic structural model class
 
@@ -48,11 +64,31 @@ class SkeletalModel(DomainBuilder):
             number of degrees of freedom (dofs) at each node
 
         """
+        self.about = """
+                 ^
+                 |
+                 | xy (4)
+                 +-->>---> x (1)
+                /
+               / 
+        """
         super().__init__(ndm=ndm, ndf=ndf)
-        self.ndf: int = ndf
-        self.ndm: int = ndm
-        self.dtype    ='float32'
-        self._units   = units
+        if ndf == 2:
+            self.prob_type = '2d-truss'
+            self.dof_names: dict = { 'x': 0, 'y': 1} # Degrees of freedom
+        elif ndm == 2 and ndf ==3:
+            self.prob_type = '2d-frame'
+            self.dof_names: dict = { 'x': 0, 'y': 1, 'xy':2}
+        elif ndm == 3 and ndf ==3:
+            self.prob_type = '3d-truss'
+            self.dof_names: dict = { 'x': 0, 'y': 1, 'z':2}
+        elif ndm == 3 and ndf ==6:
+            self.prob_type = '3d-frame'
+            self.dof_names: dict = { 'x': 0, 'y': 1, 'z':2, 'yz':3, 'zx':4, 'xy':5}
+    
+        self.dof_nums = {v: k for k,v in self.dof_names.items()}
+
+        self._units = units
 
         self.clean()
 
@@ -142,10 +178,11 @@ class SkeletalModel(DomainBuilder):
     @property
     def nv(self):
         """Number of basic deformation variables"""
-        lst = []
-        for elem in self.elems:
-            lst.append(sum([1 for x in elem.v]))
-        return lst
+        #lst = []
+        #for elem in self.elems:
+        #    lst.append(sum([1 for x in elem.v]))
+        #return lst
+        return [el.nv for el in self.elems]
 
     @property
     def nf(self) -> int:
@@ -240,6 +277,14 @@ class SkeletalModel(DomainBuilder):
         self.dnodes.update({tag: newNode})
         return newNode
 
+    def duplicate(self, component):
+        name = str(component.name) + "-copy"
+        dup = self.node(name, *component.coords)
+        #dup._name = name
+        #self.nodes.append(dup)
+        #self.dnodes.update({name: dup})
+        return dup
+
     def displ(self,val):
         pass
 
@@ -265,9 +310,33 @@ class SkeletalModel(DomainBuilder):
             node.p[kwds["dof"]] = load
         pass
 
+    def _fix_dof(self, node, dof:str):
+        newRxn = Rxn(node, dof, self.dof_names[dof])
+        self.rxns.append(newRxn)
+        node.rxns[self.dof_names[dof]] = 1
+        return newRxn
 
+    def _fix_str_flags(self, node, flags):
+        rxns = [
+            self._fix_dof(node, dof) for dof in flags
+        ]
+        if len(rxns) > 1:
+            return rxns
+        else:
+            return rxns[0]
 
-    def fix(self, node, *dirn): # for dirn enter string (e.g. "x", 'y', 'rz')
+    def _fix_int_flags(self, node, flags):
+        if len(flags) != self.ndf:
+            raise ValueError(f"`fix` method requires flags for all dofs ({self.ndf}) when working with ints.")
+        rxns = [
+            self._fix_dof(node, self.dof_nums[i]) for i in range(self.ndf)
+        ]
+        if len(rxns) > 1:
+            return rxns
+        else:
+            return rxns[0]
+
+    def fix(self, node, *dirns, x=None, y=None, z=None):
         """Define a fixed boundary condition at specified 
         degrees of freedom of the supplied node
 
@@ -294,37 +363,29 @@ class SkeletalModel(DomainBuilder):
         model.fix("n1", 0, 0, 1)
         ```
         """
-        if not dirn:
-            dirn = ["x","y","rz"]
+        dnodes = self.dnodes
 
-        if isinstance(node,str):
-            node = self.dnodes[node]
+        if not dirns:
+            dirns = list(self.dof_names.keys())
+        
+        if isinstance(dirns[0], int):
+            _fix =  self._fix_int_flags
 
-        rxns = []
-        for dfs in dirn:
-            if isinstance(dfs,list):
-                for df in dirn:
-                    if isinstance(df, str):
-                        dof_name = self.ddof[df]
-                    newRxn = Rxn(node, df, self.ddof[df])
-                    self.rxns.append(newRxn)
-                    rxns.append(newRxn)
-                    node.rxns[self.ddof[df]] = 1
-            else:
-                newRxn = Rxn(node, dfs, self.ddof[dfs])
-                self.rxns.append(newRxn)
-                rxns.append(newRxn)
-                node.rxns[self.ddof[dfs]] = 1
-        if len(rxns) > 1:
-            return rxns
         else:
-            return rxns[0]
+            _fix = self._fix_str_flags
 
-    def _fix_str_flags(self, node, flags):
-        pass
+        if isinstance(node, str):
+            nodes = [dnodes[n] for n in fnmatch.filter(dnodes.keys(), node)]
+            nodes = filter(_filter_nodes_by_coords(x,y,z), nodes)
+            return [_fix(node, dirns) for node in nodes]
 
-    def _fix_int_flags(self, node, flags):
-        pass
+        elif isinstance(node, int): 
+            node = self.dnodes[node]
+            return _fix(node, dirns)
+        
+        else: 
+            return _fix(node, dirns)
+
 
     def boun(self, node, flags: list):
         """
@@ -349,11 +410,11 @@ class SkeletalModel(DomainBuilder):
         if isinstance(node,str):
             node = self.dnodes[node]
 
-        for i, dof in enumerate(self.ddof):
+        for i, dof in enumerate(self.dof_names):
             if flags[i]:
                 self.fix(node, dof)
 
-    def pin(self, *nodes):
+    def pin(self, *nodes, x=None, y=None, z=None):
         """
         Create a pinned reaction by fixing all translational degrees
         of freedom at the specified nodes.
@@ -365,7 +426,7 @@ class SkeletalModel(DomainBuilder):
         for node in nodes:
             if isinstance(node, str):
                 node = self.dnodes[node]
-            self.fix(node, ['x', 'y'])
+            self.fix(node, 'x', 'y')
             if self.ndm == 3:
                 self.fix(node, 'z')
 
@@ -421,9 +482,20 @@ class SkeletalModel(DomainBuilder):
         self.elems.append(element)
         self.delems.update({tag: element})
         return element
+    
+    def add_material(self, material, name=None):
+        """Add a general material to model
 
+        Parameters
+        ----------
+        material : emme.abstract.Material
 
-    def add_element(self, element):
+        """
+        material._domain = self
+        self.materials.update({name: material})
+        return material
+
+    def add_element(self, element, name=None):
         """Add a general element to model
 
         Parameters
@@ -431,17 +503,17 @@ class SkeletalModel(DomainBuilder):
         element : emme.elements.Element
 
         """
-
+        element._domain = self
         self.elems.append(element)
-        self.delems.update({element.tag:element})
+        self.delems.update({element.name: element})
 
         for node in element.nodes:
             node.elems.append(element)
 
         return element
 
-    def add_elements(self, elements):
-        """Add a general element to model
+    def add_elements(self, *elements):
+        """Add multiple elements to model
 
         Parameters
         ----------
@@ -456,6 +528,16 @@ class SkeletalModel(DomainBuilder):
 
         return elements
 
+    def spring(self, inode, jnode, mat):
+        "Create and add an uncoupled zero-length spring element"
+        elem_name = f"elem-{len(self.elems)}"
+        materials = {
+            k: self.add_material(ElasticSpring(v), name = f"{elem_name}-{k}")
+                for k,v in mat.items()
+        }
+
+        newElem = ZeroLength(nodes=[inode, jnode], mat=materials, name = elem_name)
+        self.add_element(newElem)
 
     def beam(self, tag: str, iNode, jNode, mat=None, sec=None, Qpl=None,**kwds):
         """Create and add a beam object to model
@@ -494,8 +576,11 @@ class SkeletalModel(DomainBuilder):
         
         if isinstance(I,int): I = float(I)
         if isinstance(A,int): A = float(A)
-        
-        newElem = Beam(tag, iNode, jNode, E, A, I, **kwds)
+        if self.ndm == 2: 
+            newElem = Beam(tag, iNode, jNode, E, A, I, **kwds)
+        else:
+            newElem = Beam3d(tag, iNode, jNode, E, A, I, **kwds)
+
         self.elems.append(newElem)
         self.delems.update({newElem.tag:newElem})
         # self.connect([iNode, jNode], "Beam") # considering deprecation

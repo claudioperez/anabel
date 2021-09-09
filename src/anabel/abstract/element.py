@@ -22,6 +22,7 @@ try:
 except:
     from anabel.matrices import Structural_Matrix, Structural_Vector
 
+
 class IntForce:
     def __init__(self, elem:object, number:int, nature:str=None):
         self.number:int = number
@@ -142,7 +143,7 @@ class BasicLink():
         return 0
 
     def Ry_matrix(self):
-        "Rotation about z"
+        "Rotation about y"
         cs = self.cs
         sn = self.sn
         Ry = np.array([
@@ -168,12 +169,14 @@ class BasicLink():
         return Rz
 
 
-class Element(BasicLink,ModelComponent):
+class Element(ModelComponent):
     """Element parent class"""
     _tag: Union[int,None]
 
-    def __init__(self,  ndf, ndm, force_dict=None, nodes=None, elem=None, resp=None, proto=None, name=None, tag=None, transformation=None):
-        super().__init__(ndf, ndm, nodes)
+    def __init__(self,  ndf=None, ndm=None, force_dict=None, nodes=None, elem=None, resp=None, proto=None, name=None, tag=None, transformation=None):
+        #super().__init__(ndf, ndm, nodes)
+        ModelComponent.__init__(self)
+
         self._transformation = transformation
         self._resp = resp
         self.elem = elem
@@ -198,13 +201,22 @@ class Element(BasicLink,ModelComponent):
 
         self.basic_forces = np.array([IntForce(self, i, nature=str(i)) for i in range(1, nq+1)])
         self.basic_deformations = self.basic_forces
+
+    def dump(self, writer, **kwds):
+        return writer.dump_elements(self, **kwds)
+
+
     @property
     def nn(self): return len(self.nodes)
 
     @property
     def tag(self):
         if self._tag is None:
-            self._tag = self.domain.elems.index(self)
+            if self.domain:
+                self._tag = self.domain.elems.index(self)
+            else:
+                self._tag = 0
+
         return self._tag
 
     @property
@@ -252,7 +264,18 @@ class Element(BasicLink,ModelComponent):
         if all(self.w.values())==0.0:
             return np.array([0.0]*self.ndf*self.nn)
 
-class PolyRod(Element):
+class SkeletalElement(BasicLink, Element):
+    """Element parent class"""
+    _tag: Union[int,None]
+
+    def __init__(self,  ndf=None, ndm=None, force_dict=None, nodes=None, elem=None, resp=None, proto=None, name=None, tag=None, transformation=None):
+        super().__init__(ndf, ndm, nodes)
+        Element.__init__(self,  ndf, ndm, force_dict, nodes, elem, resp, proto,name,tag,transformation)
+    @property
+    def xyz(self):
+        return np.asarray([self.nodes[0].xyz, self.nodes[1].xyz])
+
+class PolyRod(SkeletalElement):
     nv  = 1
     nn  = 2
     ndm = 1
@@ -354,7 +377,7 @@ class MeshCell(Element):
     def ke_matrix(self, *args, **kwds):
         return anp.eye(self.ndm*self.nn)
 
-class Truss(Element):
+class Truss(SkeletalElement):
     nv = 1
     nn = 2
     nq = 1
@@ -544,7 +567,7 @@ class TaperedTruss(Truss):
     def v0_vector(self):
         return [0]
 
-class Truss3D(Element):
+class Truss3D(SkeletalElement):
     ndf = 3
     ndm = 3
     force_dict = {'1':0}

@@ -373,8 +373,8 @@ def plot_skeletal(Model, ax=None, label=False):
     ###< Plot Elements
     f = 0.7  # parameter controling element label distance from element
     for elem in Model.elems:
-        x = np.linspace(elem.nodes[0].x0, elem.nodes[1].x0, n)
-        y = np.linspace(elem.nodes[0].y0, elem.nodes[1].y0, n)
+        x = np.linspace(elem.nodes[0].x, elem.nodes[1].x, n)
+        y = np.linspace(elem.nodes[0].y, elem.nodes[1].y, n)
         # plt.plot(x, y, zorder = 1, color ='grey')
         ax.plot(x, y, **elem_style[0])
         if label:
@@ -387,11 +387,11 @@ def plot_skeletal(Model, ax=None, label=False):
     if Model.ndf == 3:
         for elem in Model.elems:
             if type(elem) is Truss:
-                x = elem.nodes[0].x0 + f * elem.cs
-                y = elem.nodes[0].y0 + f * elem.sn
+                x = elem.nodes[0].x + f * elem.cs
+                y = elem.nodes[0].y + f * elem.sn
                 ax.scatter(x, y, s=20, zorder=2, facecolors="white", edgecolors="black")
-                x = elem.nodes[1].x0 - f * elem.cs
-                y = elem.nodes[1].y0 - f * elem.sn
+                x = elem.nodes[1].x - f * elem.cs
+                y = elem.nodes[1].y - f * elem.sn
                 ax.scatter(x, y, s=20, zorder=2, facecolors="white", edgecolors="black")
 
     ###>
@@ -425,8 +425,8 @@ def plot_skeletal(Model, ax=None, label=False):
     for node in Model.nodes:
         for i, rxn in enumerate(node.rxns):
             if rxn:
-                x = node.x0 - rx_offset[i]  # *np.sign(node.elems[0].cs)
-                y = node.y0 - ry_offset[i]  # *np.sign(node.elems[0].sn)
+                x = node.x - rx_offset[i]  # *np.sign(node.elems[0].cs)
+                y = node.y - ry_offset[i]  # *np.sign(node.elems[0].sn)
                 ax.plot(x, y, **rxn_style[i])
 
     # plot nodes
@@ -489,14 +489,25 @@ def plot_beam(Model, ax=None, label=False):
             if label:
                 ax.annotate(tag, xy=(node.x, y_off), zorder=3, color="blue")
 
+# backwards compatibility
 plot_structure = plot_skeletal
+
+def _plot_skeletal_plane(model, plane=(0,1), ax=None, data=None):
+    #elem_lines = np.array([e.nodes])
+    pass
+
+def plot2d(model, data=None, plane=None, ax=None):
+    pass
+
+def plot3d(model, data, ax=None):
+    pass
 
 def plot_skeletal3d(Model, ax=None):
     n = 3
     if ax is None:
         _, ax = plt.subplots(1, 1, subplot_kw={
             "projection": "3d",
-            })
+        })
         ax.set_autoscale_on(True)
 
         ax.spines["right"].set_color("none")
@@ -508,17 +519,18 @@ def plot_skeletal3d(Model, ax=None):
         x = np.linspace(elem.nodes[0].x, elem.nodes[1].x, n)
         y = np.linspace(elem.nodes[0].y, elem.nodes[1].y, n)
         z = np.linspace(elem.nodes[0].z, elem.nodes[1].z, n)
-        xl = x[1] - elem.sn * f
-        yl = y[1] - elem.cs * f
-        zl = z[1] - elem.cz * f
-        ax.plot(x, y, z, color="black")
+        ax.plot(x, z, y, color="black")
         #         ax.annotate(elem.tag, xyz = (xl, yl, zl))
-        ax.text(xl, yl, zl, elem.tag, color="red")
+
+        #xl = x[1] - elem.sn * f
+        #yl = y[1] - elem.cs * f
+        #zl = z[1] - elem.cz * f
+        #ax.text(xl, yl, zl, elem.tag, color="red")
         # plot nodes
 
     f = 0.4  # factor to tweak annotation distance
     for node in Model.nodes:
-        ax.scatter(node.x, node.y, node.z, color="black", marker="s")
+        ax.scatter(node.x, node.z, node.y, color="black", marker="s")
 
     # Make axes limits 
     aspect = [ub - lb for lb, ub in (getattr(ax, f'get_{a}lim')() for a in 'xyz')]
@@ -528,6 +540,9 @@ def plot_skeletal3d(Model, ax=None):
 
 
 def plot_2dshape(xyz, N, node=1, ax=None):
+    """
+    plot 2D shape function
+    """
     if ax is None:
         _, ax = plt.subplots(1, 1, subplot_kw={
             "projection": "3d",
@@ -539,4 +554,81 @@ def plot_2dshape(xyz, N, node=1, ax=None):
 
     xx, yy = np.meshgrid(xyz[:, 0], xyz[:, 1])
     z = N[(i - 1) * 2, 0](xx, yy)
+
+def plot_3d_deformed(
+    model, U_vect, ax, fig=None, plot_struct=True, scale=1.0, color=None, chords=False
+):
+
+    if scale is None:
+        scale = 10  # factor to scale up displacements
+    if color is None:
+        color = "red"
+    XYZ = model.xyz
+
+    #A = mv.Kinematic_matrix(model)
+    # print(A.f)
+    U = U_vector(model, vector=U_vect)
+    # print(U)
+    if plot_struct:
+        plot_skeletal(model, ax)
+    for node in model.nodes:
+        delta = [0.0, 0.0]
+        for i, dof in enumerate(node.dofs[0:2]):
+            if not node.rxns[i]:
+                try:
+                    delta[i] = U[U.row_data.index(str(dof))]
+                except:
+                    pass
+        x = node.x
+        y = node.y
+        plt.plot(x, y, **node_style[0])
+        plt.plot(
+            x + delta[0] * scale, y + delta[1] * scale, color=color, **node_style[1]
+        )
+    #V = A.c0 @ U.f  # Element deformation vector
+    n_curve = 20  # number of plotting points along element
+
+    for elem in model.elems:
+        ni, nj = map(lambda x: model.nodes.index(x), elem.nodes)
+        delta = np.zeros((2, model.ndm))
+        if hasattr(elem, "Elastic_curve"):
+            X = np.array(
+              [elem.nodes[0].xyz, elem.nodes[1].xyz]
+            )
+            # v_tags = [elem.tag + "_2", elem.tag + "_3"]
+            v = elem.get_deformations(u[[ni,nj]])
+            xl = np.linspace(0, elem.L, n_curve)
+            xl, yl = elem.Elastic_curve(xl, v, scale=scale, global_coord=True)
+
+            for j, node in enumerate(elem.nodes):  # Node displacements
+                for i, dof in enumerate(node.dofs[0:2]):
+                    if not node.rxns[i]:  # if there is no reaction at dof `i`...
+                        try:
+                            delta[j, i] = U[U.row_data.index(str(dof))]
+                        except:
+                            pass
+
+            x0 = np.linspace(delta[0, 0] * scale, delta[1, 0] * scale, n_curve)
+            y0 = np.linspace(delta[0, 1] * scale, delta[1, 1] * scale, n_curve)
+            x = xl + x0
+            y = yl + y0
+            plt.plot(x, y, zorder=1, color=color)
+
+    # Plot undeformed chords
+    n = 3
+    for elem in model.elems:
+        x = np.linspace(elem.nodes[0].x, elem.nodes[1].x, n)
+        y = np.linspace(elem.nodes[0].y, elem.nodes[1].y, n)
+        plt.plot(x, y, **elem_style[0])
+
+    f = 0.5
+    for hinge in model.hinges:
+        if hinge.node == hinge.elem.nodes[0]:
+            x = hinge.node.x + f * hinge.elem.cs
+            y = hinge.node.y + f * hinge.elem.sn
+        else:
+            x = hinge.node.x - f * hinge.elem.cs
+            y = hinge.node.y - f * hinge.elem.sn
+        plt.scatter(x, y, **hinge_style[0])
+    return fig, ax
 

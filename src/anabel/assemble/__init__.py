@@ -126,24 +126,24 @@ class Assembler:
         # Define DOF list indexing 
         if ndm == 1:
             self.prob_type = '1d'
-            self.ddof: dict = {'x': 0}  # Degrees of freedom at each node
+            self.dof_names: dict = {'x': 0}  # Degrees of freedom at each node
 
         if ndf == 1 and ndm == 2:
             self.prob_type = ''
-            self.ddof: dict = { 'x': 0, 'y': 1} # Degrees of freedom
+            self.dof_names: dict = { 'x': 0, 'y': 1} # Degrees of freedom
 
         if ndf == 2:
             self.prob_type = '2d-truss'
-            self.ddof: dict = { 'x': 0, 'y': 1} # Degrees of freedom
+            self.dof_names: dict = { 'x': 0, 'y': 1} # Degrees of freedom
         elif ndm == 2 and ndf ==3:
             self.prob_type = '2d-frame'
-            self.ddof: dict = { 'x': 0, 'y': 1, 'rz':2}
+            self.dof_names: dict = { 'x': 0, 'y': 1, 'rz':2}
         elif ndm == 3 and ndf ==3:
             self.prob_type = '3d-truss'
-            self.ddof: dict = { 'x': 0, 'y': 1, 'z':2}
+            self.dof_names: dict = { 'x': 0, 'y': 1, 'z':2}
         elif ndm == 3 and ndf ==6:
             self.prob_type = '3d-frame'
-            self.ddof: dict = { 'x': 0, 'y': 1, 'z':2, 'rx':3, 'ry':4, 'rz':5}
+            self.dof_names: dict = { 'x': 0, 'y': 1, 'z':2, 'rx':3, 'ry':4, 'rz':5}
     
     @property
     def nn(self) -> int:
@@ -1371,22 +1371,22 @@ class Model(Assembler):
         if isinstance(dirn,list):
             rxns = []
             for df in dirn:
-                newRxn = Rxn(node, df, self.ddof[df])
+                newRxn = Rxn(node, df, self.dof_names[df])
                 self.rxns.append(newRxn)
                 rxns.append(newRxn)
-                node.rxns[self.ddof[df]] = 1
+                node.rxns[self.dof_names[df]] = 1
             return rxns
         else:
-            newRxn = Rxn(node, dirn, self.ddof[df])
+            newRxn = Rxn(node, dirn, self.dof_names[df])
             self.rxns.append(newRxn)
-            node.rxns[self.ddof[dirn]] = 1
+            node.rxns[self.dof_names[dirn]] = 1
             return newRxn
 
     def boun(self, node, ones: list):
         if isinstance(node,str):
             node = self.dnodes[node]
 
-        for i, dof in enumerate(self.ddof):
+        for i, dof in enumerate(self.dof_names):
             if ones[i]:
                 self.fix(node, dof)
 
@@ -1991,7 +1991,7 @@ class Node():
         self.mass = mass
         self.elems = []
 
-        self.p = {dof:0.0 for dof in model.ddof}
+        self.p = {dof:0.0 for dof in model.dof_names}
     @property
     def tag(self):
         if self._tag is not None:

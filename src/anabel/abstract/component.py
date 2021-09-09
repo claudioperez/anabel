@@ -22,10 +22,10 @@ class ModelComponent:
         self._notes = notes
         self._units = UnitHandler(units) if isinstance(units,str) else units
 
+        self.header = ""
+
     def dump_opensees(self, **kwds):
-        return build_string("""
-        >>> Unimplemented translation.
-        """, **kwds)
+        return build_string(f""">>> Unimplemented translation in {self}.\n""", **kwds)
 
     @property
     def domain(self):
@@ -76,8 +76,10 @@ class ModelComponent:
         if hasattr(self,"_units"):
             if isinstance(self._units,(int,str)):
                 return self.parent.units[self._units]
-            else:
+            elif self._units:
                 return self._units
+            else:
+                return self.parent.units
         else:
             raise AttributeError("No attribute units")
 
@@ -90,5 +92,6 @@ class ModelComponent:
                 return self._material
         else:
             raise AttributeError("No attribute material")
+
 
 

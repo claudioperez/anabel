@@ -4,34 +4,45 @@ class ModelWriter:
     def __init__(self, model):
         self.model = model
     
-    def dump(self, **kwds):
+    def dump(self, definitions={}, **kwds):
         model = self.model
         c = self.comment_char
         ndm, ndf = model.ndm, model.ndf
         cmds  = model.header.replace("\n", f"\n{c} ") + "\n"
 
 
-        cmds += "\n" + self.heading(1, "Initializations")
-        cmds += self.dump_initialize()
-        
-        cmds += "\n" + self.heading(1, "Elements")
-        cmds += self.dump_elements()
+        head = "\n" + self.heading(1, "Initializations")
+        body = self.dump_initialize(definitions=definitions, **kwds)
+        if body and not body.isspace():
+            cmds += "\n" + head + body
+         
+        head  = self.heading(1, "Materials")
+        body  = self.dump_materials(**kwds)
+        if body and not body.isspace():
+            cmds += "\n" + head + body
 
-        cmds += "\n" + self.heading(1, "Connectivity")
-        cmds += self.dump_connectivity()
+        head  = "\n" + self.heading(1, "Elements")
+        body  = self.dump_elements(**kwds)
+        if body and not body.isspace():
+            cmds += "\n" + head + body
+
+        cmds += "\n" + self.heading(1, "Assemblage")
+        cmds += self.dump_connectivity(**kwds)
 
         cmds += "\n" + self.heading(1, "Constraints")
-        cmds += self.dump_constraints()
+        cmds += self.dump_constraints(**kwds)
 
         return "\n\n".join([cmds])
 
-    def dump_materials(self)->str:
+    def dump_materials(self, definitions={})->str:
         return ""
-    
-    def dump_sections(self)->str:
-        pass
-    
-    def dump_elements(self)->str:
+
+
+    def dump_sections(self, definitions={})->str:
+        raise Exception("This model is not yet implemented by the dispatched writer")
+
+
+    def dump_elements(self, *elems)->str:
         return ""
 
     def dump_assembly(self)->str:

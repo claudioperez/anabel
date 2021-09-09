@@ -5,11 +5,18 @@ import anabel.backend as anp
 
 class Node(ModelComponent):
     def __init__(self, model, name: str, ndf, xyz, mass=None):
-        if mass is None: mass=0.0
+        if mass is None:
+            # it would be more efficient to use [0.0]*ndf, 
+            # but this would cause unexpected behavior if
+            # one attempted to later change the mass at a
+            # particular dof.
+            mass = [0 for i in range(ndf)]
 
         self.xyz = self.coords = np.array([xi for xi in xyz if xi is not None])
 
         self._tag = name if isinstance(name, int) else None
+        
+        self._name = name 
  
         #self.x: float = xyz[0]
         #self.y: float = xyz[1]
@@ -21,7 +28,7 @@ class Node(ModelComponent):
         self.mass = mass
         self.elems = []
 
-        self.p = {dof:0.0 for dof in model.ddof}
+        self.p = {dof:0.0 for dof in model.dof_names}
 
     x, y, z = (
         property(lambda self, i=i: self.coords[i]) for i in range(3)
@@ -53,6 +60,7 @@ class Node(ModelComponent):
         return np.asarray(self.model.DOF[idx],dtype=int)
     
     def dump_opensees(self):
-        coords = " ".join(f"{x:10.8}" for x in self.xyz)
-        return f"node {self.tag} {coords}"
+        coords = " ".join(f"{x:6g}" for x in self.xyz)
+        mass = f"-mass {' '.join(f'{i:6g}' for i in self.mass)}" if hasattr(self, "mass") else ""
+        return f"node {self.tag} {coords} {mass} ; # {self.name}\n"
 

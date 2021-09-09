@@ -1359,7 +1359,7 @@ class Mass_matrix (Structural_Matrix):
     def __new__(cls, Model):
 
         M = np.zeros((Model.nt, Model.nt))
-        ddof = Model.ddof
+        ddof = Model.dof_names
         mass_dofs = []
         for node in Model.nodes:
             for i,dof in enumerate(node.dofs):

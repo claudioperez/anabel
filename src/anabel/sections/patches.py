@@ -16,13 +16,16 @@ class CircularPatch(SectionPatch):
 
         """
         if radius is None and diameter is not None:
-            radius = 2.0 * diameter
+            radius = 0.5 * diameter
+        else:
+            diameter = 2.0 * radius
 
         self.radius = radius
         self.diameter = diameter
 
         self.area = anp.pi*radius**2
         self.centroid = anp.asarray(origin)
+        self.no_divs = (0, 0)
 
     @property
     def Ix(self):
@@ -41,6 +44,15 @@ class CircularPatch(SectionPatch):
     def to_mpl(self):
         import matplotlib.patches
         return matplotlib.patches.Circle(self.origin, self.radius)
+
+    def dump_opensees(self, **kwds)->str:
+        if self.material:
+            matTag = self.material.tag
+        else:
+            matTag = "$matTag"
+        numSubDivY, numSubDivZ = self.no_divs
+        x,y = self.origin
+        return f"patch circ {matTag} {numSubDivY} {numSubDivZ} {x}   {y}  0   {self.radius}  0    360"
 
 
 class RectangularPatch(SectionPatch):
@@ -90,13 +102,17 @@ class RectangularPatch(SectionPatch):
         width, height = self.vertices[2] - self.vertices[0]
         return 1/12 * height * width ** 3
 
+
     def dump_opensees(self, **kwds)->str:
         if self.material:
             matTag = self.material.tag
         else:
-            matTag = 0
+            matTag = "$matTag"
         numSubDivY, numSubDivZ = self.no_divs
-        return f"patch rect {matTag} {numSubDivY}"
+        i,j = self.vertices[0], self.vertices[2]
+        x_i = " ".join(f"{x:10.8}" for x in i)
+        x_j = " ".join(f"{x:10.8}" for x in j)
+        return f"patch rect {matTag} {numSubDivY} {numSubDivZ} {x_i} {x_j}"
 
 
     def to_mpl(self):

@@ -18,6 +18,11 @@ import scipy.sparse
 from mpl_toolkits.mplot3d import Axes3D
 
 #from anon import diff
+from .node import Node
+from .element import Element
+from .spring import Spring
+from .material import Material
+
 from anabel.template import get_unspecified_parameters, template
 
 
@@ -89,7 +94,7 @@ class DomainBuilder:
     is to provide a convenient interface for interacting with 
     and managing these entities.
     """
-    def __init__(self, ndm:int, ndf:int,verbose=0):
+    def __init__(self, ndm:int, ndf:int, verbose=0):
         """
         Parameters
         -----------
@@ -99,8 +104,11 @@ class DomainBuilder:
             number of degrees of freedom (dofs) at each node
 
         """
+        self._dirty_flag = True
+
         self.ndf: int = ndf
         self.ndm: int = ndm
+
         self.DOF: list = None
         self._numberer  = None
         self.dtype='float64'
@@ -123,24 +131,12 @@ class DomainBuilder:
         # Define DOF list indexing 
         if ndm == 1:
             self.prob_type = '1d'
-            self.ddof: dict = {'x': 0}  # Degrees of freedom at each node
+            self.dof_names: dict = {'x': 0}  # Degrees of freedom at each node
 
         if ndf == 1 and ndm == 2:
             self.prob_type = ''
-            self.ddof: dict = { 'x': 0, 'y': 1} # Degrees of freedom
+            self.dof_names: dict = { 'x': 0, 'y': 1} # Degrees of freedom
 
-        if ndf == 2:
-            self.prob_type = '2d-truss'
-            self.ddof: dict = { 'x': 0, 'y': 1} # Degrees of freedom
-        elif ndm == 2 and ndf ==3:
-            self.prob_type = '2d-frame'
-            self.ddof: dict = { 'x': 0, 'y': 1, 'rz':2}
-        elif ndm == 3 and ndf ==3:
-            self.prob_type = '3d-truss'
-            self.ddof: dict = { 'x': 0, 'y': 1, 'z':2}
-        elif ndm == 3 and ndf ==6:
-            self.prob_type = '3d-frame'
-            self.ddof: dict = { 'x': 0, 'y': 1, 'z':2, 'rx':3, 'ry':4, 'rz':5}
     
     @property
     def nn(self) -> int:
@@ -157,9 +153,12 @@ class DomainBuilder:
         "Number of free degrees of freedom."
         return  self.nt - self.nr
 
-    def dump(self, writer):
-        return writer(self).dump()
+    @property
+    def xyz(self) -> list:
+        return np.stack([n.xyz for n in self.nodes])
 
+    def dump(self, writer, **kwds):
+        return writer(self).dump(**kwds)
 
 
     def cycle(self, tag, 
@@ -197,9 +196,16 @@ class DomainBuilder:
             load[dof,:] = path[dof]
         return anp.stack([l[:,None] for l in load.T])
 
-         
+    def index(self, obj):
+        if isinstance(obj, Node):
+            return self.nodes.index(obj)
 
+        elif isinstance(obj, Element):
+            return self.nodes.index(obj)
 
+        elif isinstance(obj, (Spring, Material)):
+            return list(self.materials.values()).index(obj)
+    
     
     def param(self,*param_names,shape=0,dtype=float,default=None):
         """Create a parameter that is managed by the model.
@@ -263,5 +269,11 @@ class UniformDomainBuilder(DomainBuilder):
             for i,dof in enumerate(dofs): 
                 Be_map[dof].append((el,i))
         return Be_map
+
+    def getNode(self, identifier):
+        if isinstance(identifier, str):
+            return self.dnodes[identifier]
+        else:
+            return identifier
 
 
