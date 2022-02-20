@@ -1,7 +1,7 @@
 import yaml
 
 
-def parseYamlFile(FileName, gc=None, lc=None,**kwds):
+def parseYamlFile(FileName, gc={}, lc={},**kwds):
     with open(FileName,'r') as f: file_str = f.read()
 
     compiled_str = compile('fr"""'+file_str+'"""', '<file_str>', 'eval')

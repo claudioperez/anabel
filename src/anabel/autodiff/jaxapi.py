@@ -14,6 +14,7 @@ def jacfwd(fun: Callable, outnums: Union[int, Sequence[int]] = None,
             jac = jax.jacfwd(lambda *args,**kwds: fun(*args,**kwds)[:nf,:nf], argnums, holomorphic)
     else:
         jac = jax.jacfwd(lambda *args,**kwds: fun(*args,**kwds)[outnums],argnums,holomorphic)
+    
     if squeeze:
         return lambda *args, **kwds: jnp.squeeze(jac(*args,**kwds))
     else:

@@ -5,7 +5,7 @@ A collection of functions for composing graphs of finite elements.
 import inspect
 from collections import namedtuple, deque
 from collections import MutableMapping
-from .interfaces import interface
+from .interfaces import interface, fields
 
 from jax import jit
 

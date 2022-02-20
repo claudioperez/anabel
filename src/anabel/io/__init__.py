@@ -1,6 +1,7 @@
 import os
 
 from anabel import COMPILER 
+import anabel.io.parse
 
 compiler = COMPILER
 

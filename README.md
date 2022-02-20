@@ -22,8 +22,9 @@ Finite element neural networks.
 
 Anabel is a *functional* library for constructing finite element programs that leverage abstractions from the field of deep learning to develop new models for complex phenomena like inelasticity and geometric nonlinearity.
 
-Explore Anabel's reference element library, [**Elle**](elle), to see examples.
+<!-- Explore Anabel's reference element library, [**Elle**](elle), to see examples.-->
 
+<!--
 ## Composition, Combinators & Categories
 
 ```python
@@ -35,6 +36,7 @@ x0 = anabel.init_domain(f)
 #               x => x0 - Df
 x = anabel.fixed_point(f, x0)
 ```
+-->
 
 ## Modules
 
@@ -53,6 +55,7 @@ General numerical methods for:
 
 ### core
 
+<!--
 ## Roadmap and Goals
 
 This project is a unification of a series of isolated studies into how machine learning abstractions might be useful in finite element analysis problems. Several of these studies proved very successful, and short-term developments are expected to focus on providing a concise set of tools that will allow the reproduction and extended development of the most promising of these studies.
@@ -66,6 +69,8 @@ The following is a partial list of some successful studies and the tools which w
 ### Non-goals
 
 - The purpose of this project is not to apply *machine learning* to FEA.
+
+-->
 
 ## Installation
 
